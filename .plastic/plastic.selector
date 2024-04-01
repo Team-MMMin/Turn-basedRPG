@@ -1,0 +1,4 @@
+repository "Turn-based RPG@MeongMeongMin@cloud"
+  path "/"
+    br "/main"
+    co "/main"
