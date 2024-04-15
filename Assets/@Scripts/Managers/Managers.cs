@@ -13,9 +13,11 @@ public class Managers : MonoBehaviour
     #region Core
     ResourceManager _resource = new ResourceManager();
     PoolManager _pool = new PoolManager();
+    SceneManagerEX _scene = new SceneManagerEX();
     UIManager _ui = new UIManager();
     public static ResourceManager Resource { get { return Instance?._resource; } }
-    public static PoolManager Pool {  get { return Instance?._pool; } }
+    public static PoolManager Pool { get { return Instance?._pool; } }
+    public static SceneManagerEX Scene {  get { return Instance?._scene; } }
     public static UIManager UI { get { return Instance?._ui; } }
     #endregion
 
@@ -39,6 +41,8 @@ public class Managers : MonoBehaviour
 
     public static void Clear()
     {
-
+        UI.Clear();
+        Scene.Clear();
+        Pool.Clear();
     }
 }
