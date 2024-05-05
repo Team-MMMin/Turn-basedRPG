@@ -1,0 +1,10 @@
+{
+  "creatures": [
+    {
+      "DataId": 201000,
+      "DescriptionTextID": "전사",
+      "PrefabLabel": "Player"
+      // 이어서 작성
+    },
+  ]
+}

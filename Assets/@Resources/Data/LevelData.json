@@ -1,0 +1,54 @@
+{
+  "levels": [
+    {
+      "Level": 1,
+      "TotalExp": 50,
+      "RequiredExp": 50
+    },
+    {
+      "Level": 2,
+      "TotalExp": 150,
+      "RequiredExp": 100
+    },
+    {
+      "Level": 3,
+      "TotalExp": 300,
+      "RequiredExp": 150
+    },
+    {
+      "Level": 4,
+      "TotalExp": 500,
+      "RequiredExp": 200
+    },
+    {
+      "Level": 5,
+      "TotalExp": 750,
+      "RequiredExp": 250
+    },
+    {
+      "Level": 6,
+      "TotalExp": 1050,
+      "RequiredExp": 300
+    },
+    {
+      "Level": 7,
+      "TotalExp": 1400,
+      "RequiredExp": 350
+    },
+    {
+      "Level": 8,
+      "TotalExp": 1800,
+      "RequiredExp": 400
+    },
+    {
+      "Level": 9,
+      "TotalExp": 2250,
+      "RequiredExp": 450
+    },
+    {
+      "Level": 10,
+      "TotalExp": 2750,
+      "RequiredExp": 500
+    }
+  ]
+}

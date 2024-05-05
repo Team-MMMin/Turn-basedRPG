@@ -15,10 +15,12 @@ public class Managers : MonoBehaviour
     PoolManager _pool = new PoolManager();
     SceneManagerEX _scene = new SceneManagerEX();
     UIManager _ui = new UIManager();
+    DataManager _data = new DataManager();
     public static ResourceManager Resource { get { return Instance?._resource; } }
     public static PoolManager Pool { get { return Instance?._pool; } }
     public static SceneManagerEX Scene {  get { return Instance?._scene; } }
     public static UIManager UI { get { return Instance?._ui; } }
+    public static DataManager Data { get { return Instance?._data; } }
     #endregion
 
     public static void Init()

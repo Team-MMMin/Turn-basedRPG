@@ -1,4 +1,4 @@
-public class Define
+public static class Define
 {
     public enum UIEvent
     {
@@ -13,5 +13,32 @@ public class Define
         Unknown,
         MenuScene,
         GameScene,
+    }
+
+    public enum CreatureState
+    {
+        Idle,
+        Skill,
+        Moving,
+        OnDamaged,
+        Dead,
+    }
+
+    public enum CreatureType
+    {
+        Player,
+        Monster,
+    }
+
+    public enum ObjectType
+    {
+        Player,
+        Monster,
+    }
+
+    public enum ClassType
+    {
+        Warrior,
+        Mage,
     }
 }
