@@ -11,12 +11,12 @@ public interface ILoader<Key, Value>
 public class DataManager
 {
     public Dictionary<int, Data.LevelData> LevelDataDic { get; private set; } = new Dictionary<int, Data.LevelData>();
-    public Dictionary<int, Data.CreatureData> CreatureDataDic { get; private set; } = new Dictionary<int, Data.CreatureData>();
+    public Dictionary<int, Data.ClassData> ClassDataDic { get; private set; } = new Dictionary<int, Data.ClassData>();
 
     public void Init()
     {
         LevelDataDic = LoadJson<Data.LevelDataLoader, int, Data.LevelData>("LevelData").MakeDict();
-        CreatureDataDic = LoadJson<Data.CreatureDataLoader, int, Data.CreatureData>("CreatureData").MakeDict();
+        ClassDataDic = LoadJson<Data.ClassDataLoader, int, Data.ClassData>("ClassData").MakeDict();
     }
 
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>

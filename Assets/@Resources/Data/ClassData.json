@@ -1,0 +1,28 @@
+{
+  "classes": [
+    {
+      "DataID": 101,
+      "Name": "전사",
+      "PrefabLabel": "WarriorPrefab",
+      "Mov": 4,
+      "HpRate": 10.0,
+      "MpRate": 5.0,
+      "AtkRate": 3.0,
+      "DefRate": 2.0,
+      "IconLabel": "Warrior.sprite",
+      "SkillTypeList": []
+    },
+    {
+      "DataID": 102,
+      "Name": "마법사",
+      "PrefabLabel": "MagePrefab",
+      "Mov": 3,
+      "HpRate": 5.0,
+      "MpRate": 10.0,
+      "AtkRate": 2.0,
+      "DefRate": 1.0,
+      "IconLabel": "Mage.sprite",
+      "SkillTypeList": []
+    }
+  ]
+}

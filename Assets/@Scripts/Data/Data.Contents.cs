@@ -28,18 +28,13 @@ namespace Data
     }
     #endregion
 
-    #region CreatureData
+    #region ClassData
     [Serializable]
-    public class CreatureData
+    public class ClassData
     {
         public int DataID;
-        public string DescriptionTextID;
+        public string Name;
         public string PrefabLabel;
-        public float MaxHp;
-        public float MaxMp;
-        public float Atk;
-        public float Def;
-        public int Mov;
         public float HpRate;
         public float MpRate;
         public float AtkRate;
@@ -49,13 +44,40 @@ namespace Data
     }
 
     [Serializable]
-    public class CreatureDataLoader : ILoader<int, CreatureData> 
+    public class ClassDataLoader : ILoader<int, ClassData>
+    {
+        public List<ClassData> classes = new List<ClassData>();
+        public Dictionary<int, ClassData> MakeDict()
+        {
+            Dictionary<int, ClassData> dict = new Dictionary<int, ClassData>();
+            foreach (ClassData classData in classes)
+                dict.Add(classData.DataID, classData);
+            return dict;
+        }
+    }
+    #endregion
+
+    #region CreatureData
+    [Serializable]
+    public class CreatureData
+    {
+        public int DataID;
+        public string Name;
+        public string DescriptionTextID;
+        public float Hp;
+        public float Mp;
+        public float Atk;
+        public float Def;
+    }
+
+    [Serializable]
+    public class CreatureDataLoader : ILoader<int, CreatureData>
     {
         public List<CreatureData> creatures = new List<CreatureData>();
         public Dictionary<int, CreatureData> MakeDict()
         {
             Dictionary<int, CreatureData> dict = new Dictionary<int, CreatureData>();
-            foreach(CreatureData creature in creatures)
+            foreach (CreatureData creature in creatures)
                 dict.Add(creature.DataID, creature);
             return dict;
         }
