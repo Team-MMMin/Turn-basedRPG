@@ -35,6 +35,7 @@ namespace Data
         public int DataID;
         public string Name;
         public string PrefabLabel;
+        public int Mov;
         public float HpRate;
         public float MpRate;
         public float AtkRate;
