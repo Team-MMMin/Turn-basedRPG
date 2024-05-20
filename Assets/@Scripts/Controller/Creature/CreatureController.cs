@@ -12,6 +12,7 @@ public abstract class CreatureController : BaseController
     public CreatureData CreatureData;
 
     public virtual int DataId { get; set; }
+    public virtual string Name { get; set; }
     public virtual float Hp { get; set; }
     public virtual float Mp { get; set; }
     public virtual float Atk { get; set; }
