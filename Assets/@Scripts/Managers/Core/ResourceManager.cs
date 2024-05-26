@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
 public class ResourceManager
 {
     Dictionary<string, Object> _resources = new Dictionary<string, Object>();
+    Dictionary<string, AsyncOperationHandle> _handles = new Dictionary<string, AsyncOperationHandle>();
 
     public T Load<T>(string key) where T : UnityEngine.Object
     {
@@ -69,6 +71,7 @@ public class ResourceManager
             }
 
             _resources.Add(key, op.Result);
+            _handles.Add(key, asyncOperation);
             callback?.Invoke(op.Result);
         };
     }
@@ -101,6 +104,15 @@ public class ResourceManager
                 }
             }
         };
+    }
+
+    public void Clear()
+    {
+        _resources.Clear();
+
+        foreach (var handle in _handles)
+            Addressables.Release(handle);
+        _handles.Clear();
     }
     #endregion
 }
