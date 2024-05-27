@@ -4,27 +4,24 @@ using UnityEngine;
 
 public class UI_MenuScene : UI_Scene
 {
-    bool isPreload = false;
-
-    void Awake()
-    {
-        Init();
-    }
-
     public override bool Init()
     {
         if (base.Init() == false) 
             return false;
 
+        StartLoadAssets();
+
+        return true;
+    }
+
+    void StartLoadAssets()
+    {
         Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, count, totalCount) =>
         {
             if (count == totalCount)
             {
-                isPreload = true;
                 Managers.Data.Init();
             }
         });
-
-        return true;
     }
 }
