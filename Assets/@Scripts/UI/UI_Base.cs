@@ -9,23 +9,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-public abstract class UI_Base : MonoBehaviour
+public abstract class UI_Base : InitBase
 {
     protected Dictionary<Type, Object[]> _objects = new Dictionary<Type, Object[]>();
-    protected bool _init = false;
     
-    void Start()
+    void Awake()
     {
         Init();
-    }
-
-    public virtual bool Init()
-    {
-        if (_init) 
-            return false;
-
-        _init = true;
-        return true;
     }
 
     protected void Bind<T>(Type type) where T : Object

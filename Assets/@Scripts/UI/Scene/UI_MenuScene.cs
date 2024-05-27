@@ -21,6 +21,7 @@ public class UI_MenuScene : UI_Scene
             if (count == totalCount)
             {
                 isPreload = true;
+                Managers.Data.Init();
             }
         });
 
