@@ -1,7 +1,9 @@
 using Data;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using static Define;
 
 public abstract class CreatureController : BaseController
@@ -26,13 +28,13 @@ public abstract class CreatureController : BaseController
 
     public CreatureData CreatureData;
 
-    public virtual int DataId { get; set; }
-    public virtual string Name { get; set; }
-    public virtual float Hp { get; set; }
-    public virtual float Mp { get; set; }
-    public virtual float Atk { get; set; }
-    public virtual float Def { get; set; }
-    public virtual int Mov { get; set; }
+    #region Stats
+    public float Hp { get; set; }
+    public float Mp { get; set; }
+    public float Atk { get; set; }
+    public float Def { get; set; }
+    public int Mov { get; set; }
+    #endregion
 
     void Awake()
     {
@@ -45,7 +47,6 @@ public abstract class CreatureController : BaseController
             return false;
 
         ObjectType = EObjectType.Creature;
-        CreatureState = ECreatureState.Idle;
 
         CreatureSprite = GetComponent<SpriteRenderer>();
         if (CreatureSprite == null)
@@ -53,4 +54,29 @@ public abstract class CreatureController : BaseController
 
         return true;
     }
+
+    public virtual void SetInfo(int templateID)
+    {
+        DataTemplateID = templateID;
+
+        CreatureData = Managers.Data.CreatureDataDic[templateID];
+        gameObject.name = $"{CreatureData.DataID}_{CreatureData.Name}";
+
+        SortingGroup sg = gameObject.GetOrAddComponent<SortingGroup>();
+        sg.sortingOrder = SortingLayers.CREATURE;
+
+        // TODO
+        // ½ºÅ³
+
+        // Stat
+        Hp = CreatureData.Hp;
+        Mp = CreatureData.Mp;
+        Atk = CreatureData.Atk;
+        Def = CreatureData.Def;
+        // Mov
+
+        // State
+        CreatureState = ECreatureState.Idle;
+    }
+
 }

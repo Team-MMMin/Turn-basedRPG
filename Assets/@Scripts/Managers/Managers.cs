@@ -7,7 +7,8 @@ public class Managers : MonoBehaviour
     static bool s_init = false;
 
     #region Contents
-
+    ObjectManager _object = new ObjectManager();
+    public static ObjectManager Object { get { return Instance?._object; } }
     #endregion
 
     #region Core

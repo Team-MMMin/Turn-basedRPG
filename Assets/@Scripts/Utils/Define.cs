@@ -57,3 +57,8 @@ public static class Define
         Mage,
     }
 }
+
+public static class SortingLayers
+{
+    public const int CREATURE = 300;
+}

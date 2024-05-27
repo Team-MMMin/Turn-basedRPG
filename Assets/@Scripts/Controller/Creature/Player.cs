@@ -1,18 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class BaseController : InitBase
+public class Player : CreatureController
 {
-    public EObjectType ObjectType { get; protected set; } = EObjectType.None;
-    
-    public int DataTemplateID { get; set; }
-
     public override bool Init()
     {
         if (base.Init() == false) 
             return false;
+
+        CreatureType = ECreatureType.Player;
 
         return true;
     }
