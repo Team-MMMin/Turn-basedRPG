@@ -7,9 +7,10 @@ public class UIManager
 {
     int _order = 10;
 
-    Stack<UI_Popup> _popupStack = new Stack<UI_Popup>(); 
+    Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
+
     UI_Scene _sceneUI = null;
-    public UI_Scene SceneUI { get { return _sceneUI; } }
+    public UI_Scene SceneUI { get { return _sceneUI; } set { _sceneUI = value; } }
 
     public GameObject Root
     {
@@ -49,6 +50,24 @@ public class UIManager
         {
             canvas.sortingOrder = 0;
         }
+    }
+
+    public T GetSceneUI<T>() where T : UI_Base
+    {
+        return _sceneUI as T;
+    }
+
+    public T ShowBaseUI<T>(string name = null) where T : UI_Base
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;
+
+        GameObject go = Managers.Resource.Instantiate(name);
+        T baseUI = go.GetOrAddComponent<T>();
+
+        go.transform.SetParent(Root.transform);
+
+        return baseUI;
     }
 
     public T ShowSceneUI<T>(string name = null) where T : UI_Scene
@@ -101,8 +120,20 @@ public class UIManager
         _order--;
     }
 
+    public void CloseAllPopupUI()
+    {
+        while (_popupStack.Count > 0)
+            ClosePopupUI();
+    }
+
+    public int GetPopupCount()
+    {
+        return _popupStack.Count;
+    }
+
     public void Clear()
     {
-
+        CloseAllPopupUI();
+        _sceneUI = null;
     }
 }
