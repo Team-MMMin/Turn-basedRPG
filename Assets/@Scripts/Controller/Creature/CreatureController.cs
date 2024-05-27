@@ -2,9 +2,24 @@ using Data;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public abstract class CreatureController : BaseController
 {
+    public ECreatureType CreatureType { get; protected set; } = ECreatureType.None;
+    protected ECreatureState _creatureState = ECreatureState.None;
+    public virtual ECreatureState CreatureState
+    {
+        get { return _creatureState; }
+        set
+        {
+            if (_creatureState != value) 
+            {
+                _creatureState = value;
+            }
+        }
+    }
+
     [SerializeField]
     protected SpriteRenderer CreatureSprite;
     protected string SpriteName;
@@ -26,7 +41,11 @@ public abstract class CreatureController : BaseController
 
     public override bool Init()
     {
-        base.Init();
+        if (base.Init() == false)
+            return false;
+
+        ObjectType = EObjectType.Creature;
+        CreatureState = ECreatureState.Idle;
 
         CreatureSprite = GetComponent<SpriteRenderer>();
         if (CreatureSprite == null)

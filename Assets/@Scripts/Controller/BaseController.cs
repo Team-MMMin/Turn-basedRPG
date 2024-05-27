@@ -5,7 +5,7 @@ using static Define;
 
 public class BaseController : InitBase
 {
-    public EObjectType EObjectType { get; protected set; }
+    public EObjectType ObjectType { get; protected set; } = EObjectType.None;
 
     public override bool Init()
     {

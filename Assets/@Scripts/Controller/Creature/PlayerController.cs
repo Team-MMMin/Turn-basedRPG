@@ -20,4 +20,14 @@ public class PlayerController : CreatureController
 {
     [SerializeField]
     public PlayerStat Stat = new PlayerStat();
+
+    public override bool Init()
+    {
+        if (base.Init() == false) 
+            return false;
+
+        CreatureType = ECreatureType.Player;
+
+        return true;
+    }
 }
