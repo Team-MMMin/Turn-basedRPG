@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class BaseController : MonoBehaviour
+public class BaseController : InitBase
 {
-    public ObjectType ObjectType { get; protected set; }
+    public EObjectType EObjectType { get; protected set; }
 
-    bool _init = false;
-
-    void Awake()
+    public override bool Init()
     {
-        Init();
-    }
-
-    public virtual bool Init()
-    {
-        if (_init) 
+        if (base.Init() == false) 
             return false;
 
-        _init = true;
         return true;
     }
 }

@@ -6,7 +6,7 @@ using static Define;
 
 public abstract class BaseScene : InitBase
 {
-    public Scene SceneType { get; protected set; } = Scene.Unknown;
+    public EScene SceneType { get; protected set; } = EScene.Unknown;
 
     public override bool Init()
     {

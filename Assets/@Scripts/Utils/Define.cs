@@ -1,6 +1,6 @@
 public static class Define
 {
-    public enum UIEvent
+    public enum EUIEvent
     {
         Click,
         Drag,
@@ -8,35 +8,50 @@ public static class Define
         EndDrag
     }
 
-    public enum Scene
+    public enum EScene
     {
         Unknown,
         MenuScene,
         GameScene,
     }
 
-    public enum CreatureState
+    public enum ECreatureState
     {
+        None,
         Idle,
         Skill,
-        Moving,
-        OnDamaged,
+        Move,
         Dead,
     }
 
-    public enum CreatureType
+    public enum ECreatureType
     {
+        None,
         Player,
         Monster,
     }
 
-    public enum ObjectType
+    public enum EObjectType
     {
-        Player,
-        Monster,
+        None,
+        Creature,
+        Projectile,
+        Tile,
     }
 
-    public enum ClassType
+    public enum ETileType
+    {
+        None,
+        Free,
+        Blocked,
+        HpRecovery,
+        MpRecovery,
+        DefBoost,
+        AtkBoost,
+        Damage,
+    }
+
+    public enum EClassType
     {
         Warrior,
         Mage,

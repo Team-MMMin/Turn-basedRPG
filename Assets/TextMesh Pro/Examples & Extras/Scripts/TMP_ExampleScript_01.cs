@@ -11,7 +11,7 @@ namespace TMPro.Examples
     {
         public enum objectType { TextMeshPro = 0, TextMeshProUGUI = 1 };
 
-        public objectType ObjectType;
+        public objectType EObjectType;
         public bool isStatic;
 
         private TMP_Text m_text;
@@ -26,7 +26,7 @@ namespace TMPro.Examples
         {
             // Get a reference to the TMP text component if one already exists otherwise add one.
             // This example show the convenience of having both TMP components derive from TMP_Text. 
-            if (ObjectType == 0)
+            if (EObjectType == 0)
                 m_text = GetComponent<TextMeshPro>() ?? gameObject.AddComponent<TextMeshPro>();
             else
                 m_text = GetComponent<TextMeshProUGUI>() ?? gameObject.AddComponent<TextMeshProUGUI>();

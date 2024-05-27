@@ -9,7 +9,7 @@ public class MenuScene : BaseScene
         if (base.Init() == false)
             return false;
 
-        SceneType = Define.Scene.MenuScene;
+        SceneType = Define.EScene.MenuScene;
         return true;
     }
 

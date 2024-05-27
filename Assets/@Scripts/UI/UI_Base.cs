@@ -57,24 +57,24 @@ public abstract class UI_Base : InitBase
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     protected Toggle GetToggle(int idx) { return Get<Toggle>(idx); }
 
-    public static void BindEvent(GameObject go, Action action = null, Action<BaseEventData> dragAction = null, Define.UIEvent type = Define.UIEvent.Click)
+    public static void BindEvent(GameObject go, Action action = null, Action<BaseEventData> dragAction = null, Define.EUIEvent type = Define.EUIEvent.Click)
     {
         UI_EventHandler evt = go.GetOrAddComponent<UI_EventHandler>();
         switch (type)
         {
-            case Define.UIEvent.Click:
+            case Define.EUIEvent.Click:
                 evt.OnClickHandler -= action;
                 evt.OnClickHandler += action;
                 break;
-            case Define.UIEvent.Drag:
+            case Define.EUIEvent.Drag:
                 evt.OnDragHandler -= dragAction;
                 evt.OnDragHandler += dragAction;
                 break;
-            case Define.UIEvent.BeginDrag:
+            case Define.EUIEvent.BeginDrag:
                 evt.OnBeginDragHandler -= dragAction;
                 evt.OnBeginDragHandler += dragAction;
                 break;
-            case Define.UIEvent.EndDrag:
+            case Define.EUIEvent.EndDrag:
                 evt.OnEndDragHandler -= dragAction;
                 evt.OnEndDragHandler += dragAction;
                 break;

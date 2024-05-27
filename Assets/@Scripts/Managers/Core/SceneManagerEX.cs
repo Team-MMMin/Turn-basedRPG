@@ -8,24 +8,24 @@ public class SceneManagerEX
 {
     public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }
 
-    public void LoadScene(Define.Scene type, Transform parents = null)
+    public void LoadScene(Define.EScene type, Transform parents = null)
     {
         switch (CurrentScene.SceneType) 
         {
-            case Define.Scene.MenuScene:
+            case Define.EScene.MenuScene:
                 Managers.Clear();
                 SceneManager.LoadScene(GetSceneName(type));
                 break;
-            case Define.Scene.GameScene:
+            case Define.EScene.GameScene:
                 Managers.Clear();
                 SceneManager.LoadScene(GetSceneName(type));
                 break;
         }
     }
 
-    string GetSceneName(Define.Scene type) 
+    string GetSceneName(Define.EScene type) 
     {
-        return Enum.GetName(typeof(Define.Scene), type);
+        return Enum.GetName(typeof(Define.EScene), type);
     }
 
     public void Clear()
