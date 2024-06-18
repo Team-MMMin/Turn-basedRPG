@@ -12,7 +12,7 @@ public class Player : CreatureController
             return false;
 
         CreatureType = ECreatureType.Player;
-
+        CreatureState = ECreatureState.Idle;
         return true;
     }
 }

@@ -47,6 +47,7 @@ public abstract class CreatureController : BaseController
             return false;
 
         ObjectType = EObjectType.Creature;
+        CreatureState = ECreatureState.Idle;
 
         CreatureSprite = GetComponent<SpriteRenderer>();
         if (CreatureSprite == null)
