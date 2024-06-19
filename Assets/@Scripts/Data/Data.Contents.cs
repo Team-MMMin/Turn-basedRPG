@@ -66,6 +66,7 @@ namespace Data
         public string Name;
         public string DescriptionTextID;
         public int ClassDataID;
+        public int Level;
         public float Hp;
         public float Mp;
         public float Atk;

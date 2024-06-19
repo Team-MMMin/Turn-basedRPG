@@ -30,7 +30,7 @@ MonoBehaviour:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3af0a300495375b49a9613a21f693e7e
-    m_Address: CreatureData
+    m_Address: PlayerUnitData
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
