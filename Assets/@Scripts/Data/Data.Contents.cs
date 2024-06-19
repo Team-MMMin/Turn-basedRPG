@@ -65,6 +65,7 @@ namespace Data
         public int DataID;
         public string Name;
         public string DescriptionTextID;
+        public int ClassDataID;
         public float Hp;
         public float Mp;
         public float Atk;
@@ -80,6 +81,44 @@ namespace Data
             Dictionary<int, CreatureData> dict = new Dictionary<int, CreatureData>();
             foreach (CreatureData creature in creatures)
                 dict.Add(creature.DataID, creature);
+            return dict;
+        }
+    }
+    #endregion
+
+    #region PlayerUnitData
+    [Serializable]
+    public class PlayerUnitData : CreatureData
+    { }
+
+    [Serializable]
+    public class PlayerUnitDataLoader : ILoader<int, PlayerUnitData>
+    {
+        public List<PlayerUnitData> playerUnits = new List<PlayerUnitData>();
+        public Dictionary<int, PlayerUnitData> MakeDict() 
+        {
+            Dictionary<int, PlayerUnitData> dict = new Dictionary<int, PlayerUnitData>();
+            foreach (PlayerUnitData unit in playerUnits)
+                dict.Add(unit.DataID, unit);
+            return dict;
+        }
+    }
+    #endregion
+
+    #region MonsterData
+    [Serializable]
+    public class MonsterData : CreatureData
+    { }
+
+    [Serializable]
+    public class MonsterDataLoader : ILoader<int, MonsterData>
+    {
+        public List<MonsterData> monsters = new List<MonsterData>();
+        public Dictionary<int, MonsterData> MakeDict()
+        {
+            Dictionary<int, MonsterData> dict = new Dictionary<int, MonsterData>();
+            foreach (MonsterData monster in monsters)
+                dict.Add(monster.DataID, monster);
             return dict;
         }
     }

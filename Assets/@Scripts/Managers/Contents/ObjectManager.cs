@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ObjectManager
 {
-    public HashSet<Player> Player { get; } = new HashSet<Player>();
-    public HashSet<Monster> Monster { get; } = new HashSet<Monster>();
+    public HashSet<PlayerUnitController> Player { get; } = new HashSet<PlayerUnitController>();
+    public HashSet<MonsterController> MonsterController { get; } = new HashSet<MonsterController>();
 
     #region Roots
     public Transform GetRootTransform(string name)
@@ -17,7 +17,7 @@ public class ObjectManager
         return root.transform;
     }
 
-    public Transform PlayerRoot { get { return GetRootTransform("@Players"); } }
+    public Transform PlayerUnitRoot { get { return GetRootTransform("@PlayerUnits"); } }
     public Transform MonsterRoot { get { return GetRootTransform("@Monsters"); } }
     #endregion
 

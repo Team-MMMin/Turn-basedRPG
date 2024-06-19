@@ -1,17 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class Player : CreatureController
+public class MonsterController : CreatureController
 {
     public override bool Init()
     {
-        if (base.Init() == false) 
+        if (base.Init() == false)
             return false;
 
-        CreatureType = ECreatureType.Player;
+        CreatureType = ECreatureType.MonsterController;
         CreatureState = ECreatureState.Idle;
         return true;
     }

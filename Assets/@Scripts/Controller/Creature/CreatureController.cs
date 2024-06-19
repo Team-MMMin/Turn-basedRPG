@@ -60,7 +60,7 @@ public abstract class CreatureController : BaseController
     {
         DataTemplateID = templateID;
 
-        CreatureData = Managers.Data.CreatureDataDic[templateID];
+        CreatureData = Managers.Data.PlayerUnitDataDic[templateID];
         gameObject.name = $"{CreatureData.DataID}_{CreatureData.Name}";
 
         SortingGroup sg = gameObject.GetOrAddComponent<SortingGroup>();
@@ -74,6 +74,7 @@ public abstract class CreatureController : BaseController
         Mp = CreatureData.Mp;
         Atk = CreatureData.Atk;
         Def = CreatureData.Def;
+        
         // Mov
 
         // State

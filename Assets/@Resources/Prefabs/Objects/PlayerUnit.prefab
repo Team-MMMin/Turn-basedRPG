@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9166388895110455366}
   - component: {fileID: 1297039627838642183}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerUnit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,6 +102,7 @@ MonoBehaviour:
     DataID: 0
     Name: 
     DescriptionTextID: 
+    ClassDataID: 0
     Hp: 0
     Mp: 0
     Atk: 0

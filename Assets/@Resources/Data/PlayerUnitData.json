@@ -1,0 +1,14 @@
+{
+  "playerUnits": [
+    {
+      "DataID": 201000,
+      "Name": "전사",
+      "DescriptionTextID": "평범한 전사이다.",
+      "ClassDataID": 101,
+      "Hp": 10.0,
+      "Mp": 5.0,
+      "Atk": 3.0,
+      "Def": 2.0
+    }
+  ]
+}
