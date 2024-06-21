@@ -41,7 +41,7 @@ namespace Data
         public float AtkRate;
         public float DefRate;
         public string IconLabel;
-        public List<int> SkillTypeList;
+        public List<int> SkillIDList;
     }
 
     [Serializable]

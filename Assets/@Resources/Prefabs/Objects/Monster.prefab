@@ -102,6 +102,8 @@ MonoBehaviour:
     DataID: 0
     Name: 
     DescriptionTextID: 
+    ClassDataID: 0
+    Level: 0
     Hp: 0
     Mp: 0
     Atk: 0

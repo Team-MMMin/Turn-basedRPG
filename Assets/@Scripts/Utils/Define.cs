@@ -56,6 +56,10 @@ public static class Define
         Warrior,
         Mage,
     }
+
+    public const int PLAYER_UNIT_WARRIOR_ID = 201000;
+    
+    public const int MONSTER_WARRIOR_ID = 202000;
 }
 
 public static class SortingLayers

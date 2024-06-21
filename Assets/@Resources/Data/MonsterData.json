@@ -1,5 +1,5 @@
 {
-  "playerUnits": [
+  "monsters": [
     {
       "DataID": 202000,
       "Name": "전사",
