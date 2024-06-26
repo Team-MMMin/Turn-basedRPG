@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 namespace Data
 {
@@ -64,7 +65,7 @@ namespace Data
     {
         public int DataID;
         public string Name;
-        public string DescriptionTextID;
+        public string Description;
         public int ClassDataID;
         public int Level;
         public float Hp;
@@ -121,6 +122,36 @@ namespace Data
             foreach (MonsterData monster in monsters)
                 dict.Add(monster.DataID, monster);
             return dict;
+        }
+    }
+    #endregion
+
+    #region SkillData
+    [Serializable]
+    public class SkillData
+    {
+        public int DataID;
+        public string Name;
+        public string Description;
+        public string PrefabLabel;
+        public string IconLabel;
+        public float DamageMultiplier;    // 데미지 배율
+        public int CoolTime;
+        public int ManaCost;
+        public List<Vector2Int> CastingRange;   // 캐스팅(시전) 범위
+        public List<Vector2Int> SkillSize;  // 스킬의 크기를 나타내며, null일 때는 캐스팅(시전) 범위 내의 모든 적을 공격
+    }
+
+    [Serializable]
+    public class SkillDataLoader : ILoader<int, SkillData>
+    {
+        public List<SkillData> skills = new List<SkillData>();
+        public Dictionary<int, SkillData> MakeDict() 
+        {
+            Dictionary<int, SkillData> dic = new Dictionary<int, SkillData>();
+            foreach (SkillData skill in skills)
+                dic.Add(skill.DataID, skill);
+            return dic;
         }
     }
     #endregion

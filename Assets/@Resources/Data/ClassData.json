@@ -10,7 +10,12 @@
       "AtkRate": 3.0,
       "DefRate": 2.0,
       "IconLabel": "Warrior.sprite",
-      "SkillIDList": []
+      "SkillIDList": [
+        10001,
+        10011,
+        10021,
+        10031
+      ]
     },
     {
       "DataID": 102,
@@ -22,7 +27,12 @@
       "AtkRate": 2.0,
       "DefRate": 1.0,
       "IconLabel": "Mage.sprite",
-      "SkillIDList": []
+      "SkillIDList": [
+        20001,
+        20011,
+        20021,
+        20031
+      ]
     }
   ]
 }

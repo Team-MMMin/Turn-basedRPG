@@ -3,7 +3,7 @@
     {
       "DataID": 201000,
       "Name": "전사",
-      "DescriptionTextID": "평범한 전사이다.",
+      "Description": "평범한 전사이다.",
       "ClassDataID": 101,
       "Level": 1,
       "Hp": 10.0,
