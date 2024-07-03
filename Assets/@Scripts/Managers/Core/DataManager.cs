@@ -15,6 +15,7 @@ public class DataManager
     public Dictionary<int, Data.PlayerUnitData> PlayerUnitDataDic { get; private set; } = new Dictionary<int, Data.PlayerUnitData>();
     public Dictionary<int, Data.MonsterData> MonsterDataDic { get; private set; } = new Dictionary<int, Data.MonsterData>();
     public Dictionary<int, Data.SkillData> SkillDataDic { get; private set; } = new Dictionary<int, Data.SkillData>();
+    public Dictionary<int, Data.TileData> TileDataDic { get; private set; } = new Dictionary<int, Data.TileData>();
 
     public void Init()
     {
@@ -23,6 +24,7 @@ public class DataManager
         PlayerUnitDataDic = LoadJson<Data.PlayerUnitDataLoader, int, Data.PlayerUnitData>("PlayerUnitData").MakeDict();
         MonsterDataDic = LoadJson<Data.MonsterDataLoader, int, Data.MonsterData>("MonsterData").MakeDict();
         SkillDataDic = LoadJson<Data.SkillDataLoader, int, Data.SkillData>("SkillData").MakeDict();
+        TileDataDic = LoadJson<Data.TileDataLoader, int, Data.TileData>("TileData").MakeDict();
     }
 
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>

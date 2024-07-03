@@ -155,4 +155,29 @@ namespace Data
         }
     }
     #endregion
+
+    #region TileData
+    [Serializable]
+    public class TileData 
+    {
+        public int DataID;
+        public string Name;
+        public string Description;
+        public string PrefabLabel;
+        public ETileType TileType;
+    }
+
+    [Serializable]
+    public class TileDataLoader : ILoader<int, TileData>
+    {
+        public List<TileData> tiles = new List<TileData>();
+        public Dictionary<int, TileData> MakeDict()
+        {
+            Dictionary<int, TileData> dic = new Dictionary<int, TileData>();
+            foreach (TileData tile in tiles)
+                dic.Add(tile.DataID, tile);
+            return dic;
+        }
+    }
+    #endregion
 }
