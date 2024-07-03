@@ -8,7 +8,9 @@ public class Managers : MonoBehaviour
 
     #region Contents
     ObjectManager _object = new ObjectManager();
+    MapManager _map = new MapManager();
     public static ObjectManager Object { get { return Instance?._object; } }
+    public static MapManager Map { get { return Instance?._map; } }
     #endregion
 
     #region Core
