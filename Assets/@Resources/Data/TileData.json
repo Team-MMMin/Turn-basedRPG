@@ -1,0 +1,65 @@
+{
+  "Tiles": [
+    {
+      "DataID": 300001,
+      "Name": "체력 회복 타일",
+      "Description": "이 타일 위에 위치할 때, 체력(HP)을 즉시 10만큼 회복합니다. 이 효과는 한 번만 적용됩니다.",
+      "TileType": 3,
+      "HpRecovery": 10.0,
+      "MpRecovery": 0.0,
+      "DefBoost": 0.0,
+      "AtkBoost": 0.0,
+      "Damage": 0.0,
+      "isOneTime": true
+    },
+    {
+      "DataID": 300011,
+      "Name": "마나 회복 타일",
+      "Description": "이 타일 위에 위치할 때, 마나(MP)를 즉시 5만큼 회복합니다. 이 효과는 한 번만 적용됩니다.",
+      "TileType": 4,
+      "HpRecovery": 0.0,
+      "MpRecovery": 5.0,
+      "DefBoost": 0.0,
+      "AtkBoost": 0.0,
+      "Damage": 0.0,
+      "isOneTime": true
+    },
+    {
+      "DataID": 300021,
+      "Name": "방어력 증가 타일",
+      "Description": "이 타일 위에 위치하는 동안 방어력이 7만큼 증가합니다. 타일을 벗어나면 효과가 사라집니다.",
+      "TileType": 5,
+      "HpRecovery": 0.0,
+      "MpRecovery": 0.0,
+      "DefBoost": 7.0,
+      "AtkBoost": 0.0,
+      "Damage": 0.0,
+      "isOneTime": false
+    },
+    {
+      "DataID": 300031,
+      "Name": "공격력 증가 타일",
+      "Description": "이 타일 위에 위치하는 동안 공격력이 10만큼 증가합니다. 타일을 벗어나면 효과가 사라집니다.",
+      "TileType": 6,
+      "HpRecovery": 0.0,
+      "MpRecovery": 0.0,
+      "DefBoost": 0.0,
+      "AtkBoost": 10.0,
+      "Damage": 0.0,
+      "isOneTime": false
+    },
+    {
+      "DataID": 300041,
+      "Name": "데미지 타일",
+      "Description": "이 타일 위에 위치할 때, 현재 체력(HP)의 10%를 잃습니다. 이 효과는 한 번만 적용됩니다.",
+      "TileType": 7,
+      "HpRecovery": 0.0,
+      "MpRecovery": 0.0,
+      "DefBoost": 0.0,
+      "AtkBoost": 0.0,
+      "Damage": 0.1,
+      "isOneTime": true
+    }
+
+  ]
+}

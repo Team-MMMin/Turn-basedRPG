@@ -163,8 +163,13 @@ namespace Data
         public int DataID;
         public string Name;
         public string Description;
-        public string PrefabLabel;
         public ETileType TileType;
+        public float HpRecovery;
+        public float MpRecovery;
+        public float DefBoost;
+        public float AtkBoost;
+        public float Damage;
+        public bool isOneTime;
     }
 
     [Serializable]
