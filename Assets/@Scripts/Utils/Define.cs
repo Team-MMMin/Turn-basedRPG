@@ -51,6 +51,28 @@ public static class Define
         Damage,
     }
 
+    public enum EColliderSize
+    {
+        Small,
+        Normal,
+        Big
+    }
+
+    public enum EFindPathResult
+    {
+        Fail_LerpCell,
+        Fail_NoPath,
+        Fail_MoveTo,
+        Success,
+    }
+
+    public enum ECellCollisionType
+    {
+        None, 
+        SemiWall, //카메라만 갈수있는벽
+        Wall,
+    }
+
     public enum EClassType
     {
         Warrior,

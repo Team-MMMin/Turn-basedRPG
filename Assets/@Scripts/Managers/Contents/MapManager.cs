@@ -9,8 +9,7 @@ public class MapManager
     public GameObject MapName { get; private set; }
     public Grid CellGrid { get; private set; }
 
-//      아래 부분 BaseObject가 무엇이길래 누락되어있는지 확인중
-//    Dictionary<Vector3Int, BaseObject> cells = new Dictionary<Vector3Int, BaseObject>(); 4
+    Dictionary<Vector3Int, BaseController> cells = new Dictionary<Vector3Int, BaseController>();
 
     private int MinX;
     private int MaxX;
@@ -20,5 +19,5 @@ public class MapManager
     public Vector3Int World2Cell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); }
     public Vector3 Cell2World(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); }
 
-
+    //ECellCollisionType[,] _collision;
 }
