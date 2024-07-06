@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static Define;
 
 
 public class MapManager
@@ -11,13 +12,13 @@ public class MapManager
 
     Dictionary<Vector3Int, BaseController> cells = new Dictionary<Vector3Int, BaseController>();
 
-    private int MinX;
-    private int MaxX;
-    private int MinY;
-    private int MaxY;
+    int MinX;
+    int MaxX;
+    int MinY;
+    int MaxY;
 
     public Vector3Int World2Cell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); }
     public Vector3 Cell2World(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); }
 
-    //ECellCollisionType[,] _collision;
+    ECellCollisionType[,] _collision;
 }
