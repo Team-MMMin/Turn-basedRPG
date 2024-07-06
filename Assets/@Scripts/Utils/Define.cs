@@ -82,6 +82,11 @@ public static class Define
     public const int PLAYER_UNIT_WARRIOR_ID = 201000;
     
     public const int MONSTER_WARRIOR_ID = 202000;
+
+
+    public const char MAP_TOOL_WALL = '0';
+    public const char MAP_TOOL_NONE = '1';
+    public const char MAP_TOOL_SEMI_WALL = '2';
 }
 
 public static class SortingLayers
