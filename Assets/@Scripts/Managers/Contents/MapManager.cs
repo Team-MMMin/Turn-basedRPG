@@ -18,8 +18,8 @@ public class MapManager
     int MinY;
     int MaxY;
 
-    public Vector3Int WorldToCell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); }
-    public Vector3 CellToWorld(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); }
+    public Vector3Int WorldToCell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); } //벡터3 월드포지션
+    public Vector3 CellToWorld(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); } //int벡터3 셀포지션  
 
     ECellCollisionType[,] _collision;
 
@@ -52,7 +52,7 @@ public class MapManager
     {
         GameObject collision = Util.FindChild(map, tilemap, true);
         if (collision != null)
-            collision.SetActive(false); //Collision 불가시화
+            collision.SetActive(false); //게임 실행시 Collision 불가시화
 
         // Collision 관련 파일
         TextAsset txt = Managers.Resource.Load<TextAsset>($"{mapName}Collision");
