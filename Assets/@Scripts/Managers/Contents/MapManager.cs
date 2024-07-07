@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using static Define;
 
-
 public class MapManager
 {
     public GameObject Map { get; private set; }
@@ -18,8 +17,8 @@ public class MapManager
     int MinY;
     int MaxY;
 
-    public Vector3Int WorldToCell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); } //벡터3 월드포지션
-    public Vector3 CellToWorld(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); } //int벡터3 셀포지션  
+    public Vector3Int WorldToCell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); }  // 벡터3 월드포지션
+    public Vector3 CellToWorld(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); }    // int 벡터3 셀포지션  
 
     ECellCollisionType[,] _collision;
 
@@ -87,12 +86,59 @@ public class MapManager
             }
         }
     }
+
     #region Helpers
+    public BaseController GetObject(Vector3Int cellPos)
+    {
+        // 없으면 null
+        _cells.TryGetValue(cellPos, out BaseController value);
+        return value;
+    }
+
+    public BaseController GetObject(Vector3 worldPos)
+    {
+        Vector3Int cellPos = WorldToCell(worldPos);
+        return GetObject(cellPos);
+    }
+    
+    public bool RemoveObject(BaseController obj)
+    {
+        BaseController prev = GetObject(obj.CellPos);
+
+        // 처음 신청했으면 해당 CellPos의 오브젝트가 본인이 아닐 수도 있음
+        if (prev != obj)
+            return false;
+
+        _cells[obj.CellPos] = null;
+        return true;
+    }
+
+    public bool AddObject(BaseController obj, Vector3Int cellPos)
+    {
+        // TODO
+        // CanGO 함수를 호출하여 false일 때 이동할 수 없게 한다.
+        //if (CanGo(cellPos) == false)
+        //{
+        //    Debug.LogWarning($"AddObject Failed");
+        //    return false;
+        //}
+        BaseController prev = GetObject(cellPos);
+        if (prev != null)
+        {
+            Debug.LogWarning($"AddObject Failed");
+            return false;
+        }
+
+        _cells[cellPos] = obj;
+        return true;
+    }
+
+    // TODO
+    // CanGo 함수는 오브젝트가 목적지로 갈 수 있는 지의 여부를 확인한다.
+
     public void ClearObjects()
     {
         _cells.Clear();
     }
-
     #endregion
-
 }

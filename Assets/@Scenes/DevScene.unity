@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 871776298}
   - component: {fileID: 871776297}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: BaseMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2067,7 +2067,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1624281323}
   m_Layer: 0
-  m_Name: BaseMap
+  m_Name: TestMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
