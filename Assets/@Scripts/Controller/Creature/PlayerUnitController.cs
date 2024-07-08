@@ -11,8 +11,13 @@ public class PlayerUnitController : CreatureController
         if (base.Init() == false) 
             return false;
 
-        CreatureType = ECreatureType.PlayerUnitController;
+        CreatureType = ECreatureType.PlayerUnit;
         CreatureState = ECreatureState.Idle;
         return true;
+    }
+
+    public override void SetInfo(int templateID)
+    {
+        base.SetInfo(templateID);
     }
 }

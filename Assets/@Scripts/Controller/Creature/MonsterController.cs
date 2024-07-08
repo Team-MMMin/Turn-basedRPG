@@ -10,8 +10,13 @@ public class MonsterController : CreatureController
         if (base.Init() == false)
             return false;
 
-        CreatureType = ECreatureType.MonsterController;
+        CreatureType = ECreatureType.Monster;
         CreatureState = ECreatureState.Idle;
         return true;
+    }
+
+    public override void SetInfo(int templateID)
+    {
+        base.SetInfo(templateID);
     }
 }
