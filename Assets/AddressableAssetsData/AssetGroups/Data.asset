@@ -48,13 +48,19 @@ MonoBehaviour:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9db1265a2684e7b45a496458b47a6cd1
-    m_Address: Map_000Collision
+    m_Address: 000Collision
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c0e2228cf7137fb4ca5d85a4ecba38ec
     m_Address: TileData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e62b04fa5d11cc14eaa92615a9815322
+    m_Address: 001Collision
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad

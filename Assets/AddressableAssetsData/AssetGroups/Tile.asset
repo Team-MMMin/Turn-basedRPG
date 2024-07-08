@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Tile
+  m_EditorClassIdentifier: 
+  m_GroupName: Tile
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 4ecbd77cd93115941b90391cf4cd012d
+  m_SerializeEntries:
+  - m_GUID: 6e136e195739af94d914d53d7f8d653b
+    m_Address: Assets/@Resources/Prefabs/Map/TileMap/Heel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68e0007ce33d2df44adbde6b2d04049c
+    m_Address: Assets/@Resources/Prefabs/Map/TileMap/Lava.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a861df324d712e44a7cd30dbd0fed33
+    m_Address: Assets/@Resources/Prefabs/Map/TileMap/Move_able.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48b04c070de450c44a1c5809d27f242b
+    m_Address: Assets/@Resources/Prefabs/Map/TileMap/Tilemap_Collision.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5af3e97ea4e63b442a0f8a486be80d70
+    m_Address: Assets/@Resources/Prefabs/Map/TileMap/Water.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 18450d62243315140a2fc940c05ad24f, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4ba03c5802deedc4d9cb1c42f8ae5426, type: 2}
+    - {fileID: 11400000, guid: e1308588b344fb44fa46d35c278bed19, type: 2}

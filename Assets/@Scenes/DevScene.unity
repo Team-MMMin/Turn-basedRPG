@@ -2049,7 +2049,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6941045212386153592, guid: 2fdfbe6a86ffcf04497e314ca125a3fb, type: 3}
       propertyPath: m_Name
-      value: Map_000
+      value: 000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14812,7 +14812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5561980618318483660, guid: f03560d8b20ea3142ba9d33d9425337e, type: 3}
       propertyPath: m_Name
-      value: Map_001
+      value: 001
       objectReference: {fileID: 0}
     - target: {fileID: 6223537824211173419, guid: f03560d8b20ea3142ba9d33d9425337e, type: 3}
       propertyPath: m_Tiles.Array.size
