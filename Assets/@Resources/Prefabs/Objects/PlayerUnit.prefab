@@ -101,7 +101,7 @@ MonoBehaviour:
   CreatureData:
     DataID: 0
     Name: 
-    DescriptionTextID: 
+    Description: 
     ClassDataID: 0
     Level: 0
     Hp: 0
