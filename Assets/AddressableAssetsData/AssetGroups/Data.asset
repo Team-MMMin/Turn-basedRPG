@@ -48,7 +48,7 @@ MonoBehaviour:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9db1265a2684e7b45a496458b47a6cd1
-    m_Address: Map_000Collision
+    m_Address: 000Collision
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
