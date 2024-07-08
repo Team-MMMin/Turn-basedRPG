@@ -22,6 +22,12 @@ public class ObjectManager
     public Transform MonsterRoot { get { return GetRootTransform("@Monsters"); } }
     #endregion
 
+    public T Spawn<T>(Vector3Int cellPos, int templateID) where T : BaseController
+    {
+        Vector3 spawnPos = Managers.Map.CellToWorld(cellPos);
+        return Spawn<T>(spawnPos, templateID);
+    }
+
     public T Spawn<T>(Vector3 pos, int templateID) where T : BaseController
     {
         string prefabName = typeof(T).Name;
