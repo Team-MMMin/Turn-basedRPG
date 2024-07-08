@@ -27,8 +27,8 @@ public static class Define
     public enum ECreatureType
     {
         None,
-        PlayerUnitController,
-        MonsterController,
+        PlayerUnit,
+        Monster,
     }
 
     public enum EObjectType
