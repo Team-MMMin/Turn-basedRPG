@@ -15,4 +15,9 @@ public class PlayerUnitController : CreatureController
         CreatureState = ECreatureState.Idle;
         return true;
     }
+
+    public override void SetInfo(int templateID)
+    {
+        base.SetInfo(templateID);
+    }
 }
