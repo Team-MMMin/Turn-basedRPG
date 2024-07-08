@@ -51,7 +51,7 @@ public class MapManager
     {
         GameObject collision = Util.FindChild(map, tilemap, true);
         if (collision != null)
-            collision.SetActive(false); //게임 실행시 Collision 불가시화
+            collision.SetActive(false); // 게임 실행시 Collision 불가시화
 
         // Collision 관련 파일
         TextAsset txt = Managers.Resource.Load<TextAsset>($"{mapName}Collision");
@@ -113,14 +113,15 @@ public class MapManager
         return true;
     }
 
-    public bool AddObject(BaseController obj, Vector3Int cellPos) // 동일한위치에 두개 의 물체가 있으면 안되기에 체크
+    public bool AddObject(BaseController obj, Vector3Int cellPos)   
     {
-     
+        // 동일한 위치에 두 개의 물체가 있으면 안되기에 체크
         if (CanGo(cellPos) == false)
         {
             Debug.LogWarning($"AddObject Failed");
             return false;
         }
+        
         BaseController prev = GetObject(cellPos);
         if (prev != null)
         {
@@ -132,40 +133,38 @@ public class MapManager
         return true;
     }
 
-
-
-    public bool CanGo(Vector3 worldPos, bool ignoreObjects = false, bool ignoreSemiWall = false)  //SemiWall은 카메라만 이동할 수 있는 영역
+    public bool CanGo(Vector3 worldPos, bool ignoreObjects = false, bool ignoreSemiWall = false)    // SemiWall은 카메라만 이동할 수 있는 영역
     {
         return CanGo(WorldToCell(worldPos), ignoreObjects, ignoreSemiWall);
     }
 
     public bool CanGo(Vector3Int cellPos, bool ignoreObjects = false, bool ignoreSemiWall = false)
     {
-        //범위를 벗어났는지 확인 후, 벗어났으면 false 반환
+        // 범위를 벗어났는지 확인 후, 벗어났으면 false 반환
         if (cellPos.x < MinX || cellPos.x > MaxX)
             return false;
         if (cellPos.y < MinY || cellPos.y > MaxY)
             return false;
 
-        if (ignoreObjects == false)  //물체가 있는지 체크
+        if (ignoreObjects == false) // 물체가 있는지 체크
         {
             BaseController obj = GetObject(cellPos);
-            if (obj != null) // 물체가 있다면 false 반환
+            if (obj != null)    // 물체가 있다면 false 반환
                 return false;
         }
-        // 물체가없으면 해당 위치 타입 체크해서 None이면 이동가능하니까 이동하도록 확인
+
+        // 물체가 없으면 해당 위치의 타입이 None일 때 이동하도록 확인
         int x = cellPos.x - MinX;
         int y = MaxY - cellPos.y;
         ECellCollisionType type = _collision[x, y];
         if (type == ECellCollisionType.None)
             return true;
 
-        if (ignoreSemiWall && type == ECellCollisionType.SemiWall) //ignoreSemiWall이 true고 type이 ECellCollisionType내에있는 타입과 같을 시
+        if (ignoreSemiWall && type == ECellCollisionType.SemiWall)  // ignoreSemiWall이 true고 type이 ECellCollisionType내에 있는 타입과 같을 시
             return true; 
 
         return false;
     }
-    
 
     public void ClearObjects()
     {
