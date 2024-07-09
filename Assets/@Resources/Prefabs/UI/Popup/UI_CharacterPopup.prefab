@@ -410,7 +410,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5103135424756068285}
   m_Layer: 5
-  m_Name: CharacterGroup
+  m_Name: CharacterImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -429,10 +429,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3754128451835045654}
-  - {fileID: 8615840563628894664}
-  - {fileID: 987869434731188870}
   - {fileID: 2041727592785839432}
   - {fileID: 7181414221203697781}
+  - {fileID: 8615840563628894664}
+  - {fileID: 987869434731188870}
   m_Father: {fileID: 8589607794072817667}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -574,7 +574,7 @@ GameObject:
   - component: {fileID: 2204306029109751956}
   - component: {fileID: 1817893852523265562}
   m_Layer: 5
-  m_Name: CharacterButton_4
+  m_Name: CharacterImage_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -693,7 +693,7 @@ GameObject:
   - component: {fileID: 2120034525818803075}
   - component: {fileID: 8447302319790119406}
   m_Layer: 5
-  m_Name: SettingTitleText
+  m_Name: CharacterTitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1260,7 +1260,7 @@ GameObject:
   - component: {fileID: 5169081351011152876}
   - component: {fileID: 3226210068024856674}
   m_Layer: 5
-  m_Name: CharacterButton_1
+  m_Name: CharacterImage_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1380,7 +1380,7 @@ GameObject:
   - component: {fileID: 100565175075222879}
   - component: {fileID: 8138481829950274484}
   m_Layer: 5
-  m_Name: CharacterButton_2
+  m_Name: CharacterImage_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1500,7 +1500,7 @@ GameObject:
   - component: {fileID: 7379665955015926591}
   - component: {fileID: 6611220756011302489}
   m_Layer: 5
-  m_Name: CharacterButton_5
+  m_Name: CharacterImage_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1835,7 +1835,7 @@ GameObject:
   - component: {fileID: 8847060680956452517}
   - component: {fileID: 3633740396539876083}
   m_Layer: 5
-  m_Name: CharacterButton_3
+  m_Name: CharacterImage_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
