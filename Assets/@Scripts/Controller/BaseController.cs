@@ -8,6 +8,8 @@ public class BaseController : InitBase
     public int ExtraCells { get; set; } = 0;
 
     public EObjectType ObjectType { get; protected set; } = EObjectType.None;
+    public BoxCollider2D Collider { get; private set; }
+    public Rigidbody2D RigidBody { get; private set; }
     
     public int DataTemplateID { get; set; }
 
@@ -18,6 +20,9 @@ public class BaseController : InitBase
     {
         if (base.Init() == false) 
             return false;
+
+        Collider = gameObject.GetOrAddComponent<BoxCollider2D>();
+        RigidBody = gameObject.GetOrAddComponent<Rigidbody2D>();
 
         return true;
     }

@@ -49,9 +49,14 @@ public abstract class CreatureController : BaseController
         ObjectType = EObjectType.Creature;
         CreatureState = ECreatureState.Idle;
 
-        CreatureSprite = GetComponent<SpriteRenderer>();
-        if (CreatureSprite == null)
-            CreatureSprite = Util.FindChild<SpriteRenderer>(gameObject);
+        CreatureSprite = gameObject.GetOrAddComponent<SpriteRenderer>();
+
+        Collider.isTrigger = true;
+        
+        RigidBody.mass = 0;
+        RigidBody.simulated = true;
+        RigidBody.gravityScale = 0;
+        RigidBody.freezeRotation = true;
 
         return true;
     }
