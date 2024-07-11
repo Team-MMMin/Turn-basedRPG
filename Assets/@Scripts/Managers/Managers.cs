@@ -19,11 +19,13 @@ public class Managers : MonoBehaviour
     SceneManagerEX _scene = new SceneManagerEX();
     UIManager _ui = new UIManager();
     DataManager _data = new DataManager();
+    InputManager _input = new InputManager();
     public static ResourceManager Resource { get { return Instance?._resource; } }
     public static PoolManager Pool { get { return Instance?._pool; } }
     public static SceneManagerEX Scene {  get { return Instance?._scene; } }
     public static UIManager UI { get { return Instance?._ui; } }
     public static DataManager Data { get { return Instance?._data; } }
+    public static InputManager Input { get { return Instance?._input; } }
     #endregion
 
     public static void Init()
@@ -49,5 +51,6 @@ public class Managers : MonoBehaviour
         UI.Clear();
         Scene.Clear();
         Pool.Clear();
+        Input.Clear();
     }
 }

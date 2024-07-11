@@ -10,6 +10,10 @@ public class GameScene : BaseScene
             return false;
 
         SceneType = Define.EScene.GameScene;
+
+        // Test
+        Managers.Map.LoadMap("001");
+        
         return true;
     }
 

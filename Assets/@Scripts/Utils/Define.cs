@@ -8,6 +8,20 @@ public static class Define
         EndDrag
     }
 
+    public enum EMouseEvent
+    {
+        Click,
+        Press,
+    }
+
+    public enum ECursorType
+    {
+        None,
+        Hand,
+        Move,
+        Skill,
+    }
+
     public enum EScene
     {
         Unknown,
