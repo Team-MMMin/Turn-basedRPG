@@ -23,8 +23,14 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 03d14e81155c1b849ad9ce518dbfaa58
-    m_Address: UI_GameScene
+  - m_GUID: 9d9fb1e70038cb14cad65b9ad3cc50bb
+    m_Address: UI_CharacterInformationPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 487a9d32691f8fb4ebc0c39366a3161a
+    m_Address: UI_CharacterPopup
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
