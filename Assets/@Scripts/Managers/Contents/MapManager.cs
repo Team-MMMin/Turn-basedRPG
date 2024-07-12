@@ -17,8 +17,8 @@ public class MapManager
     int MinY;
     int MaxY;
 
-    public Vector3Int WorldToCell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); }  // 벡터3 월드포지션
-    public Vector3 CellToWorld(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); }    // int 벡터3 셀포지션  
+    public Vector3Int WorldToCell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); }  // 월드 좌표를 타일맵의 셀 좌표로 변환
+    public Vector3 CellToWorld(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); }    // 셀 좌표를 타일맵의 월드 좌표로 변환  
 
     ECellCollisionType[,] _collision;
 
