@@ -4,19 +4,12 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using static Define;
 
-public class CursorController : BaseController
+public class CursorController : InitBase
 {
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
-
-        Collider.isTrigger = false;
-
-        RigidBody.mass = 0;
-        RigidBody.simulated = true;
-        RigidBody.gravityScale = 0;
-        RigidBody.freezeRotation = true;
 
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
