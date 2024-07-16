@@ -10,7 +10,9 @@ public class BaseController : InitBase
     public EObjectType ObjectType { get; protected set; } = EObjectType.None;
     public BoxCollider2D Collider { get; private set; }
     public Rigidbody2D RigidBody { get; private set; }
-    
+
+    public Vector3 CenterPosition { get { return transform.position + new Vector3(Collider.offset.x, Collider.offset.y); } }
+
     public int DataTemplateID { get; set; }
 
     bool _lookLeft = true;
