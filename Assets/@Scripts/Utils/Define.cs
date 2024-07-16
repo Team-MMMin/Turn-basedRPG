@@ -11,7 +11,7 @@ public static class Define
     public enum EMouseEvent
     {
         Click,
-        Press,
+        Drag,
     }
 
     public enum ECursorType
@@ -106,4 +106,5 @@ public static class Define
 public static class SortingLayers
 {
     public const int CREATURE = 300;
+    public const int CURSOR = 300;
 }
