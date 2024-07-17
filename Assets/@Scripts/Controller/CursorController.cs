@@ -50,7 +50,8 @@ public class CursorController : InitBase
                     Debug.Log("Move");
                     // TODO
                     // 범위 내에서만 커서를 두게 한다.
-                    transform.position = Managers.Map.CellToWorld(cellPos) + new Vector3(cellSize.x / 2 - 1, cellSize.y / 2, 0);
+                    Vector3 pos = Managers.Map.CellToWorld(cellPos) + new Vector3(cellSize.x / 2 - 1, cellSize.y / 2, 0);
+                    transform.position = pos;
                     break;
                 case ECursorType.Skill:
                     break;
