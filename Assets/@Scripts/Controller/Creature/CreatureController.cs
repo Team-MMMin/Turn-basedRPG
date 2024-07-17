@@ -27,6 +27,7 @@ public abstract class CreatureController : BaseController
     protected string SpriteName;
 
     public CreatureData CreatureData;
+    public ClassData ClassData;
 
     #region Stats
     public float Hp { get; set; }
@@ -66,6 +67,7 @@ public abstract class CreatureController : BaseController
         DataTemplateID = templateID;
 
         CreatureData = Managers.Data.PlayerUnitDataDic[templateID];
+        ClassData = Managers.Data.ClassDataDic[CreatureData.ClassDataID];
         gameObject.name = $"{CreatureData.DataID}_{CreatureData.Name}";
 
         SortingGroup sg = gameObject.GetOrAddComponent<SortingGroup>();
@@ -79,11 +81,9 @@ public abstract class CreatureController : BaseController
         Mp = CreatureData.Mp;
         Atk = CreatureData.Atk;
         Def = CreatureData.Def;
-        
-        // Mov
+        Mov = ClassData.Mov;
 
         // State
         CreatureState = ECreatureState.Idle;
     }
-
 }
