@@ -9,8 +9,8 @@ using static Define;
 public class CursorController : InitBase
 {
     SpriteRenderer _sprite;
-    public float Speed { get; set; } = 0.2f;
-    
+    public float Speed { get; set; } = 0.5f;
+
     public override bool Init()
     {
         if (base.Init() == false)
