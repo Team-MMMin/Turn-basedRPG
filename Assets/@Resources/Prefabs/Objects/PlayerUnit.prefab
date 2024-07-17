@@ -81,7 +81,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.6875, y: 0.5}
+  m_Size: {x: 1.375, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -110,6 +110,17 @@ MonoBehaviour:
     Mp: 0
     Atk: 0
     Def: 0
+  ClassData:
+    DataID: 0
+    Name: 
+    PrefabLabel: 
+    Mov: 0
+    HpRate: 0
+    MpRate: 0
+    AtkRate: 0
+    DefRate: 0
+    IconLabel: 
+    SkillIDList: 
 --- !u!50 &1768614488201147828
 Rigidbody2D:
   serializedVersion: 4
@@ -169,16 +180,16 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.34375, y: 0.25}
+  m_Offset: {x: 0.012812436, y: 0.5037188}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0.6875, y: 0.5}
-    newSize: {x: 0.6875, y: 0.5}
+    pivot: {x: 0.4, y: 0}
+    oldSize: {x: 1.375, y: 1}
+    newSize: {x: 1.375, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6875, y: 0.5}
+  m_Size: {x: 0.7820536, y: 1.0074376}
   m_EdgeRadius: 0
