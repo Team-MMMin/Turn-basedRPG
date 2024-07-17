@@ -29,6 +29,15 @@ public static class Define
         GameScene,
     }
 
+    public enum EGameState
+    {
+        None,
+        PlayerTurn,
+        MonsterTurn,
+        Win,
+        Lose,
+    }
+
     public enum ECreatureState
     {
         None,
@@ -36,6 +45,7 @@ public static class Define
         Skill,
         Move,
         Dead,
+        EndTurn,
     }
 
     public enum ECreatureType

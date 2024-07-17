@@ -52,6 +52,7 @@ public class CursorController : InitBase
                     // 범위 내에서만 커서를 두게 한다.
                     Vector3 pos = Managers.Map.CellToWorld(cellPos) + new Vector3(cellSize.x / 2 - 1, cellSize.y / 2, 0);
                     transform.position = pos;
+                    Managers.Game.ClickCellPos = pos;
                     break;
                 case ECursorType.Skill:
                     break;

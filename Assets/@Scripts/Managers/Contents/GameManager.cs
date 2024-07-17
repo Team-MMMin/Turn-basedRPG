@@ -6,6 +6,13 @@ using static Define;
 
 public class GameManager
 {
+    EGameState _gameState;
+    public EGameState GameState
+    {
+        get { return _gameState; }
+        set { _gameState = value; }
+    }
+
     ECursorType _cursorType;
     public ECursorType CursorType
     {
@@ -17,5 +24,17 @@ public class GameManager
         }
     }
 
+    public Vector3 _clickCellPos;
+    public Vector3 ClickCellPos
+    {
+        get { return _clickCellPos; }
+        set 
+        {
+            _clickCellPos = value;
+            OnClickCellPosChanged?.Invoke(_clickCellPos);
+        }
+    }
+
     public event Action<ECursorType> OnCursorChanged;
+    public event Action<Vector3> OnClickCellPosChanged;
 }

@@ -12,10 +12,13 @@ public class GameScene : BaseScene
 
         SceneType = Define.EScene.GameScene;
 
-        // Test
+        #region Test
         Managers.Map.LoadMap("001");
         CameraController camera = Camera.main.GetOrAddComponent<CameraController>();
         GameObject cursor = Managers.Resource.Instantiate("Cursor");
+        
+        Managers.Game.GameState = Define.EGameState.PlayerTurn;
+        #endregion
 
         return true;
     }
