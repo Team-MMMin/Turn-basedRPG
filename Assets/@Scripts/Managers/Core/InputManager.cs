@@ -8,29 +8,41 @@ using static Define;
 public class InputManager
 {
     public Action<EMouseEvent> MouseAction = null;
-    public Action<EMouseEvent> MouseDragAction = null;
+
+    bool _pressed = false;
+    float _pressedTime = 0;
 
     public void OnUpdate()
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
-        if (Input.anyKey == false)
+        if (MouseAction == null)
             return;
 
-        if (MouseAction != null && MouseDragAction != null)
+        if (Input.GetMouseButton(0))
         {
-            if (Input.GetMouseButton(0))
+            if (_pressed == false)
+                _pressedTime = Time.time;
+
+            MouseAction.Invoke(EMouseEvent.Drag);
+            _pressed = true;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            if (_pressed)
             {
-                MouseAction.Invoke(EMouseEvent.Click);
-                MouseDragAction.Invoke(EMouseEvent.Drag);
+                if (Time.time < _pressedTime + 0.2f)
+                    MouseAction.Invoke(EMouseEvent.Click);
             }
+
+            _pressed = false;
+            _pressedTime = 0;
         }
     }
 
     public void Clear()
     {
         MouseAction = null;
-        MouseDragAction = null;
     }
 }
