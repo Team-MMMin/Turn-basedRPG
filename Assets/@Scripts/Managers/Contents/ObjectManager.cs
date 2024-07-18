@@ -30,9 +30,10 @@ public class ObjectManager
 
     public T Spawn<T>(Vector3 pos, int templateID) where T : BaseController
     {
-        // TODO
-        // 해당 위치가 움직일 수 있는 곳인지 확인
         if (Managers.Map.GetObject(pos) != null)
+            return null;
+
+        if (Managers.Map.CanGo(pos) == false)
             return null;
 
         string prefabName = typeof(T).Name;
@@ -56,17 +57,18 @@ public class ObjectManager
                     PlayerUnitController playerUnit = go.GetComponent<PlayerUnitController>();
                     playerUnit.SetInfo(templateID);
                     PlayerUnits.Add(playerUnit);
+                    Managers.Map.MoveTo(playerUnit, Managers.Map.WorldToCell(pos));
                     break;
                 case ECreatureType.Monster:
                     obj.transform.parent = MonsterRoot;
                     MonsterController monster = go.GetComponent<MonsterController>();
                     monster.SetInfo(templateID);
                     Monsters.Add(monster);
+                    Managers.Map.MoveTo(monster, Managers.Map.WorldToCell(pos));
                     break;
             }
         }
 
-        Managers.Map.AddObject(obj, Managers.Map.WorldToCell(pos));
         return obj as T;
     }
 

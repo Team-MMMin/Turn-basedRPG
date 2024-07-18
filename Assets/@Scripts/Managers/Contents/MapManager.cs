@@ -87,6 +87,19 @@ public class MapManager
         }
     }
 
+    public bool MoveTo(CreatureController obj, Vector3Int cellPos, bool forceMove = false)
+    {
+        if (CanGo(cellPos) == false)
+            return false;
+        
+        RemoveObject(obj);
+
+        AddObject(obj, cellPos);
+
+        obj.SetCellPos(cellPos, forceMove);
+        return true;
+    }
+
     #region Helpers
     public BaseController GetObject(Vector3Int cellPos)
     {
