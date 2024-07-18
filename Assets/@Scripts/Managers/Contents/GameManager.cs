@@ -13,14 +13,14 @@ public class GameManager
         set { _gameState = value; }
     }
 
-    ECursorType _cursorType;
-    public ECursorType CursorType
+    EActionState _actionState;
+    public EActionState ActionState
     {
-        get { return _cursorType; }
+        get { return _actionState; }
         set 
         {
-            _cursorType = value;
-            OnCursorChanged?.Invoke(_cursorType);
+            _actionState = value;
+            OnCursorChanged?.Invoke(_actionState);
         }
     }
 
@@ -35,6 +35,6 @@ public class GameManager
         }
     }
 
-    public event Action<ECursorType> OnCursorChanged;
+    public event Action<EActionState> OnCursorChanged;
     public event Action<Vector3> OnClickCellPosChanged;
 }

@@ -23,7 +23,7 @@ public class CursorController : InitBase
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
-        Managers.Game.CursorType = ECursorType.Hand;
+        Managers.Game.ActionState = EActionState.Spawn;
 
         return true;
     }
@@ -37,9 +37,10 @@ public class CursorController : InitBase
     {
         if (type == EMouseEvent.Click)
         {
-            switch (Managers.Game.CursorType)
+            switch (Managers.Game.ActionState)
             {
-                case ECursorType.Move:
+                case EActionState.Move:
+                {
                     // TODO
                     // 범위 내에서만 커서를 두게 한다.
 
@@ -47,9 +48,10 @@ public class CursorController : InitBase
                     transform.position = pos;
                     Managers.Game.ClickCellPos = pos;
 
-                    Managers.Game.CursorType = ECursorType.Hand;
+                    Managers.Game.ActionState = EActionState.Hand;
                     break;
-                case ECursorType.Skill:
+                }
+                case EActionState.Skill:
                     break;
             }
         }

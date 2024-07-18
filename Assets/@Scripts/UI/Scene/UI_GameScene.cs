@@ -34,19 +34,19 @@ public class UI_GameScene : UI_Scene
     void OnClickMoveButton()
     {
         Debug.Log("OnClickMoveButton");
-        Managers.Game.CursorType = ECursorType.Move;
+        Managers.Game.CursorType = EActionState.Move;
     }
 
     void OnClickSkillButton()
     {
         Debug.Log("OnClickSkillButton");
-        Managers.Game.CursorType = ECursorType.Skill;
+        Managers.Game.CursorType = EActionState.Skill;
     }
 
     void OnClickEndTurnButton()
     {
         Debug.Log("OnClickEndTurnButton");
-        Managers.Game.CursorType = ECursorType.Hand;
+        Managers.Game.CursorType = EActionState.Hand;
     }
 
     void OnClickSettingButton()

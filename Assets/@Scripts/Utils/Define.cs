@@ -14,10 +14,11 @@ public static class Define
         Drag,
     }
 
-    public enum ECursorType
+    public enum EActionState
     {
         None,
         Hand,
+        Spawn,
         Move,
         Skill,
     }
