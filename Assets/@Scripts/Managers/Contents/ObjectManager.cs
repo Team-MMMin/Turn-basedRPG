@@ -30,6 +30,11 @@ public class ObjectManager
 
     public T Spawn<T>(Vector3 pos, int templateID) where T : BaseController
     {
+        // TODO
+        // 해당 위치가 움직일 수 있는 곳인지 확인
+        if (Managers.Map.GetObject(pos) != null)
+            return null;
+
         string prefabName = typeof(T).Name;
         if (prefabName.Contains("Controller"))
             prefabName = $"{prefabName.Replace("Controller", "")}";
@@ -61,6 +66,7 @@ public class ObjectManager
             }
         }
 
+        Managers.Map.AddObject(obj, Managers.Map.WorldToCell(pos));
         return obj as T;
     }
 
