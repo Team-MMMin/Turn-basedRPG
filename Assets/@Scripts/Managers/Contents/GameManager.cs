@@ -20,7 +20,7 @@ public class GameManager
         set 
         {
             _actionState = value;
-            OnCursorChanged?.Invoke(_actionState);
+            OnActionStateChanged?.Invoke(_actionState);
         }
     }
 
@@ -35,6 +35,6 @@ public class GameManager
         }
     }
 
-    public event Action<EActionState> OnCursorChanged;
+    public event Action<EActionState> OnActionStateChanged;
     public event Action<Vector3> OnClickCellPosChanged;
 }
