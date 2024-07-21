@@ -30,12 +30,6 @@ public class ObjectManager
 
     public T Spawn<T>(Vector3 pos, int templateID) where T : BaseController
     {
-        if (Managers.Map.GetObject(pos) != null)
-            return null;
-
-        if (Managers.Map.CanGo(pos) == false)
-            return null;
-
         string prefabName = typeof(T).Name;
         if (prefabName.Contains("Controller"))
             prefabName = $"{prefabName.Replace("Controller", "")}";

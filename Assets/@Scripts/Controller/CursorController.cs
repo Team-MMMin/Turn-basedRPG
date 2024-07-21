@@ -23,7 +23,7 @@ public class CursorController : InitBase
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
-        Managers.Game.ActionState = EActionState.Spawn;
+        Managers.Game.ActionState = EActionState.Spawn; // Spawn Test
 
         return true;
     }
@@ -37,20 +37,16 @@ public class CursorController : InitBase
     {
         if (type == EMouseEvent.Click)
         {
+            Vector3 worldPos = GetMouseWorldPosition();
+            transform.position = worldPos;
             switch (Managers.Game.ActionState)
             {
-                case EActionState.Move:
-                {
-                    // TODO
-                    // 범위 내에서만 커서를 두게 한다.
-
-                    Vector3 pos = GetMouseCellPosition();
-                    transform.position = pos;
-                    Managers.Game.ClickCellPos = pos;
-
-                    Managers.Game.ActionState = EActionState.Hand;
+                case EActionState.Spawn:
+                    HandleSpawnAction(worldPos);
                     break;
-                }
+                case EActionState.Move:
+                    HandleMoveAction(worldPos);
+                    break;
                 case EActionState.Skill:
                     break;
             }
@@ -61,16 +57,38 @@ public class CursorController : InitBase
         }
     }
 
-    Vector3 GetMouseCellPosition()
+    Vector3 GetMouseWorldPosition()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0; // 임시적으로 0으로 설정했다
-
+        
         Vector3Int cellPos = Managers.Map.WorldToCell(mousePos);
+        Vector3 worldPos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos);
+        Vector3 MouseWorldPos = worldPos + new Vector3(0, -0.25f, 0); ;
 
-        Vector3 cellSize = Managers.Map.CellGrid.cellSize;
-        Vector3 pos = Managers.Map.CellToWorld(cellPos) + new Vector3(cellSize.x / 2 - 1, cellSize.y / 2, 0);
+        return MouseWorldPos;
+    }
 
-        return pos;
+    void HandleSpawnAction(Vector3 worldPos)
+    {
+        if (IsValidPosition(worldPos))
+        {
+            PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
+            Managers.Game.CurrentUnit = playerUnit;
+            Managers.Game.ActionState = EActionState.None;
+        }
+    }
+
+    void HandleMoveAction(Vector3 worldPos)
+    {
+        if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null)
+        {
+            Managers.Game.ActionState = EActionState.None;
+        }
+    }
+
+    bool IsValidPosition(Vector3 worldPos)
+    {
+        return Managers.Map.CanGo(worldPos);
     }
 }
