@@ -24,17 +24,15 @@ public class GameManager
         }
     }
 
-    public Vector3 _clickCellPos;
-    public Vector3 ClickCellPos
+    CreatureController _currentUnit;
+    public CreatureController CurrentUnit
     {
-        get { return _clickCellPos; }
+        get { return _currentUnit; }
         set 
         {
-            _clickCellPos = value;
-            OnClickCellPosChanged?.Invoke(_clickCellPos);
+            _currentUnit = value;
         }
     }
 
     public event Action<EActionState> OnActionStateChanged;
-    public event Action<Vector3> OnClickCellPosChanged;
 }
