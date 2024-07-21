@@ -50,7 +50,9 @@ public class BaseController : InitBase
 
         if (forceMove)
         {
-            transform.position = Managers.Map.CellToWorld(CellPos);
+            Vector3 worldPos = Managers.Map.CellToWorld(CellPos);
+            worldPos += new Vector3(0, 0.5f, 0);    // 하단에서 중앙으로 피벗 보정
+            transform.position = worldPos;
             LerpCellPosCompleted = true;
         }
     }
@@ -61,6 +63,7 @@ public class BaseController : InitBase
             return;
 
         Vector3 destPos = Managers.Map.CellToWorld(CellPos);
+        destPos += new Vector3(0, 0.5f, 0); // 하단에서 중앙으로 피벗 보정
         Vector3 dir = destPos - transform.position;
 
         if (dir.x < 0)
