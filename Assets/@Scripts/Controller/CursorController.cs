@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -64,7 +65,7 @@ public class CursorController : InitBase
         
         Vector3Int cellPos = Managers.Map.WorldToCell(mousePos);
         Vector3 worldPos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos);
-        Vector3 MouseWorldPos = worldPos + new Vector3(0, -0.25f, 0); ;
+        Vector3 MouseWorldPos = worldPos + new Vector3(0, -0.25f, 0);   // 중앙에서 약간 아래로 피벗 보정
 
         return MouseWorldPos;
     }
@@ -83,6 +84,11 @@ public class CursorController : InitBase
     {
         if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null)
         {
+            Debug.Log("HandleSpawnAction");
+            //Managers.Game.CurrentUnit.FindPathAndMoveToCellPos(worldPos, Managers.Game.CurrentUnit.Mov);
+            PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
+            if (playerUnit != null)
+                playerUnit.DestPos = worldPos;
             Managers.Game.ActionState = EActionState.None;
         }
     }

@@ -85,6 +85,7 @@ public static class Define
 
     public enum EFindPathResult
     {
+        None,
         Fail_LerpCell,
         Fail_NoPath,
         Fail_MoveTo,
