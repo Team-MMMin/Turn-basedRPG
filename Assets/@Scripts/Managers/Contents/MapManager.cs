@@ -240,7 +240,7 @@ public class MapManager
             if (pos == dest)
                 break;
 
-            if (node.Depth >= maxDepth)
+            if (node.Depth > maxDepth)
                 break;
 
             // 상하좌우 등 이동할 수 있는 좌표인지 확인해서 예약

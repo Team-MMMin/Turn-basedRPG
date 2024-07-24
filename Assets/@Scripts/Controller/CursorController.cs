@@ -84,7 +84,6 @@ public class CursorController : InitBase
     {
         if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null)
         {
-            Debug.Log("HandleSpawnAction");
             //Managers.Game.CurrentUnit.FindPathAndMoveToCellPos(worldPos, Managers.Game.CurrentUnit.Mov);
             PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
             if (playerUnit != null)
