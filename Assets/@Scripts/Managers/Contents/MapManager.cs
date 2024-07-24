@@ -205,13 +205,13 @@ public class MapManager
     List<Vector3Int> _delta = new List<Vector3Int>()
     {
         new Vector3Int(0, 1, 0), // U
-		new Vector3Int(1, 1, 0), // UR
+		//new Vector3Int(1, 1, 0), // UR
 		new Vector3Int(1, 0, 0), // R
-		new Vector3Int(1, -1, 0), // DR
+		//new Vector3Int(1, -1, 0), // DR
 		new Vector3Int(0, -1, 0), // D
-		new Vector3Int(-1, -1, 0), // LD
+		//new Vector3Int(-1, -1, 0), // LD
 		new Vector3Int(-1, 0, 0), // L
-		new Vector3Int(-1, 1, 0), // LU
+		//new Vector3Int(-1, 1, 0), // LU
     };
 
     public List<Vector3Int> FindPath(BaseController self, Vector3Int startCellPos, Vector3Int destCellPos, int maxDepth = 10)
@@ -228,8 +228,8 @@ public class MapManager
         Vector3Int dest = destCellPos;
 
         // destCellPos에 도착 못하더라도 제일 가까운 애
-        Vector3Int closestCellPos = startCellPos;
-        int closestH = (dest - pos).sqrMagnitude;
+        //Vector3Int closestCellPos = startCellPos;
+        //int closestH = (dest - pos).sqrMagnitude;
 
         // 시작점 발견 (예약 진행)
         {
@@ -239,11 +239,11 @@ public class MapManager
             best[pos] = h;
         }
 
-        while (pq.Count > 0) 
+        while (pq.Count > 0)
         {
             PQNode node = pq.Pop();
-            pos = node.CellPos;
-
+            pos = node.CellPos; 
+            
             if (pos == dest)
                 break;
 
@@ -271,17 +271,17 @@ public class MapManager
                 parent[next] = pos;
 
                 // 목적지까지는 못 가더라도, 그나마 제일 좋았던 후보 기억
-                if (closestH > h)
-                {
-                    closestH = h;
-                    closestCellPos = next;
-                }
+                //if (closestH > h)
+                //{
+                //    closestH = h;
+                //    closestCellPos = next;
+                //}
             }
         }
 
         // 제일 가까운 얘라도 찾음
-        if (parent.ContainsKey(dest) == false)
-            return CalcCellPathFromParent(parent, closestCellPos);
+        //if (parent.ContainsKey(dest) == false)
+        //    return CalcCellPathFromParent(parent, closestCellPos);
 
         return CalcCellPathFromParent(parent, dest);
     }
