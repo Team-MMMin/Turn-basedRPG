@@ -37,8 +37,6 @@ public class MapManager
         CellGrid = map.GetComponent<Grid>();
 
         ParseCollisionData(map, mapName);
-
-        //SpawnObjectsByData(map, mapName);
     }
 
     public void DestroyMap()
@@ -53,9 +51,8 @@ public class MapManager
     {
         GameObject collision = Util.FindChild(map, tilemap, true);
         if (collision != null)
-            collision.SetActive(false); // ���� ����� Collision �Ұ���ȭ
+            collision.SetActive(false);
 
-        // Collision ���� ����
         TextAsset txt = Managers.Resource.Load<TextAsset>($"{mapName}Collision");
         StringReader reader = new StringReader(txt.text);
 
@@ -91,13 +88,13 @@ public class MapManager
 
     public bool MoveTo(CreatureController obj,Vector3Int cellPos, bool forceMove = false)
     {
-        if(CanGo(cellPos) == false) 
+        if (CanGo(cellPos) == false) 
             return false;
-        //������ġ ������Ʈ ����
+
         RemoveObject(obj);
-        //�̵��� �� ��ġ�� ������Ʈ ���
+
         AddObject(obj,cellPos);
-        //�� ��ǥ �̵�
+
         obj.SetCellPos(cellPos,forceMove);
         return true;
     }
@@ -105,7 +102,6 @@ public class MapManager
     #region Helpers
     public BaseController GetObject(Vector3Int cellPos)
     {
-        // ������ null
         _cells.TryGetValue(cellPos, out BaseController value);
         return value;
     }
@@ -120,7 +116,6 @@ public class MapManager
     {
         BaseController prev = GetObject(obj.CellPos);
 
-        // ó�� ��û������ �ش� CellPos�� ������Ʈ�� ������ �ƴ� ���� ����
         if (prev != obj)
             return false;
 
@@ -130,7 +125,6 @@ public class MapManager
 
     public bool AddObject(BaseController obj, Vector3Int cellPos)   
     {
-        // ������ ��ġ�� �� ���� ��ü�� ������ �ȵǱ⿡ üũ
         if (CanGo(cellPos) == false)
         {
             Debug.LogWarning($"AddObject Failed");
@@ -148,34 +142,32 @@ public class MapManager
         return true;
     }
 
-    public bool CanGo(Vector3 worldPos, bool ignoreObjects = false, bool ignoreSemiWall = false)    // SemiWall�� ī�޶� �̵��� �� �ִ� ����
+    public bool CanGo(Vector3 worldPos, bool ignoreObjects = false, bool ignoreSemiWall = false)
     {
         return CanGo(WorldToCell(worldPos), ignoreObjects, ignoreSemiWall);
     }
 
     public bool CanGo(Vector3Int cellPos, bool ignoreObjects = false, bool ignoreSemiWall = false)
     {
-        // ������ ������� Ȯ�� ��, ������� false ��ȯ
         if (cellPos.x < MinX || cellPos.x > MaxX)
             return false;
         if (cellPos.y < MinY || cellPos.y > MaxY)
             return false;
 
-        if (ignoreObjects == false) // ��ü�� �ִ��� üũ
+        if (ignoreObjects == false)
         {
             BaseController obj = GetObject(cellPos);
-            if (obj != null)    // ��ü�� �ִٸ� false ��ȯ
+            if (obj != null)
                 return false;
         }
 
-        // ��ü�� ������ �ش� ��ġ�� Ÿ���� None�� �� �̵��ϵ��� Ȯ��
         int x = cellPos.x - MinX;
         int y = MaxY - cellPos.y;
         ECellCollisionType type = _collision[x, y];
         if (type == ECellCollisionType.None)
             return true;
 
-        if (ignoreSemiWall && type == ECellCollisionType.SemiWall)  // ignoreSemiWall�� true�� type�� ECellCollisionType���� �ִ� Ÿ�԰� ���� ��
+        if (ignoreSemiWall && type == ECellCollisionType.SemiWall)
             return true; 
 
         return false;
@@ -216,22 +208,22 @@ public class MapManager
 
     public List<Vector3Int> FindPath(BaseController self, Vector3Int startCellPos, Vector3Int destCellPos, int maxDepth = 10)
     {
-        // ���ݱ��� ���� ���� �ĺ� ���
+        // 지금까지 제일 좋은 후보 기록
         Dictionary<Vector3Int, int> best = new Dictionary<Vector3Int, int>();
-        // ��� ���� �뵵
+        // 경로 추적 용도
         Dictionary<Vector3Int, Vector3Int> parent = new Dictionary<Vector3Int, Vector3Int>();
 
-        // ���� �߰ߵ� �ĺ� �߿��� ���� ���� �ĺ��� ������ �̾ƿ��� ���� ����
+        // 현재 발견된 후보 중에서 가장 좋은 후보를 빠르게 뽑아오기 위한 도구
         PriorityQueue<PQNode> pq = new PriorityQueue<PQNode>();
 
         Vector3Int pos = startCellPos;
         Vector3Int dest = destCellPos;
 
-        // destCellPos�� ���� ���ϴ��� ���� ����� ��
+        // destCellPos에 도착 못하더라도 제일 가까운 애
         //Vector3Int closestCellPos = startCellPos;
         //int closestH = (dest - pos).sqrMagnitude;
 
-        // ������ �߰� (���� ����)
+        // 시작점 발견 (예약 진행)
         {
             int h = (dest - pos).sqrMagnitude;
             pq.Push(new PQNode() { H = h, CellPos = pos, Depth = 1 });
@@ -241,6 +233,7 @@ public class MapManager
 
         while (pq.Count > 0)
         {
+            // 제일 좋은 후보를 찾는다
             PQNode node = pq.Pop();
             pos = node.CellPos; 
             
@@ -250,6 +243,7 @@ public class MapManager
             if (node.Depth >= maxDepth)
                 break;
 
+            // 상하좌우 등 이동할 수 있는 좌표인지 확인해서 예약
             foreach (Vector3Int delta in _delta)
             {
                 Vector3Int next = pos + delta;
@@ -259,6 +253,7 @@ public class MapManager
 
                 int h = (dest - next).sqrMagnitude;
 
+                // 더 좋은 후보 찾았는지
                 if (best.ContainsKey(next) == false)
                     best[next] = int.MaxValue;
 
@@ -270,7 +265,7 @@ public class MapManager
                 pq.Push(new PQNode() { H = h, CellPos = next, Depth = node.Depth + 1 });
                 parent[next] = pos;
 
-                // ������������ �� ������, �׳��� ���� ���Ҵ� �ĺ� ���
+                // 목적지까지는 못 가더라도, 그나마 제일 좋았던 후보 기억.
                 //if (closestH > h)
                 //{
                 //    closestH = h;
@@ -279,7 +274,7 @@ public class MapManager
             }
         }
 
-        // ���� ����� ��� ã��
+        // 제일 가까운 애라도 찾는다
         //if (parent.ContainsKey(dest) == false)
         //    return CalcCellPathFromParent(parent, closestCellPos);
 
