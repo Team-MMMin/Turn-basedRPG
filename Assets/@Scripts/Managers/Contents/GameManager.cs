@@ -13,28 +13,26 @@ public class GameManager
         set { _gameState = value; }
     }
 
-    ECursorType _cursorType;
-    public ECursorType CursorType
+    EActionState _actionState;
+    public EActionState ActionState
     {
-        get { return _cursorType; }
+        get { return _actionState; }
         set 
         {
-            _cursorType = value;
-            OnCursorChanged?.Invoke(_cursorType);
+            _actionState = value;
+            OnActionStateChanged?.Invoke(_actionState);
         }
     }
 
-    public Vector3 _clickCellPos;
-    public Vector3 ClickCellPos
+    CreatureController _currentUnit;
+    public CreatureController CurrentUnit
     {
-        get { return _clickCellPos; }
+        get { return _currentUnit; }
         set 
         {
-            _clickCellPos = value;
-            OnClickCellPosChanged?.Invoke(_clickCellPos);
+            _currentUnit = value;
         }
     }
 
-    public event Action<ECursorType> OnCursorChanged;
-    public event Action<Vector3> OnClickCellPosChanged;
+    public event Action<EActionState> OnActionStateChanged;
 }

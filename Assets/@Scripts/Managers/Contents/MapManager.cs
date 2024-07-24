@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static Define;
@@ -17,8 +19,8 @@ public class MapManager
     int MinY;
     int MaxY;
 
-    public Vector3Int WorldToCell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); }  // ¿ùµå ÁÂÇ¥¸¦ Å¸ÀÏ¸ÊÀÇ ¼¿ ÁÂÇ¥·Î º¯È¯
-    public Vector3 CellToWorld(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); }    // ¼¿ ÁÂÇ¥¸¦ Å¸ÀÏ¸ÊÀÇ ¿ùµå ÁÂÇ¥·Î º¯È¯  
+    public Vector3Int WorldToCell(Vector3 worldPos) { return CellGrid.WorldToCell(worldPos); }  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ Å¸ï¿½Ï¸ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯
+    public Vector3 CellToWorld(Vector3Int cellPos) { return CellGrid.CellToWorld(cellPos); }    // ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ Å¸ï¿½Ï¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯  
 
     ECellCollisionType[,] _collision;
 
@@ -51,9 +53,9 @@ public class MapManager
     {
         GameObject collision = Util.FindChild(map, tilemap, true);
         if (collision != null)
-            collision.SetActive(false); // °ÔÀÓ ½ÇÇà½Ã Collision ºÒ°¡½ÃÈ­
+            collision.SetActive(false); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Collision ï¿½Ò°ï¿½ï¿½ï¿½È­
 
-        // Collision °ü·Ã ÆÄÀÏ
+        // Collision ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         TextAsset txt = Managers.Resource.Load<TextAsset>($"{mapName}Collision");
         StringReader reader = new StringReader(txt.text);
 
@@ -91,20 +93,19 @@ public class MapManager
     {
         if(CanGo(cellPos) == false) 
             return false;
-        //±âÁ¸À§Ä¡ ¿ÀºêÁ§Æ® »èÁ¦
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         RemoveObject(obj);
-        //ÀÌµ¿ÇÑ »õ À§Ä¡¿¡ ¿ÀºêÁ§Æ® µî·Ï
+        //ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½
         AddObject(obj,cellPos);
-        //¼¿ ÁÂÇ¥ ÀÌµ¿
+        //ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½Ìµï¿½
         obj.SetCellPos(cellPos,forceMove);
-        Debug.Log($"Move To {cellPos}");
         return true;
     }
 
     #region Helpers
     public BaseController GetObject(Vector3Int cellPos)
     {
-        // ¾øÀ¸¸é null
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ null
         _cells.TryGetValue(cellPos, out BaseController value);
         return value;
     }
@@ -119,7 +120,7 @@ public class MapManager
     {
         BaseController prev = GetObject(obj.CellPos);
 
-        // Ã³À½ ½ÅÃ»ÇßÀ¸¸é ÇØ´ç CellPosÀÇ ¿ÀºêÁ§Æ®°¡ º»ÀÎÀÌ ¾Æ´Ò ¼öµµ ÀÖÀ½
+        // Ã³ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ CellPosï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (prev != obj)
             return false;
 
@@ -129,7 +130,7 @@ public class MapManager
 
     public bool AddObject(BaseController obj, Vector3Int cellPos)   
     {
-        // µ¿ÀÏÇÑ À§Ä¡¿¡ µÎ °³ÀÇ ¹°Ã¼°¡ ÀÖÀ¸¸é ¾ÈµÇ±â¿¡ Ã¼Å©
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ÈµÇ±â¿¡ Ã¼Å©
         if (CanGo(cellPos) == false)
         {
             Debug.LogWarning($"AddObject Failed");
@@ -147,34 +148,34 @@ public class MapManager
         return true;
     }
 
-    public bool CanGo(Vector3 worldPos, bool ignoreObjects = false, bool ignoreSemiWall = false)    // SemiWallÀº Ä«¸Þ¶ó¸¸ ÀÌµ¿ÇÒ ¼ö ÀÖ´Â ¿µ¿ª
+    public bool CanGo(Vector3 worldPos, bool ignoreObjects = false, bool ignoreSemiWall = false)    // SemiWallï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½
     {
         return CanGo(WorldToCell(worldPos), ignoreObjects, ignoreSemiWall);
     }
 
     public bool CanGo(Vector3Int cellPos, bool ignoreObjects = false, bool ignoreSemiWall = false)
     {
-        // ¹üÀ§¸¦ ¹þ¾î³µ´ÂÁö È®ÀÎ ÈÄ, ¹þ¾î³µÀ¸¸é false ¹ÝÈ¯
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³µï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½î³µï¿½ï¿½ï¿½ï¿½ false ï¿½ï¿½È¯
         if (cellPos.x < MinX || cellPos.x > MaxX)
             return false;
         if (cellPos.y < MinY || cellPos.y > MaxY)
             return false;
 
-        if (ignoreObjects == false) // ¹°Ã¼°¡ ÀÖ´ÂÁö Ã¼Å©
+        if (ignoreObjects == false) // ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ Ã¼Å©
         {
             BaseController obj = GetObject(cellPos);
-            if (obj != null)    // ¹°Ã¼°¡ ÀÖ´Ù¸é false ¹ÝÈ¯
+            if (obj != null)    // ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ false ï¿½ï¿½È¯
                 return false;
         }
 
-        // ¹°Ã¼°¡ ¾øÀ¸¸é ÇØ´ç À§Ä¡ÀÇ Å¸ÀÔÀÌ NoneÀÏ ¶§ ÀÌµ¿ÇÏµµ·Ï È®ÀÎ
+        // ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ Noneï¿½ï¿½ ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ïµï¿½ï¿½ï¿½ È®ï¿½ï¿½
         int x = cellPos.x - MinX;
         int y = MaxY - cellPos.y;
         ECellCollisionType type = _collision[x, y];
         if (type == ECellCollisionType.None)
             return true;
 
-        if (ignoreSemiWall && type == ECellCollisionType.SemiWall)  // ignoreSemiWallÀÌ true°í typeÀÌ ECellCollisionType³»¿¡ ÀÖ´Â Å¸ÀÔ°ú °°À» ½Ã
+        if (ignoreSemiWall && type == ECellCollisionType.SemiWall)  // ignoreSemiWallï¿½ï¿½ trueï¿½ï¿½ typeï¿½ï¿½ ECellCollisionTypeï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Å¸ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
             return true; 
 
         return false;
@@ -183,6 +184,127 @@ public class MapManager
     public void ClearObjects()
     {
         _cells.Clear();
+    }
+    #endregion
+
+    #region A* PathFinding
+    public struct PQNode : IComparable<PQNode>
+    {
+        public int H;
+        public Vector3Int CellPos;
+        public int Depth;
+
+        public int CompareTo(PQNode other)
+        {
+            if (H == other.H)
+                return 0;
+            return H < other.H ? 1 : -1;
+        }
+    }
+
+    List<Vector3Int> _delta = new List<Vector3Int>()
+    {
+        new Vector3Int(0, 1, 0), // U
+		//new Vector3Int(1, 1, 0), // UR
+		new Vector3Int(1, 0, 0), // R
+		//new Vector3Int(1, -1, 0), // DR
+		new Vector3Int(0, -1, 0), // D
+		//new Vector3Int(-1, -1, 0), // LD
+		new Vector3Int(-1, 0, 0), // L
+		//new Vector3Int(-1, 1, 0), // LU
+    };
+
+    public List<Vector3Int> FindPath(BaseController self, Vector3Int startCellPos, Vector3Int destCellPos, int maxDepth = 10)
+    {
+        // ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Äºï¿½ ï¿½ï¿½ï¿½
+        Dictionary<Vector3Int, int> best = new Dictionary<Vector3Int, int>();
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ëµµ
+        Dictionary<Vector3Int, Vector3Int> parent = new Dictionary<Vector3Int, Vector3Int>();
+
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ßµï¿½ ï¿½Äºï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Äºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¾Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        PriorityQueue<PQNode> pq = new PriorityQueue<PQNode>();
+
+        Vector3Int pos = startCellPos;
+        Vector3Int dest = destCellPos;
+
+        // destCellPosï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+        //Vector3Int closestCellPos = startCellPos;
+        //int closestH = (dest - pos).sqrMagnitude;
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        {
+            int h = (dest - pos).sqrMagnitude;
+            pq.Push(new PQNode() { H = h, CellPos = pos, Depth = 1 });
+            parent[pos] = pos;
+            best[pos] = h;
+        }
+
+        while (pq.Count > 0)
+        {
+            PQNode node = pq.Pop();
+            pos = node.CellPos; 
+            
+            if (pos == dest)
+                break;
+
+            if (node.Depth >= maxDepth)
+                break;
+
+            foreach (Vector3Int delta in _delta)
+            {
+                Vector3Int next = pos + delta;
+
+                if (CanGo(next) == false)
+                    continue;
+
+                int h = (dest - next).sqrMagnitude;
+
+                if (best.ContainsKey(next) == false)
+                    best[next] = int.MaxValue;
+
+                if (best[next] <= h)
+                    continue;
+
+                best[next] = h;
+
+                pq.Push(new PQNode() { H = h, CellPos = next, Depth = node.Depth + 1 });
+                parent[next] = pos;
+
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½×³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò´ï¿½ ï¿½Äºï¿½ ï¿½ï¿½ï¿½
+                //if (closestH > h)
+                //{
+                //    closestH = h;
+                //    closestCellPos = next;
+                //}
+            }
+        }
+
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
+        //if (parent.ContainsKey(dest) == false)
+        //    return CalcCellPathFromParent(parent, closestCellPos);
+
+        return CalcCellPathFromParent(parent, dest);
+    }
+
+    List<Vector3Int> CalcCellPathFromParent(Dictionary<Vector3Int, Vector3Int> parent, Vector3Int dest)
+    {
+        List<Vector3Int> cells = new List<Vector3Int>();
+
+        if (parent.ContainsKey(dest) == false)
+            return cells;
+
+        Vector3Int now = dest;
+
+        while (parent[now] != now)
+        {
+            cells.Add(now);
+            now = parent[now];
+        }
+
+        cells.Add(now);
+        cells.Reverse();
+
+        return cells;
     }
     #endregion
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -23,7 +24,7 @@ public class CursorController : InitBase
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
-        Managers.Game.CursorType = ECursorType.Hand;
+        Managers.Game.ActionState = EActionState.Spawn; // Spawn Test
 
         return true;
     }
@@ -37,19 +38,17 @@ public class CursorController : InitBase
     {
         if (type == EMouseEvent.Click)
         {
-            switch (Managers.Game.CursorType)
+            Vector3 worldPos = GetMouseWorldPosition();
+            transform.position = worldPos;
+            switch (Managers.Game.ActionState)
             {
-                case ECursorType.Move:
-                    // TODO
-                    // 범위 내에서만 커서를 두게 한다.
-
-                    Vector3 pos = GetMouseCellPosition();
-                    transform.position = pos;
-                    Managers.Game.ClickCellPos = pos;
-
-                    Managers.Game.CursorType = ECursorType.Hand;
+                case EActionState.Spawn:
+                    HandleSpawnAction(worldPos);
                     break;
-                case ECursorType.Skill:
+                case EActionState.Move:
+                    HandleMoveAction(worldPos);
+                    break;
+                case EActionState.Skill:
                     break;
             }
         }
@@ -59,16 +58,43 @@ public class CursorController : InitBase
         }
     }
 
-    Vector3 GetMouseCellPosition()
+    Vector3 GetMouseWorldPosition()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0; // 임시적으로 0으로 설정했다
-
+        
         Vector3Int cellPos = Managers.Map.WorldToCell(mousePos);
+        Vector3 worldPos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos);
+        Vector3 MouseWorldPos = worldPos + new Vector3(0, -0.25f, 0);   // 중앙에서 약간 아래로 피벗 보정
 
-        Vector3 cellSize = Managers.Map.CellGrid.cellSize;
-        Vector3 pos = Managers.Map.CellToWorld(cellPos) + new Vector3(cellSize.x / 2 - 1, cellSize.y / 2, 0);
+        return MouseWorldPos;
+    }
 
-        return pos;
+    void HandleSpawnAction(Vector3 worldPos)
+    {
+        if (IsValidPosition(worldPos))
+        {
+            PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
+            Managers.Game.CurrentUnit = playerUnit;
+            Managers.Game.ActionState = EActionState.None;
+        }
+    }
+
+    void HandleMoveAction(Vector3 worldPos)
+    {
+        if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null)
+        {
+            Debug.Log("HandleSpawnAction");
+            //Managers.Game.CurrentUnit.FindPathAndMoveToCellPos(worldPos, Managers.Game.CurrentUnit.Mov);
+            PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
+            if (playerUnit != null)
+                playerUnit.DestPos = worldPos;
+            Managers.Game.ActionState = EActionState.None;
+        }
+    }
+
+    bool IsValidPosition(Vector3 worldPos)
+    {
+        return Managers.Map.CanGo(worldPos);
     }
 }
