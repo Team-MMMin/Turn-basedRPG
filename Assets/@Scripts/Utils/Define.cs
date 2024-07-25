@@ -105,7 +105,7 @@ public static class Define
         Mage,
     }
 
-    public enum ESkillType
+    public enum ESkillID
     {
         None,
         MeleeNormalAttack = 10001,
