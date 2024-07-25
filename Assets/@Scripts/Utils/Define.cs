@@ -105,10 +105,22 @@ public static class Define
         Mage,
     }
 
+    public enum ESkillType
+    {
+        None,
+        MeleeNormalAttack = 10001,
+        MeleeStrongAttack = 10011,
+        MeleeAoEAttack = 10021,
+        MeleeStrongAoEAttack = 10031,
+        NormalMagic = 20001,
+        Magic01 = 20011,
+        Magic02 = 20021,
+        StrongAoEMagic = 20031,
+    }
+
     public const int PLAYER_UNIT_WARRIOR_ID = 201000;
     
     public const int MONSTER_WARRIOR_ID = 202000;
-
 
     public const char MAP_TOOL_WALL = '0';
     public const char MAP_TOOL_NONE = '1';
