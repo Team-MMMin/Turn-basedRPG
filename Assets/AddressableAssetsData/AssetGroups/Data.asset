@@ -59,7 +59,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e62b04fa5d11cc14eaa92615a9815322
+  - m_GUID: 5af377240b8b7234aad982fb4f6b9170
     m_Address: 001Collision
     m_ReadOnly: 0
     m_SerializedLabels:
