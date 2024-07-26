@@ -27,8 +27,10 @@ public abstract class CreatureController : BaseController
     protected SpriteRenderer CreatureSprite;
     protected string SpriteName;
 
-    public CreatureData CreatureData;
-    public ClassData ClassData;
+    public SkillComponent Skills { get; protected set; }
+
+    public CreatureData CreatureData { get; protected set; }
+    public ClassData ClassData { get; protected set; }
 
     #region Stats
     public float Hp { get; set; }
@@ -74,8 +76,9 @@ public abstract class CreatureController : BaseController
         SortingGroup sg = gameObject.GetOrAddComponent<SortingGroup>();
         sg.sortingOrder = SortingLayers.CREATURE;
 
-        // TODO
         // ½ºÅ³
+        Skills = gameObject.GetOrAddComponent<SkillComponent>();
+        Skills.SetInfo(this);
 
         // Stat
         Hp = CreatureData.Hp;
@@ -103,6 +106,7 @@ public abstract class CreatureController : BaseController
                     UpdateMove();
                     break;
                 case ECreatureState.Skill:
+                    UpdateSkill();
                     break;
                 case ECreatureState.Dead: 
                     break;
@@ -113,6 +117,7 @@ public abstract class CreatureController : BaseController
     }
 
     protected virtual void UpdateMove() { }
+    protected virtual void UpdateSkill() { }
 
     #region Map
     public EFindPathResult FindPathAndMoveToCellPos(Vector3 destWorldPos, int maxDepth, bool forceMoveCloser = false)
