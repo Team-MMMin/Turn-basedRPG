@@ -1,12 +1,18 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 using static Define;
 
 public class UI_GameScene : UI_Scene
 {
     #region enum
+    enum GameObjects
+    {
+        SkillScrollView,
+    }
+
     enum Buttons
     {
         MoveButton,
@@ -21,8 +27,10 @@ public class UI_GameScene : UI_Scene
         if (base.Init() == false) 
             return false;
 
+        BindObject(typeof(GameObjects));
         BindButton(typeof(Buttons));
 
+        GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
         BindEvent(GetButton((int)Buttons.MoveButton).gameObject, OnClickMoveButton);
         BindEvent(GetButton((int)Buttons.SkillButton).gameObject, OnClickSkillButton);
         BindEvent(GetButton((int)Buttons.EndTurnButton).gameObject, OnClickEndTurnButton);
@@ -41,6 +49,25 @@ public class UI_GameScene : UI_Scene
     {
         Debug.Log("OnClickSkillButton");
         Managers.Game.ActionState = EActionState.Skill;
+
+        // 현재 유닛의 스킬을 가져온다
+        CreatureController unit = Managers.Game.CurrentUnit;
+        if (unit != null)
+        {
+            GameObject ssv = GetObject((int)GameObjects.SkillScrollView).gameObject;
+            GameObject content = Util.FindChild(ssv, "Content", true);
+            ssv.SetActive(true);
+            
+            for (int i = 0; i < unit.Skills.SkillList.Count; i++)
+            {
+                GameObject go = Managers.Resource.Instantiate("UI_Skill_Item");
+                go.name = unit.Skills.SkillList[i].SkillData.PrefabLabel;
+                go.transform.parent = content.transform;
+
+                TMP_Text txt = Util.FindChild<TMP_Text>(go);
+                txt.text = unit.Skills.SkillList[i].Name;
+            }
+        }
     }
 
     void OnClickEndTurnButton()
@@ -51,7 +78,7 @@ public class UI_GameScene : UI_Scene
 
     void OnClickSettingButton()
     {
-        // ����â �˾� Ȱ��ȭ
+        // 설정창 팝업 활성화
         Debug.Log("OnClickSettingButton");
     }
 }
