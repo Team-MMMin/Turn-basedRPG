@@ -27,6 +27,7 @@ public abstract class CreatureController : BaseController
     protected SpriteRenderer CreatureSprite;
     protected string SpriteName;
 
+    public Vector3Int TargetCellPos { get; set; }
     public SkillComponent Skills { get; protected set; }
 
     public CreatureData CreatureData { get; protected set; }
@@ -117,7 +118,10 @@ public abstract class CreatureController : BaseController
     }
 
     protected virtual void UpdateMove() { }
-    protected virtual void UpdateSkill() { }
+    protected virtual void UpdateSkill() 
+    {
+
+    }
 
     #region Map
     public EFindPathResult FindPathAndMoveToCellPos(Vector3 destWorldPos, int maxDepth, bool forceMoveCloser = false)

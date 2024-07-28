@@ -49,6 +49,7 @@ public class CursorController : InitBase
                     HandleMoveAction(worldPos);
                     break;
                 case EActionState.Skill:
+                    HandleSkillAction(worldPos);
                     break;
             }
         }
@@ -76,8 +77,9 @@ public class CursorController : InitBase
         {
             PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
             Managers.Game.CurrentUnit = playerUnit;
-            Managers.Game.ActionState = EActionState.None;
         }
+        
+        Managers.Game.ActionState = EActionState.None;
     }
 
     void HandleMoveAction(Vector3 worldPos)
@@ -88,8 +90,21 @@ public class CursorController : InitBase
             PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
             if (playerUnit != null)
                 playerUnit.DestPos = worldPos;
-            Managers.Game.ActionState = EActionState.None;
         }
+     
+        Managers.Game.ActionState = EActionState.None;
+    }
+
+    void HandleSkillAction(Vector3 worldPos)
+    {
+        if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null)
+        {
+            // TODO
+            Vector3Int cellPos = Managers.Map.WorldToCell(worldPos);
+            Managers.Game.CurrentUnit.TargetCellPos = cellPos;
+        }
+
+        Managers.Game.ActionState = EActionState.None;
     }
 
     bool IsValidPosition(Vector3 worldPos)

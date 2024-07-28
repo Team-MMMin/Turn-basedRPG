@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,7 +48,16 @@ public class PlayerUnitController : CreatureController
         {
             Debug.Log("UpdateMove");
             // TODO
-            // ÇÃ·¹ÀÌ¾î À¯´ÖÀÇ ¹«ºê Æ÷ÀÎÆ®¸¸Å­ ÀÌµ¿ °¡´ÉÇÑ ±¸¿ª Ç¥½Ã
+            // í”Œë ˆì´ì–´ ìœ ë‹›ì˜ ë¬´ë¸Œ í¬ì¸íŠ¸ë§Œí¼ ì´ë™ ê°€ëŠ¥í•œ êµ¬ì—­ í‘œì‹œ
+        }
+    }
+
+    protected override void UpdateSkill()
+    {
+        if (CreatureState == ECreatureState.Skill)
+        {
+            // TODO
+            // ìŠ¤í‚¬ ë²”ìœ„ í‘œì‹œ
         }
     }
 
@@ -63,6 +72,7 @@ public class PlayerUnitController : CreatureController
                 CreatureState = ECreatureState.Move;
                 break;
             case EActionState.Skill:
+                CreatureState = ECreatureState.Skill;
                 break;
         }
     }
