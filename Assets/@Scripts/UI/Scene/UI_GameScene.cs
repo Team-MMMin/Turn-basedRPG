@@ -11,6 +11,7 @@ public class UI_GameScene : UI_Scene
     enum GameObjects
     {
         SkillScrollView,
+        SkillContent,
     }
 
     enum Buttons
@@ -48,16 +49,16 @@ public class UI_GameScene : UI_Scene
     void OnClickSkillButton()
     {
         Debug.Log("OnClickSkillButton");
+        ClearSkillList();
         Managers.Game.ActionState = EActionState.Skill;
 
         // 현재 유닛의 스킬을 가져온다
         CreatureController unit = Managers.Game.CurrentUnit;
         if (unit != null)
         {
-            GameObject ssv = GetObject((int)GameObjects.SkillScrollView).gameObject;
-            GameObject content = Util.FindChild(ssv, "Content", true);
-            ssv.SetActive(true);
-            
+            GetObject((int)GameObjects.SkillScrollView).SetActive(true);
+            GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
+
             for (int i = 0; i < unit.Skills.SkillList.Count; i++)
             {
                 GameObject go = Managers.Resource.Instantiate("UI_Skill_Item");
@@ -80,5 +81,12 @@ public class UI_GameScene : UI_Scene
     {
         // 설정창 팝업 활성화
         Debug.Log("OnClickSettingButton");
+    }
+
+    void ClearSkillList()
+    {
+        GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
+        foreach (Transform child in content.transform)
+            Destroy(child.gameObject);
     }
 }
