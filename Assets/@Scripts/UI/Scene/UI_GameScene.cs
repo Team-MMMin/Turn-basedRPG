@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static Define;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class UI_GameScene : UI_Scene
 {
@@ -50,7 +53,6 @@ public class UI_GameScene : UI_Scene
     {
         Debug.Log("OnClickSkillButton");
         ClearSkillList();
-        Managers.Game.ActionState = EActionState.Skill;
 
         // 현재 유닛의 스킬을 가져온다
         CreatureController unit = Managers.Game.CurrentUnit;
@@ -59,14 +61,17 @@ public class UI_GameScene : UI_Scene
             GetObject((int)GameObjects.SkillScrollView).SetActive(true);
             GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
 
-            for (int i = 0; i < unit.Skills.SkillList.Count; i++)
+            List<SkillBase> skillList = unit.Skills.SkillList;
+            for (int i = 0; i < skillList.Count; i++)
             {
-                GameObject go = Managers.Resource.Instantiate("UI_Skill_Item");
-                go.name = unit.Skills.SkillList[i].SkillData.PrefabLabel;
-                go.transform.parent = content.transform;
+                GameObject go = Managers.Resource.Instantiate("UI_Skill_Item", content.transform);
+                go.name = skillList[i].SkillData.PrefabLabel;
 
                 TMP_Text txt = Util.FindChild<TMP_Text>(go);
-                txt.text = unit.Skills.SkillList[i].Name;
+                txt.text = skillList[i].Name;
+
+                Button button = go.GetComponent<Button>();
+                button.onClick.AddListener(() => OnClickSkill_ItemButton(go.name));
             }
         }
     }
@@ -88,5 +93,20 @@ public class UI_GameScene : UI_Scene
         GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
         foreach (Transform child in content.transform)
             Destroy(child.gameObject);
+    }
+
+    void OnClickSkill_ItemButton(string name)
+    {
+        foreach (var skill in Managers.Game.CurrentUnit.Skills.SkillList)
+        {
+            if (skill.SkillData.PrefabLabel == name)
+            {
+                gameObject.SetActive(false);
+                Managers.Game.CurrentUnit.CastingSkill = skill;
+
+                Managers.Game.ActionState = EActionState.Skill;
+                break;
+            }
+        }
     }
 }

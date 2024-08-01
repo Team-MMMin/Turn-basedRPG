@@ -28,7 +28,17 @@ public abstract class CreatureController : BaseController
     protected string SpriteName;
 
     public Vector3Int TargetCellPos { get; set; }
+    
     public SkillComponent Skills { get; protected set; }
+    protected SkillBase _castingSkill;
+    public SkillBase CastingSkill
+    {
+        get { return _castingSkill; }
+        set
+        {
+            _castingSkill = value;
+        }
+    }
 
     public CreatureData CreatureData { get; protected set; }
     public ClassData ClassData { get; protected set; }

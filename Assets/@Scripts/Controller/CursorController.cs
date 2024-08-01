@@ -97,7 +97,7 @@ public class CursorController : InitBase
 
     void HandleSkillAction(Vector3 worldPos)
     {
-        if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null)
+        if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null && Managers.Game.CurrentUnit.CastingSkill != null)
         {
             // TODO
             Vector3Int cellPos = Managers.Map.WorldToCell(worldPos);
@@ -105,6 +105,7 @@ public class CursorController : InitBase
         }
 
         Managers.Game.ActionState = EActionState.None;
+        Managers.Game.CurrentUnit.CastingSkill = null;
     }
 
     bool IsValidPosition(Vector3 worldPos)
