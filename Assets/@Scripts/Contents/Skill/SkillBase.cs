@@ -9,6 +9,8 @@ public abstract class SkillBase : InitBase
     public CreatureController Owner { get; private set; }
 
     public Data.SkillData SkillData { get; private set; }
+    public List<Vector3> CastingRange = new List<Vector3>();
+    public List<Vector3> SkillSizeRange = new List<Vector3>();
 
     public string Name { get; protected set; }
     

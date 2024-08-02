@@ -34,5 +34,7 @@ public class GameManager
         }
     }
 
+    public CursorController Cursor;
+
     public event Action<EActionState> OnActionStateChanged;
 }

@@ -19,6 +19,30 @@ public class PlayerUnitController : CreatureController
 
     public event Action OnDestPosChanged;
 
+    public Transform SelectTileRoot 
+    { 
+        get
+        {
+            GameObject tile = GameObject.Find("SelectTile");
+            if (tile == null)
+                return null;
+
+            return tile.transform.parent;
+        }
+    }
+
+    public Transform SkillSizeTileRoot
+    {
+        get
+        {
+            GameObject tile = GameObject.Find("SkillSizeTile");
+            if (tile == null)
+                return null;
+
+            return tile.transform.parent;
+        }
+    }
+
     public override bool Init()
     {
         if (base.Init() == false) 
@@ -29,7 +53,9 @@ public class PlayerUnitController : CreatureController
 
         Managers.Game.OnActionStateChanged -= HandleOnActionStateChanged;
         Managers.Game.OnActionStateChanged += HandleOnActionStateChanged;
-        
+        Managers.Game.Cursor.OnSkillSizeChanged -= ShowSkillSize;
+        Managers.Game.Cursor.OnSkillSizeChanged += ShowSkillSize;
+
         OnDestPosChanged -= HandleOnDestPosChanged;
         OnDestPosChanged += HandleOnDestPosChanged;
 
@@ -40,6 +66,11 @@ public class PlayerUnitController : CreatureController
     public override void SetInfo(int templateID)
     {
         base.SetInfo(templateID);
+    }
+
+    protected override void UpdateIdle()
+    {
+
     }
 
     protected override void UpdateMove()
@@ -55,6 +86,7 @@ public class PlayerUnitController : CreatureController
     protected override void UpdateSkill()
     {
         if (CreatureState == ECreatureState.Skill)
+        if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
             
         }
@@ -66,6 +98,8 @@ public class PlayerUnitController : CreatureController
         {
             case EActionState.None:
                 CreatureState = ECreatureState.Idle;
+                ClearSkillCastingRange();
+                ClearSkillSize();
                 break;
             case EActionState.Move:
                 CreatureState = ECreatureState.Move;
@@ -84,34 +118,53 @@ public class PlayerUnitController : CreatureController
 
     void ShowSkillCastingRange()
     {
-        GameObject SelectTiles = GameObject.Find("SelectTiles");
-        if (SelectTiles == null)
-            SelectTiles = new GameObject() { name = "SelectTiles" }; 
-        
         foreach (Vector3Int delta in CastingSkill.SkillData.CastingRange)
         {
-            Vector3 pos = GetTilePosition(delta);
-            if (IsValidPosition(pos))
+            Vector3 pos = Managers.Map.GetTilePosition(transform.position, delta, new Vector3(0, -0.25f, 0));
+            if (Managers.Map.CanGo(pos))
             {
-                GameObject go = Managers.Resource.Instantiate("SelectTile", SelectTiles.transform);
+                CastingSkill.CastingRange.Add(pos);
+                GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
                 go.transform.position = pos;
             }
         }
     }
 
+    void ShowSkillSize(Vector3 cursorPos)
+    {
+        ClearSkillSize();
+        foreach (Vector3Int delta in CastingSkill.SkillData.SkillSize)
+        {
+            Vector3 pos = Managers.Map.GetTilePosition(cursorPos, delta, new Vector3(0, -0.25f, 0));
+            if (Managers.Map.CanGo(pos))
+            {
+                CastingSkill.SkillSizeRange.Add(delta);
+                GameObject go = Managers.Resource.Instantiate("SkillSizeTile", pooling: true);
+                go.transform.position = pos;
+            }
+        }
+    }
+
+    void ClearSkillCastingRange()
+    {
+        if (SelectTileRoot == null)
+            return;
+
+        foreach (Transform child in SelectTileRoot)
+            Managers.Resource.Destroy(child.gameObject);
+    }
+
+    void ClearSkillSize()
+    {
+        if (SkillSizeTileRoot == null)
+            return;
+
+        foreach (Transform child in SkillSizeTileRoot)
+            Managers.Resource.Destroy(child.gameObject);
+    }
+
     bool IsValidPosition(Vector3 worldPos)
     {
         return Managers.Map.CanGo(worldPos);
-    }
-
-    Vector3 GetTilePosition(Vector3Int delta)
-    {
-        Vector3 worldPos = transform.position;
-        worldPos.z = 0;
-
-        Vector3Int cellPos = Managers.Map.WorldToCell(worldPos) + delta;
-        Vector3 pos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos) + new Vector3(0, -0.25f, 0);    // 중앙에서 약간 아래로 피벗 보정
-
-        return pos;
     }
 }

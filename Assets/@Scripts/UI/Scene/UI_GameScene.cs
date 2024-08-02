@@ -46,6 +46,8 @@ public class UI_GameScene : UI_Scene
     void OnClickMoveButton()
     {
         Debug.Log("OnClickMoveButton");
+        
+        gameObject.SetActive(false);
         Managers.Game.ActionState = EActionState.Move;
     }
 
