@@ -20,3 +20,13 @@ public class MeleeNormalAttack : SkillBase
         Name = "Melee Normal Attack";
     }
 
+    public override bool DoSkill()
+    {
+        if (base.DoSkill() == false) 
+            return false;
+
+        Debug.Log("MeleeNormalAttack");
+
+        return true;
+    }
+}

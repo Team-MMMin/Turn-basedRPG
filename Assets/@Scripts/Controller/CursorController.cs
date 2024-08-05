@@ -51,16 +51,13 @@ public class CursorController : InitBase
 
             if (IsValidRange(worldPos, castingRange))
             {
-                transform.position = worldPos;
                 Managers.Game.CursorPos = worldPos;
-                return;
             }
             else
             {
                 PlayerUnitController unit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
                 if (unit != null)
                     unit.ClearSkillSize();
-                return;
             }
         }
 
@@ -116,7 +113,10 @@ public class CursorController : InitBase
             transform.position = worldPos;
             PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
             if (playerUnit != null)
+            {
                 playerUnit.DestPos = worldPos;
+                playerUnit.CreatureState = ECreatureState.Move;
+            }
         }
      
         Managers.Game.ActionState = EActionState.None;
@@ -135,8 +135,12 @@ public class CursorController : InitBase
                 transform.position = worldPos;
                 Vector3Int cellPos = Managers.Map.WorldToCell(worldPos);
                 Managers.Game.CurrentUnit.TargetCellPos = cellPos;
+                
+                PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
+                if (playerUnit != null)
+                    playerUnit.CreatureState = ECreatureState.Skill;
+
                 Managers.Game.ActionState = EActionState.None;
-                Managers.Game.CurrentUnit.CastingSkill = null;
             }
             else
             {
@@ -152,11 +156,11 @@ public class CursorController : InitBase
         return Managers.Map.CanGo(worldPos, ignoreObjects);
     }
 
-    bool IsValidRange(Vector3 worldPos, List<Vector3> ranges)
+    bool IsValidRange(Vector3 worldPos, List<Vector3> range)
     {
-        foreach (var range in ranges)
+        foreach (var pos in range)
         {
-            if (worldPos == range)
+            if (worldPos == pos)
                 return true;
         }
 

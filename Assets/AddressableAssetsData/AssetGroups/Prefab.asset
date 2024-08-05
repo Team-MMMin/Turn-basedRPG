@@ -36,13 +36,13 @@ MonoBehaviour:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5710042457d0240439c30b15083004e1
-    m_Address: SelectTile
+    m_Address: RangeTile
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0e51d48acb2d96b418ac2de909742a66
-    m_Address: SkillSizeTile
+    m_Address: SelectTile
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad

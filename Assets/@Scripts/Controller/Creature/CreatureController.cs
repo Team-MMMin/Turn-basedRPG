@@ -27,7 +27,16 @@ public abstract class CreatureController : BaseController
     protected SpriteRenderer CreatureSprite;
     protected string SpriteName;
 
-    public Vector3Int TargetCellPos { get; set; }
+    Vector3Int _targetCellPos;
+    public Vector3Int TargetCellPos 
+    {
+        get { return _targetCellPos; }
+        set
+        {
+            _targetCellPos = value;
+            CastingSkill.DoSkill();
+        }
+    }
     
     public SkillComponent Skills { get; protected set; }
     protected SkillBase _castingSkill;
@@ -112,6 +121,7 @@ public abstract class CreatureController : BaseController
             switch (CreatureState) 
             {
                 case ECreatureState.Idle:
+                    UpdateIdle();
                     break;
                 case ECreatureState.Move:
                     UpdateMove();
@@ -127,6 +137,7 @@ public abstract class CreatureController : BaseController
         }
     }
 
+    protected virtual void UpdateIdle() { }
     protected virtual void UpdateMove() { }
     protected virtual void UpdateSkill() 
     {

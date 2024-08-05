@@ -11,7 +11,7 @@ public class PlayerUnitController : CreatureController
     {
         get { return _destPos; }
         set 
-        { 
+        {
             _destPos = value;
             OnDestPosChanged?.Invoke();
         }
@@ -19,11 +19,11 @@ public class PlayerUnitController : CreatureController
 
     public event Action OnDestPosChanged;
 
-    public Transform SelectTileRoot 
+    public Transform RangeTile
     { 
         get
         {
-            GameObject tile = GameObject.Find("SelectTile");
+            GameObject tile = GameObject.Find("RangeTile");
             if (tile == null)
                 return null;
 
@@ -31,11 +31,11 @@ public class PlayerUnitController : CreatureController
         }
     }
 
-    public Transform SkillSizeTileRoot
+    public Transform SelectTile
     {
         get
         {
-            GameObject tile = GameObject.Find("SkillSizeTile");
+            GameObject tile = GameObject.Find("SelectTile");
             if (tile == null)
                 return null;
 
@@ -79,7 +79,7 @@ public class PlayerUnitController : CreatureController
         {
             Debug.Log("UpdateMove");
             // TODO
-            // 플레이어 유닛의 무브 포인트만큼 이동 가능한 구역 표시
+            // 이동을 완료했다면
         }
     }
 
@@ -87,7 +87,7 @@ public class PlayerUnitController : CreatureController
     {
         if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
-            
+            Debug.Log("UpdateSkill");
         }
     }
 
@@ -96,15 +96,12 @@ public class PlayerUnitController : CreatureController
         switch (actionState)
         {
             case EActionState.None:
-                CreatureState = ECreatureState.Idle;
                 ClearSkillCastingRange();
                 ClearSkillSize();
                 break;
             case EActionState.Move:
-                CreatureState = ECreatureState.Move;
                 break;
             case EActionState.Skill:
-                CreatureState = ECreatureState.Skill;
                 ShowSkillCastingRange();
                 break;
         }
@@ -123,7 +120,7 @@ public class PlayerUnitController : CreatureController
             if (Managers.Map.CanGo(pos))
             {
                 CastingSkill.CastingRange.Add(pos);
-                GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
+                GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
                 go.transform.position = pos;
             }
         }
@@ -138,7 +135,7 @@ public class PlayerUnitController : CreatureController
             if (Managers.Map.CanGo(pos))
             {
                 CastingSkill.SkillSizeRange.Add(delta);
-                GameObject go = Managers.Resource.Instantiate("SkillSizeTile", pooling: true);
+                GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
                 go.transform.position = pos;
             }
         }
@@ -146,19 +143,19 @@ public class PlayerUnitController : CreatureController
 
     void ClearSkillCastingRange()
     {
-        if (SelectTileRoot == null)
+        if (RangeTile == null)
             return;
 
-        foreach (Transform child in SelectTileRoot)
+        foreach (Transform child in RangeTile)
             Managers.Resource.Destroy(child.gameObject);
     }
 
     public void ClearSkillSize()
     {
-        if (SkillSizeTileRoot == null)
+        if (SelectTile == null)
             return;
 
-        foreach (Transform child in SkillSizeTileRoot)
+        foreach (Transform child in SelectTile)
             Managers.Resource.Destroy(child.gameObject);
     }
 
