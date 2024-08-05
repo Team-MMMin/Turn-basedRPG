@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -13,8 +13,6 @@ public class CursorController : InitBase
     SpriteRenderer _sprite;
     public float Speed { get; set; } = 0.5f;
 
-    public Action<Vector3> OnSkillSizeChanged;
-
     public override bool Init()
     {
         if (base.Init() == false)
@@ -26,8 +24,6 @@ public class CursorController : InitBase
 
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
-
-        Managers.Game.Cursor = this;
 
         Managers.Game.ActionState = EActionState.Spawn; // Spawn Test
 
@@ -46,20 +42,25 @@ public class CursorController : InitBase
         if (IsValidPosition(worldPos, true) == false)
             return;
 
+        // 커서가 캐스팅 범위 내에 있는지 확인한다
         if (Managers.Game.ActionState == EActionState.Skill)
         {
             List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
             if (castingRange == null)
                 return;
-            
-            foreach (var range in castingRange)
+
+            if (IsValidRange(worldPos, castingRange))
             {
-                if (worldPos == range)
-                {
-                    transform.position = worldPos;
-                    OnSkillSizeChanged?.Invoke(worldPos);
-                    return;
-                }
+                transform.position = worldPos;
+                Managers.Game.CursorPos = worldPos;
+                return;
+            }
+            else
+            {
+                PlayerUnitController unit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
+                if (unit != null)
+                    unit.ClearSkillSize();
+                return;
             }
         }
 
@@ -125,17 +126,40 @@ public class CursorController : InitBase
     {
         if (IsValidPosition(worldPos, true) && Managers.Game.CurrentUnit != null && Managers.Game.CurrentUnit.CastingSkill != null)
         {
-            transform.position = worldPos;
-            Vector3Int cellPos = Managers.Map.WorldToCell(worldPos);
-            Managers.Game.CurrentUnit.TargetCellPos = cellPos;
-        }
+            List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
+            if (castingRange == null)
+                return;
 
-        Managers.Game.ActionState = EActionState.None;
-        Managers.Game.CurrentUnit.CastingSkill = null;
+            if (IsValidRange(worldPos, castingRange))
+            {
+                transform.position = worldPos;
+                Vector3Int cellPos = Managers.Map.WorldToCell(worldPos);
+                Managers.Game.CurrentUnit.TargetCellPos = cellPos;
+                Managers.Game.ActionState = EActionState.None;
+                Managers.Game.CurrentUnit.CastingSkill = null;
+            }
+            else
+            {
+                Debug.Log("캐스팅 범위내에서 스킬을 사용해주세요.");
+                transform.position = worldPos;
+                return;
+            }
+        }
     }
 
     bool IsValidPosition(Vector3 worldPos, bool ignoreObjects = false)
     {
         return Managers.Map.CanGo(worldPos, ignoreObjects);
+    }
+
+    bool IsValidRange(Vector3 worldPos, List<Vector3> ranges)
+    {
+        foreach (var range in ranges)
+        {
+            if (worldPos == range)
+                return true;
+        }
+
+        return false;
     }
 }

@@ -53,8 +53,8 @@ public class PlayerUnitController : CreatureController
 
         Managers.Game.OnActionStateChanged -= HandleOnActionStateChanged;
         Managers.Game.OnActionStateChanged += HandleOnActionStateChanged;
-        Managers.Game.Cursor.OnSkillSizeChanged -= ShowSkillSize;
-        Managers.Game.Cursor.OnSkillSizeChanged += ShowSkillSize;
+        Managers.Game.OnCursorPosChanged -= ShowSkillSize;
+        Managers.Game.OnCursorPosChanged += ShowSkillSize;
 
         OnDestPosChanged -= HandleOnDestPosChanged;
         OnDestPosChanged += HandleOnDestPosChanged;
@@ -85,7 +85,6 @@ public class PlayerUnitController : CreatureController
 
     protected override void UpdateSkill()
     {
-        if (CreatureState == ECreatureState.Skill)
         if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
             
@@ -154,7 +153,7 @@ public class PlayerUnitController : CreatureController
             Managers.Resource.Destroy(child.gameObject);
     }
 
-    void ClearSkillSize()
+    public void ClearSkillSize()
     {
         if (SkillSizeTileRoot == null)
             return;

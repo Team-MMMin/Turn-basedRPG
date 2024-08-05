@@ -34,7 +34,17 @@ public class GameManager
         }
     }
 
-    public CursorController Cursor;
+    Vector3 _cursorPos;
+    public Vector3 CursorPos
+    {
+        get { return _cursorPos; }
+        set 
+        {
+            _cursorPos = value;
+            OnCursorPosChanged?.Invoke(_cursorPos);
+        }
+    }
 
     public event Action<EActionState> OnActionStateChanged;
+    public event Action<Vector3> OnCursorPosChanged;
 }
