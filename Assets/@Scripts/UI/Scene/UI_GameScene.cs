@@ -105,7 +105,6 @@ public class UI_GameScene : UI_Scene
             {
                 gameObject.SetActive(false);
                 Managers.Game.CurrentUnit.CastingSkill = skill;
-
                 Managers.Game.ActionState = EActionState.Skill;
                 break;
             }

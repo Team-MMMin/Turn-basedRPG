@@ -1,3 +1,4 @@
+using Data;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -26,6 +27,19 @@ public class MeleeNormalAttack : SkillBase
             return false;
 
         Debug.Log("MeleeNormalAttack");
+
+        foreach (var pos in SkillSizeRange)
+        {
+            BaseController obj = Managers.Map.GetObject(pos);
+            if (obj == null)
+                continue;
+
+            CreatureController creature = obj.GetComponent<CreatureController>();
+            if (creature == null)
+                continue;
+
+            creature.Hp -= SkillData.DamageMultiplier;
+        }
 
         return true;
     }

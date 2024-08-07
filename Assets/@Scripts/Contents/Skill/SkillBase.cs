@@ -9,8 +9,8 @@ public abstract class SkillBase : InitBase
     public CreatureController Owner { get; private set; }
 
     public Data.SkillData SkillData { get; private set; }
-    public List<Vector3> CastingRange = new List<Vector3>();
-    public List<Vector3> SkillSizeRange = new List<Vector3>();
+    public List<Vector3> CastingRange { get; set; } = new List<Vector3>();
+    public List<Vector3> SkillSizeRange  { get; set; } = new List<Vector3>();
 
     public string Name { get; protected set; }
     
@@ -40,7 +40,10 @@ public abstract class SkillBase : InitBase
     public virtual bool DoSkill()
     {
         if (Owner.Mp >= SkillData.ManaCost)
+        {
+            Owner.Mp -= SkillData.ManaCost;
             return true;
+        }
 
         return false;
     }

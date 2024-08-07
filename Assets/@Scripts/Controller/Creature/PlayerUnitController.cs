@@ -77,9 +77,9 @@ public class PlayerUnitController : CreatureController
     {
         if (CreatureState == ECreatureState.Move)
         {
-            Debug.Log("UpdateMove");
+            //Debug.Log("UpdateMove");
             // TODO
-            // 이동을 완료했다면
+            // 이동을 완료할 때까지 애니메이션 재생
         }
     }
 
@@ -87,7 +87,7 @@ public class PlayerUnitController : CreatureController
     {
         if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
-            Debug.Log("UpdateSkill");
+            //Debug.Log("UpdateSkill");
         }
     }
 
@@ -114,10 +114,17 @@ public class PlayerUnitController : CreatureController
 
     void ShowSkillCastingRange()
     {
+        Debug.Log(CastingSkill);
+        if (CastingSkill == null)
+        {
+            Debug.Log("CastingSkill을 할당해주세요.");
+            return;
+        }
+
         foreach (Vector3Int delta in CastingSkill.SkillData.CastingRange)
         {
             Vector3 pos = Managers.Map.GetTilePosition(transform.position, delta, new Vector3(0, -0.25f, 0));
-            if (Managers.Map.CanGo(pos))
+            if (Managers.Map.CanGo(pos, true))
             {
                 CastingSkill.CastingRange.Add(pos);
                 GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
@@ -129,12 +136,18 @@ public class PlayerUnitController : CreatureController
     void ShowSkillSize(Vector3 cursorPos)
     {
         ClearSkillSize();
+        if (CastingSkill == null)
+        {
+            Debug.Log("CastingSkill을 할당해주세요.");
+            return;
+        }
+
         foreach (Vector3Int delta in CastingSkill.SkillData.SkillSize)
         {
             Vector3 pos = Managers.Map.GetTilePosition(cursorPos, delta, new Vector3(0, -0.25f, 0));
-            if (Managers.Map.CanGo(pos))
+            if (Managers.Map.CanGo(pos, true))
             {
-                CastingSkill.SkillSizeRange.Add(delta);
+                CastingSkill.SkillSizeRange.Add(pos);
                 GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
                 go.transform.position = pos;
             }
@@ -148,6 +161,9 @@ public class PlayerUnitController : CreatureController
 
         foreach (Transform child in RangeTile)
             Managers.Resource.Destroy(child.gameObject);
+
+        if (CastingSkill != null)
+            CastingSkill.CastingRange.Clear();
     }
 
     public void ClearSkillSize()
@@ -157,6 +173,9 @@ public class PlayerUnitController : CreatureController
 
         foreach (Transform child in SelectTile)
             Managers.Resource.Destroy(child.gameObject);
+
+        if (CastingSkill != null)
+            CastingSkill.SkillSizeRange.Clear();
     }
 
     bool IsValidPosition(Vector3 worldPos)

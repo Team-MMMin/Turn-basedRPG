@@ -45,6 +45,9 @@ public class CursorController : InitBase
         // 커서가 캐스팅 범위 내에 있는지 확인한다
         if (Managers.Game.ActionState == EActionState.Skill)
         {
+            if (worldPos == Managers.Game.CursorPos)
+                return;
+
             List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
             if (castingRange == null)
                 return;
@@ -134,11 +137,13 @@ public class CursorController : InitBase
             {
                 transform.position = worldPos;
                 Vector3Int cellPos = Managers.Map.WorldToCell(worldPos);
-                Managers.Game.CurrentUnit.TargetCellPos = cellPos;
                 
                 PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
                 if (playerUnit != null)
+                {
                     playerUnit.CreatureState = ECreatureState.Skill;
+                    playerUnit.TargetCellPos = cellPos;
+                }
 
                 Managers.Game.ActionState = EActionState.None;
             }
