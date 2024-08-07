@@ -61,7 +61,11 @@ public class PlayerUnitController : CreatureController
         if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
             Debug.Log("UpdateSkill");
+            
             CastingSkill.DoSkill();
+            CastingSkill.ClearCastingRange();
+            CastingSkill.ClearSizeRange();
+            
             CreatureState = ECreatureState.None;
         }
     }

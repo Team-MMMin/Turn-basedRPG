@@ -1,4 +1,4 @@
-using Data;
+﻿using Data;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -39,6 +39,7 @@ public class MeleeNormalAttack : SkillBase
                 continue;
 
             creature.Hp -= SkillData.DamageMultiplier;
+            Debug.Log($"스킬에 맞은 {creature.name}의 HP가 {creature.Hp}로 됐다.");
         }
 
         return true;

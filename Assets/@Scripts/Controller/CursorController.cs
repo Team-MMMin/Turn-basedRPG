@@ -133,14 +133,7 @@ public class CursorController : InitBase
             if (IsValidRange(worldPos, castingRange))
             {
                 transform.position = worldPos;
-                PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
-                if (playerUnit != null)
-                {
-                    playerUnit.CastingSkill.ClearCastingRange();
-                    playerUnit.CastingSkill.ClearSizeRange();
-                    playerUnit.CreatureState = ECreatureState.Skill;
-                }
-
+                Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
                 Managers.Game.ActionState = EActionState.None;
             }
             else
