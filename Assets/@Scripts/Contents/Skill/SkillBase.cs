@@ -61,8 +61,17 @@ public abstract class SkillBase : InitBase
             return SkillData;
 
         SkillData = skillData;
-        OnChangedSkillData();
         return SkillData;
+    }
+
+    public virtual void OnChangedSkillData() 
+    {
+
+    }
+
+    public virtual void LevelUp()
+    {
+
     }
 
     public void ShowCastingRange()
