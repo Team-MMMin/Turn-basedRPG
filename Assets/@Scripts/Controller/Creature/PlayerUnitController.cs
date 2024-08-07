@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +11,7 @@ public class PlayerUnitController : CreatureController
     {
         get { return _destPos; }
         set 
-        { 
+        {
             _destPos = value;
             OnDestPosChanged?.Invoke();
         }
@@ -27,9 +27,6 @@ public class PlayerUnitController : CreatureController
         CreatureType = ECreatureType.PlayerUnit;
         CreatureState = ECreatureState.Idle;
 
-        Managers.Game.OnActionStateChanged -= HandleOnActionStateChanged;
-        Managers.Game.OnActionStateChanged += HandleOnActionStateChanged;
-        
         OnDestPosChanged -= HandleOnDestPosChanged;
         OnDestPosChanged += HandleOnDestPosChanged;
 
@@ -42,28 +39,34 @@ public class PlayerUnitController : CreatureController
         base.SetInfo(templateID);
     }
 
+    protected override void UpdateIdle()
+    {
+
+    }
+
     protected override void UpdateMove()
     {
         if (CreatureState == ECreatureState.Move)
         {
             Debug.Log("UpdateMove");
             // TODO
-            // ÇÃ·¹ÀÌ¾î À¯´ÖÀÇ ¹«ºê Æ÷ÀÎÆ®¸¸Å­ ÀÌµ¿ °¡´ÉÇÑ ±¸¿ª Ç¥½Ã
+            // ì´ë™ì„ ì™„ë£Œí•  ë•Œê¹Œì§€ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
+
+            CreatureState = ECreatureState.None;
         }
     }
 
-    void HandleOnActionStateChanged(EActionState actionState)
+    protected override void UpdateSkill()
     {
-        switch (actionState)
+        if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
-            case EActionState.None:
-                CreatureState = ECreatureState.Idle;
-                break;
-            case EActionState.Move:
-                CreatureState = ECreatureState.Move;
-                break;
-            case EActionState.Skill:
-                break;
+            Debug.Log("UpdateSkill");
+            
+            CastingSkill.DoSkill();
+            CastingSkill.ClearCastingRange();
+            CastingSkill.ClearSizeRange();
+            
+            CreatureState = ECreatureState.None;
         }
     }
 

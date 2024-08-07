@@ -26,9 +26,21 @@ public abstract class CreatureController : BaseController
     [SerializeField]
     protected SpriteRenderer CreatureSprite;
     protected string SpriteName;
+    
+    public SkillComponent Skills { get; protected set; }
+    protected SkillBase _castingSkill;
+    public SkillBase CastingSkill
+    {
+        get { return _castingSkill; }
+        set
+        {
+            _castingSkill = value;
+            _castingSkill.ShowCastingRange();
+        }
+    }
 
-    public CreatureData CreatureData;
-    public ClassData ClassData;
+    public CreatureData CreatureData { get; protected set; }
+    public ClassData ClassData { get; protected set; }
 
     #region Stats
     public float Hp { get; set; }
@@ -74,8 +86,9 @@ public abstract class CreatureController : BaseController
         SortingGroup sg = gameObject.GetOrAddComponent<SortingGroup>();
         sg.sortingOrder = SortingLayers.CREATURE;
 
-        // TODO
         // ½ºÅ³
+        Skills = gameObject.GetOrAddComponent<SkillComponent>();
+        Skills.SetInfo(this);
 
         // Stat
         Hp = CreatureData.Hp;
@@ -98,11 +111,13 @@ public abstract class CreatureController : BaseController
             switch (CreatureState) 
             {
                 case ECreatureState.Idle:
+                    UpdateIdle();
                     break;
                 case ECreatureState.Move:
                     UpdateMove();
                     break;
                 case ECreatureState.Skill:
+                    UpdateSkill();
                     break;
                 case ECreatureState.Dead: 
                     break;
@@ -112,7 +127,12 @@ public abstract class CreatureController : BaseController
         }
     }
 
+    protected virtual void UpdateIdle() { }
     protected virtual void UpdateMove() { }
+    protected virtual void UpdateSkill() 
+    {
+
+    }
 
     #region Map
     public EFindPathResult FindPathAndMoveToCellPos(Vector3 destWorldPos, int maxDepth, bool forceMoveCloser = false)

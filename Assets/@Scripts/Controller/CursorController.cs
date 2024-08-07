@@ -1,3 +1,4 @@
+Ôªøusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -32,6 +33,35 @@ public class CursorController : InitBase
     void Update()
     {
         Managers.Input.OnUpdate();
+        UpdateCursorPosition();
+    }
+
+    void UpdateCursorPosition()
+    {
+        Vector3 worldPos = GetMouseWorldPosition();
+        if (IsValidPosition(worldPos, true) == false)
+            return;
+
+        // Ïª§ÏÑúÍ∞Ä Ï∫êÏä§ÌåÖ Î≤îÏúÑ ÎÇ¥Ïóê ÏûàÎäîÏßÄ ÌôïÏù∏ÌïúÎã§
+        if (Managers.Game.ActionState == EActionState.Skill)
+        {
+            if (worldPos == Managers.Game.CursorPos)
+                return;
+
+            List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
+            if (castingRange == null)
+                return;
+
+            if (IsValidRange(worldPos, castingRange))
+            {
+                Managers.Game.CursorPos = worldPos;
+                Managers.Game.CurrentUnit.CastingSkill.ShowSizeRange();
+            }
+            else
+                Managers.Game.CurrentUnit.CastingSkill.ClearSizeRange();
+        }
+
+        transform.position = worldPos;
     }
 
     void OnMouseEvent(EMouseEvent type)
@@ -39,7 +69,6 @@ public class CursorController : InitBase
         if (type == EMouseEvent.Click)
         {
             Vector3 worldPos = GetMouseWorldPosition();
-            transform.position = worldPos;
             switch (Managers.Game.ActionState)
             {
                 case EActionState.Spawn:
@@ -49,6 +78,7 @@ public class CursorController : InitBase
                     HandleMoveAction(worldPos);
                     break;
                 case EActionState.Skill:
+                    HandleSkillAction(worldPos);
                     break;
             }
         }
@@ -60,41 +90,74 @@ public class CursorController : InitBase
 
     Vector3 GetMouseWorldPosition()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0; // ¿”Ω√¿˚¿∏∑Œ 0¿∏∑Œ º≥¡§«ﬂ¥Ÿ
-        
-        Vector3Int cellPos = Managers.Map.WorldToCell(mousePos);
-        Vector3 worldPos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos);
-        Vector3 MouseWorldPos = worldPos + new Vector3(0, -0.25f, 0);   // ¡ﬂæ”ø°º≠ æ‡∞£ æ∆∑°∑Œ ««π˛ ∫∏¡§
-
-        return MouseWorldPos;
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
+        return Managers.Map.GetTilePosition(mousePos, Vector3Int.zero, new Vector3(0, -0.25f, 0));
     }
 
     void HandleSpawnAction(Vector3 worldPos)
     {
         if (IsValidPosition(worldPos))
         {
+            transform.position = worldPos;
             PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
             Managers.Game.CurrentUnit = playerUnit;
-            Managers.Game.ActionState = EActionState.None;
         }
+        
+        Managers.Game.ActionState = EActionState.None;
     }
 
     void HandleMoveAction(Vector3 worldPos)
     {
         if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null)
         {
-            Debug.Log("HandleSpawnAction");
-            //Managers.Game.CurrentUnit.FindPathAndMoveToCellPos(worldPos, Managers.Game.CurrentUnit.Mov);
+            transform.position = worldPos;
             PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
             if (playerUnit != null)
+            {
                 playerUnit.DestPos = worldPos;
-            Managers.Game.ActionState = EActionState.None;
+                playerUnit.CreatureState = ECreatureState.Move;
+            }
+        }
+     
+        Managers.Game.ActionState = EActionState.None;
+    }
+
+    void HandleSkillAction(Vector3 worldPos)
+    {
+        if (IsValidPosition(worldPos, true) && Managers.Game.CurrentUnit != null && Managers.Game.CurrentUnit.CastingSkill != null)
+        {
+            List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
+            if (castingRange == null)
+                return;
+
+            if (IsValidRange(worldPos, castingRange))
+            {
+                transform.position = worldPos;
+                Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
+                Managers.Game.ActionState = EActionState.None;
+            }
+            else
+            {
+                Debug.Log("Ï∫êÏä§ÌåÖ Î≤îÏúÑÎÇ¥ÏóêÏÑú Ïä§ÌÇ¨ÏùÑ ÏÇ¨Ïö©Ìï¥Ï£ºÏÑ∏Ïöî.");
+                transform.position = worldPos;
+                return;
+            }
         }
     }
 
-    bool IsValidPosition(Vector3 worldPos)
+    bool IsValidPosition(Vector3 worldPos, bool ignoreObjects = false)
     {
-        return Managers.Map.CanGo(worldPos);
+        return Managers.Map.CanGo(worldPos, ignoreObjects);
+    }
+
+    bool IsValidRange(Vector3 worldPos, List<Vector3> range)
+    {
+        foreach (var pos in range)
+        {
+            if (worldPos == pos)
+                return true;
+        }
+
+        return false;
     }
 }

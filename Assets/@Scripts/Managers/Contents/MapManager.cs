@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -86,6 +86,15 @@ public class MapManager
         }
     }
 
+    public Vector3 GetTilePosition(Vector3 worldPos, Vector3Int delta, Vector3 pivotOffset)
+    {
+        worldPos.z = 0;
+        Vector3Int cellPos = Managers.Map.WorldToCell(worldPos) + delta;
+        worldPos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos) + pivotOffset;    // 중앙에서 약간 아래로 피벗 보정
+
+        return worldPos;
+    }
+
     public bool MoveTo(CreatureController obj,Vector3Int cellPos, bool forceMove = false)
     {
         if (CanGo(cellPos) == false) 
@@ -95,7 +104,7 @@ public class MapManager
 
         AddObject(obj,cellPos);
 
-        obj.SetCellPos(cellPos,forceMove);
+        obj.SetCellPos(cellPos, forceMove);
         return true;
     }
 
@@ -240,7 +249,7 @@ public class MapManager
             if (pos == dest)
                 break;
 
-            if (node.Depth >= maxDepth)
+            if (node.Depth > maxDepth)
                 break;
 
             // 상하좌우 등 이동할 수 있는 좌표인지 확인해서 예약
