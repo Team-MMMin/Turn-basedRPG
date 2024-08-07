@@ -65,4 +65,56 @@ public abstract class SkillBase : InitBase
         return SkillData;
     }
 
+    public void ShowCastingRange()
+    {
+        foreach (Vector3Int delta in SkillData.CastingRange)
+        {
+            Vector3 pos = Managers.Map.GetTilePosition(transform.position, delta, new Vector3(0, -0.25f, 0));
+            if (Managers.Map.CanGo(pos, true))
+            {
+                CastingRange.Add(pos);
+                GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
+                go.transform.position = pos;
+            }
+        }
+    }
+
+    public void ShowSizeRange()
+    {
+        ClearSizeRange();
+        foreach (Vector3Int delta in SkillData.SkillSize)
+        {
+            Vector3 pos = Managers.Map.GetTilePosition(Managers.Game.CursorPos, delta, new Vector3(0, -0.25f, 0));
+            if (Managers.Map.CanGo(pos, true))
+            {
+                SkillSizeRange.Add(pos);
+                GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
+                go.transform.position = pos;
+            }
+        }
+    }
+
+    public void ClearCastingRange()
+    {
+        GameObject tile = GameObject.Find("RangeTile");
+        if (tile == null)
+            return;
+
+        foreach (Transform child in tile.transform.parent)
+            Managers.Resource.Destroy(child.gameObject);
+
+        CastingRange.Clear();
+    }
+
+    public void ClearSizeRange()
+    {
+        GameObject tile = GameObject.Find("SelectTile");
+        if (tile == null)
+            return;
+
+        foreach (Transform child in tile.transform.parent)
+            Managers.Resource.Destroy(child.gameObject);
+
+        SkillSizeRange.Clear();
+    }
 }
