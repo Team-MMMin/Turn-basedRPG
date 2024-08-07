@@ -55,13 +55,10 @@ public class CursorController : InitBase
             if (IsValidRange(worldPos, castingRange))
             {
                 Managers.Game.CursorPos = worldPos;
+                Managers.Game.CurrentUnit.CastingSkill.ShowSizeRange();
             }
             else
-            {
-                PlayerUnitController unit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
-                if (unit != null)
-                    unit.ClearSkillSize();
-            }
+                Managers.Game.CurrentUnit.CastingSkill.ClearSizeRange();
         }
 
         transform.position = worldPos;
@@ -136,13 +133,12 @@ public class CursorController : InitBase
             if (IsValidRange(worldPos, castingRange))
             {
                 transform.position = worldPos;
-                Vector3Int cellPos = Managers.Map.WorldToCell(worldPos);
-                
                 PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
                 if (playerUnit != null)
                 {
+                    playerUnit.CastingSkill.ClearCastingRange();
+                    playerUnit.CastingSkill.ClearSizeRange();
                     playerUnit.CreatureState = ECreatureState.Skill;
-                    playerUnit.TargetCellPos = cellPos;
                 }
 
                 Managers.Game.ActionState = EActionState.None;

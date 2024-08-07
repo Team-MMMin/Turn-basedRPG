@@ -41,10 +41,8 @@ public class GameManager
         set 
         {
             _cursorPos = value;
-            OnCursorPosChanged?.Invoke(_cursorPos);
         }
     }
 
     public event Action<EActionState> OnActionStateChanged;
-    public event Action<Vector3> OnCursorPosChanged;
 }

@@ -26,17 +26,6 @@ public abstract class CreatureController : BaseController
     [SerializeField]
     protected SpriteRenderer CreatureSprite;
     protected string SpriteName;
-
-    Vector3Int _targetCellPos;
-    public Vector3Int TargetCellPos 
-    {
-        get { return _targetCellPos; }
-        set
-        {
-            _targetCellPos = value;
-            CastingSkill.DoSkill();
-        }
-    }
     
     public SkillComponent Skills { get; protected set; }
     protected SkillBase _castingSkill;
@@ -46,6 +35,7 @@ public abstract class CreatureController : BaseController
         set
         {
             _castingSkill = value;
+            _castingSkill.ShowCastingRange();
         }
     }
 

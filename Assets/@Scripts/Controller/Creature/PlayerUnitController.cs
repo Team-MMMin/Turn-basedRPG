@@ -19,30 +19,6 @@ public class PlayerUnitController : CreatureController
 
     public event Action OnDestPosChanged;
 
-    public Transform RangeTile
-    { 
-        get
-        {
-            GameObject tile = GameObject.Find("RangeTile");
-            if (tile == null)
-                return null;
-
-            return tile.transform.parent;
-        }
-    }
-
-    public Transform SelectTile
-    {
-        get
-        {
-            GameObject tile = GameObject.Find("SelectTile");
-            if (tile == null)
-                return null;
-
-            return tile.transform.parent;
-        }
-    }
-
     public override bool Init()
     {
         if (base.Init() == false) 
@@ -50,11 +26,6 @@ public class PlayerUnitController : CreatureController
 
         CreatureType = ECreatureType.PlayerUnit;
         CreatureState = ECreatureState.Idle;
-
-        Managers.Game.OnActionStateChanged -= HandleOnActionStateChanged;
-        Managers.Game.OnActionStateChanged += HandleOnActionStateChanged;
-        Managers.Game.OnCursorPosChanged -= ShowSkillSize;
-        Managers.Game.OnCursorPosChanged += ShowSkillSize;
 
         OnDestPosChanged -= HandleOnDestPosChanged;
         OnDestPosChanged += HandleOnDestPosChanged;
@@ -77,9 +48,11 @@ public class PlayerUnitController : CreatureController
     {
         if (CreatureState == ECreatureState.Move)
         {
-            //Debug.Log("UpdateMove");
+            Debug.Log("UpdateMove");
             // TODO
             // 이동을 완료할 때까지 애니메이션 재생
+
+            CreatureState = ECreatureState.None;
         }
     }
 
@@ -87,99 +60,14 @@ public class PlayerUnitController : CreatureController
     {
         if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
-            //Debug.Log("UpdateSkill");
-        }
-    }
-
-    void HandleOnActionStateChanged(EActionState actionState)
-    {
-        switch (actionState)
-        {
-            case EActionState.None:
-                ClearSkillCastingRange();
-                ClearSkillSize();
-                break;
-            case EActionState.Move:
-                break;
-            case EActionState.Skill:
-                ShowSkillCastingRange();
-                break;
+            Debug.Log("UpdateSkill");
+            CastingSkill.DoSkill();
+            CreatureState = ECreatureState.None;
         }
     }
 
     void HandleOnDestPosChanged()
     {
         FindPathAndMoveToCellPos(_destPos, Mov);
-    }
-
-    void ShowSkillCastingRange()
-    {
-        Debug.Log(CastingSkill);
-        if (CastingSkill == null)
-        {
-            Debug.Log("CastingSkill을 할당해주세요.");
-            return;
-        }
-
-        foreach (Vector3Int delta in CastingSkill.SkillData.CastingRange)
-        {
-            Vector3 pos = Managers.Map.GetTilePosition(transform.position, delta, new Vector3(0, -0.25f, 0));
-            if (Managers.Map.CanGo(pos, true))
-            {
-                CastingSkill.CastingRange.Add(pos);
-                GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
-                go.transform.position = pos;
-            }
-        }
-    }
-
-    void ShowSkillSize(Vector3 cursorPos)
-    {
-        ClearSkillSize();
-        if (CastingSkill == null)
-        {
-            Debug.Log("CastingSkill을 할당해주세요.");
-            return;
-        }
-
-        foreach (Vector3Int delta in CastingSkill.SkillData.SkillSize)
-        {
-            Vector3 pos = Managers.Map.GetTilePosition(cursorPos, delta, new Vector3(0, -0.25f, 0));
-            if (Managers.Map.CanGo(pos, true))
-            {
-                CastingSkill.SkillSizeRange.Add(pos);
-                GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
-                go.transform.position = pos;
-            }
-        }
-    }
-
-    void ClearSkillCastingRange()
-    {
-        if (RangeTile == null)
-            return;
-
-        foreach (Transform child in RangeTile)
-            Managers.Resource.Destroy(child.gameObject);
-
-        if (CastingSkill != null)
-            CastingSkill.CastingRange.Clear();
-    }
-
-    public void ClearSkillSize()
-    {
-        if (SelectTile == null)
-            return;
-
-        foreach (Transform child in SelectTile)
-            Managers.Resource.Destroy(child.gameObject);
-
-        if (CastingSkill != null)
-            CastingSkill.SkillSizeRange.Clear();
-    }
-
-    bool IsValidPosition(Vector3 worldPos)
-    {
-        return Managers.Map.CanGo(worldPos);
     }
 }
