@@ -61,6 +61,7 @@ public class CursorController : InitBase
                 Managers.Game.CurrentUnit.CastingSkill.ClearSizeRange();
         }
 
+        ShowCreatureInfoUI(worldPos);
         transform.position = worldPos;
     }
 
@@ -69,6 +70,7 @@ public class CursorController : InitBase
         if (type == EMouseEvent.Click)
         {
             Vector3 worldPos = GetMouseWorldPosition();
+
             switch (Managers.Game.ActionState)
             {
                 case EActionState.Spawn:
@@ -94,6 +96,16 @@ public class CursorController : InitBase
         return Managers.Map.GetTilePosition(mousePos, Vector3Int.zero, new Vector3(0, -0.25f, 0));
     }
 
+    void ShowCreatureInfoUI(Vector3 worldPos)
+    {
+        BaseController obj = Managers.Map.GetObject(worldPos);
+        if (obj != null)
+        {
+            CreatureController unit = obj.GetComponent<CreatureController>();
+            Managers.UI.GetSceneUI<UI_GameScene>().SetInfo(unit);
+        }
+    }
+
     void HandleSpawnAction(Vector3 worldPos)
     {
         if (IsValidPosition(worldPos))
@@ -101,6 +113,8 @@ public class CursorController : InitBase
             transform.position = worldPos;
             PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
             Managers.Game.CurrentUnit = playerUnit;
+
+            ShowCreatureInfoUI(worldPos);
         }
         
         Managers.Game.ActionState = EActionState.None;

@@ -3,7 +3,7 @@
     {
       "DataID": 101,
       "Name": "전사",
-      "PrefabLabel": "WarriorPrefab",
+      "PrefabLabel": "Warrior",
       "Mov": 4,
       "HpRate": 10.0,
       "MpRate": 5.0,
@@ -20,7 +20,7 @@
     {
       "DataID": 102,
       "Name": "마법사",
-      "PrefabLabel": "MagePrefab",
+      "PrefabLabel": "Mage",
       "Mov": 3,
       "HpRate": 5.0,
       "MpRate": 10.0,

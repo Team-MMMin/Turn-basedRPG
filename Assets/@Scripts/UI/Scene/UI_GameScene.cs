@@ -13,8 +13,18 @@ public class UI_GameScene : UI_Scene
     #region enum
     enum GameObjects
     {
+        StatInfoObject,
         SkillScrollView,
         SkillContent,
+    }
+
+    enum Texts
+    {
+        ClassValueText,
+        HPVauleText,
+        MPVauleText,
+        ATKVauleText,
+        DEFVauleText,
     }
 
     enum Buttons
@@ -32,6 +42,7 @@ public class UI_GameScene : UI_Scene
             return false;
 
         BindObject(typeof(GameObjects));
+        BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
         GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
@@ -43,11 +54,31 @@ public class UI_GameScene : UI_Scene
         return true;
     }
 
+    public void SetInfo(CreatureController unit = null) // 데이터 받아올때
+    {
+        if (unit == null)
+            unit = Managers.Game.CurrentUnit;
+
+        Refresh(unit);
+    }
+
+    void Refresh(CreatureController unit = null)
+    {
+        if (unit == null)
+            return;
+
+        GetText((int)Texts.ClassValueText).text = unit.ClassData.PrefabLabel;   // 한글 폰트를 지원하지 않아 임시적으로 프리팹 라벨을 사용하기로 했다
+        GetText((int)Texts.HPVauleText).text = unit.Hp.ToString();
+        GetText((int)Texts.MPVauleText).text = unit.Mp.ToString();
+        GetText((int)Texts.ATKVauleText).text = unit.Atk.ToString();
+        GetText((int)Texts.DEFVauleText).text = unit.Hp.ToString();
+    }
+
     void OnClickMoveButton()
     {
         Debug.Log("OnClickMoveButton");
         
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
         Managers.Game.ActionState = EActionState.Move;
     }
 
@@ -60,6 +91,7 @@ public class UI_GameScene : UI_Scene
         CreatureController unit = Managers.Game.CurrentUnit;
         if (unit != null)
         {
+            // 스킬 스크롤 뷰
             GetObject((int)GameObjects.SkillScrollView).SetActive(true);
             GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
 
@@ -103,7 +135,7 @@ public class UI_GameScene : UI_Scene
         {
             if (skill.SkillData.PrefabLabel == name)
             {
-                gameObject.SetActive(false);
+                // gameObject.SetActive(false);
                 Managers.Game.CurrentUnit.CastingSkill = skill;
                 Managers.Game.ActionState = EActionState.Skill;
                 break;
