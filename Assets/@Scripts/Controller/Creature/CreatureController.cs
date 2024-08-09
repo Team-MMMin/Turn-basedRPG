@@ -35,9 +35,11 @@ public abstract class CreatureController : BaseController
         set
         {
             _castingSkill = value;
-            _castingSkill.ShowCastingRange();
+            _castingSkill.SetCastingRange();
         }
     }
+
+    public Vector3 TargetPos;
 
     public CreatureData CreatureData { get; protected set; }
     public ClassData ClassData { get; protected set; }

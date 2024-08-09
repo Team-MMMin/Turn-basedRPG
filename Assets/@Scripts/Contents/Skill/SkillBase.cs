@@ -1,6 +1,7 @@
 ﻿using Data;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Pipeline;
 using UnityEngine;
 using static Define;
 
@@ -74,56 +75,71 @@ public abstract class SkillBase : InitBase
 
     }
 
-    public void ShowCastingRange()
+    public void SetCastingRange()
     {
+        ClearCastingRange();
         foreach (Vector3Int delta in SkillData.CastingRange)
         {
             Vector3 pos = Managers.Map.GetTilePosition(transform.position, delta, new Vector3(0, -0.25f, 0));
             if (Managers.Map.CanGo(pos, true))
             {
                 CastingRange.Add(pos);
-                GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
-                go.transform.position = pos;
+                switch (Owner.CreatureType)
+                {
+                    case ECreatureType.PlayerUnit:
+                        GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
+                        go.transform.position = pos;
+                        break;
+                    case ECreatureType.Monster:
+                        break;
+                }
             }
         }
     }
 
-    public void ShowSizeRange()
+    public void SetSizeRange()
     {
         ClearSizeRange();
         foreach (Vector3Int delta in SkillData.SkillSize)
         {
-            Vector3 pos = Managers.Map.GetTilePosition(Managers.Game.CursorPos, delta, new Vector3(0, -0.25f, 0));
+            Vector3 pos = Managers.Map.GetTilePosition(Owner.TargetPos, delta, new Vector3(0, -0.25f, 0));
             if (Managers.Map.CanGo(pos, true))
             {
                 SkillSizeRange.Add(pos);
-                GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
-                go.transform.position = pos;
+                switch (Owner.CreatureType)
+                {
+                    case ECreatureType.PlayerUnit:
+                        GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
+                        go.transform.position = pos;
+                        break;
+                    case ECreatureType.Monster:
+                        break;
+                }
             }
         }
     }
 
     public void ClearCastingRange()
     {
-        GameObject tile = GameObject.Find("RangeTile");
-        if (tile == null)
-            return;
-
-        foreach (Transform child in tile.transform.parent)
-            Managers.Resource.Destroy(child.gameObject);
-
         CastingRange.Clear();
+        if (Owner.CreatureType == ECreatureType.PlayerUnit)
+            DestroyTile("RangeTile");
     }
 
     public void ClearSizeRange()
     {
-        GameObject tile = GameObject.Find("SelectTile");
+        SkillSizeRange.Clear();
+        if (Owner.CreatureType == ECreatureType.PlayerUnit)
+            DestroyTile("SelectTile");
+    }
+
+    void DestroyTile(string tileName)
+    {
+        GameObject tile = GameObject.Find(tileName);
         if (tile == null)
             return;
 
         foreach (Transform child in tile.transform.parent)
             Managers.Resource.Destroy(child.gameObject);
-
-        SkillSizeRange.Clear();
     }
 }

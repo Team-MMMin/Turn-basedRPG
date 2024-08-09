@@ -55,7 +55,8 @@ public class CursorController : InitBase
             if (IsValidRange(worldPos, castingRange))
             {
                 Managers.Game.CursorPos = worldPos;
-                Managers.Game.CurrentUnit.CastingSkill.ShowSizeRange();
+                Managers.Game.CurrentUnit.TargetPos = worldPos;
+                Managers.Game.CurrentUnit.CastingSkill.SetSizeRange();
             }
             else
                 Managers.Game.CurrentUnit.CastingSkill.ClearSizeRange();
