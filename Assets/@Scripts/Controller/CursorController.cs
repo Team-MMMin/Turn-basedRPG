@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 using static Define;
 
 public class CursorController : InitBase
@@ -66,14 +63,19 @@ public class CursorController : InitBase
         transform.position = worldPos;
     }
 
-    void OnMouseEvent(EMouseEvent type)
+    void OnMouseEvent(EMouseEvent type, bool isLeftMouseClick = true)
     {
+        if (isLeftMouseClick == false)
+            HandleRigthMouth();
+
         if (type == EMouseEvent.Click)
         {
             Vector3 worldPos = GetMouseWorldPosition();
-
             switch (Managers.Game.ActionState)
             {
+                case EActionState.None:
+                    HandleNoneAction(worldPos);
+                    break;
                 case EActionState.Spawn:
                     HandleSpawnAction(worldPos);
                     break;
@@ -89,6 +91,20 @@ public class CursorController : InitBase
         {
             Camera.main.transform.Translate(-Input.GetAxis("Mouse X") * Speed, -Input.GetAxis("Mouse Y") * Speed, 0);
         }
+    }
+
+    void HandleRigthMouth()
+    {
+        // 이미 유닛을 조작 중이라면 취소
+        if (Managers.Game.ActionState == EActionState.Hand)
+        {
+            Managers.Game.ActionState = EActionState.None;
+            return;
+        }
+
+        Managers.Game.CurrentUnit.CreatureState = ECreatureState.Idle;
+        Managers.Game.ActionState = EActionState.Hand;
+        return;
     }
 
     Vector3 GetMouseWorldPosition()
@@ -114,11 +130,9 @@ public class CursorController : InitBase
             transform.position = worldPos;
             PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
             Managers.Game.CurrentUnit = playerUnit;
-
-            ShowCreatureInfoUI(worldPos);
         }
         
-        Managers.Game.ActionState = EActionState.None;
+        Managers.Game.ActionState = EActionState.Hand;
     }
 
     void HandleMoveAction(Vector3 worldPos)
@@ -134,7 +148,7 @@ public class CursorController : InitBase
             }
         }
      
-        Managers.Game.ActionState = EActionState.None;
+        Managers.Game.ActionState = EActionState.Hand;
     }
 
     void HandleSkillAction(Vector3 worldPos)
@@ -149,7 +163,7 @@ public class CursorController : InitBase
             {
                 transform.position = worldPos;
                 Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
-                Managers.Game.ActionState = EActionState.None;
+                Managers.Game.ActionState = EActionState.Hand;
             }
             else
             {
