@@ -6,7 +6,7 @@ using static Define;
 
 public class GameManager
 {
-    EGameState _gameState;
+    EGameState _gameState = EGameState.PlayerTurn;
     public EGameState GameState
     {
         get { return _gameState; }

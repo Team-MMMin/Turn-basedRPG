@@ -123,6 +123,28 @@ public class CursorController : InitBase
         }
     }
 
+    void HandleNoneAction(Vector3 worldPos)
+    {
+        if (IsValidPosition(worldPos, true))
+        {
+            transform.position = worldPos;
+
+            BaseController obj = Managers.Map.GetObject(worldPos);
+            if (obj == null)
+                return;
+            
+            CreatureController unit = obj.GetComponent<CreatureController>();
+            if (unit == null)
+                return;
+
+            if (unit.CreatureType == ECreatureType.PlayerUnit && unit.CreatureState != ECreatureState.EndTurn)
+            {
+                Managers.Game.CurrentUnit = unit;
+                Managers.Game.ActionState = EActionState.Hand;
+            }
+        }
+    }
+
     void HandleSpawnAction(Vector3 worldPos)
     {
         if (IsValidPosition(worldPos))

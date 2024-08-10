@@ -41,7 +41,19 @@ public class PlayerUnitController : CreatureController
 
     protected override void UpdateIdle()
     {
+        if (CreatureState == ECreatureState.Idle)
+        {
+            Debug.Log("UpdateIdle");
 
+            if (Managers.Game.CurrentUnit == this && CastingSkill != null)
+            {
+                CastingSkill.ClearCastingRange();
+                CastingSkill.ClearSizeRange();
+                CastingSkill = null;
+            }
+
+            CreatureState = ECreatureState.None;
+        }
     }
 
     protected override void UpdateMove()
@@ -52,7 +64,7 @@ public class PlayerUnitController : CreatureController
             // TODO
             // 이동을 완료할 때까지 애니메이션 재생
 
-            CreatureState = ECreatureState.None;
+            CreatureState = ECreatureState.Idle;
         }
     }
 
@@ -63,10 +75,7 @@ public class PlayerUnitController : CreatureController
             Debug.Log("UpdateSkill");
             
             CastingSkill.DoSkill();
-            CastingSkill.ClearCastingRange();
-            CastingSkill.ClearSizeRange();
-            
-            CreatureState = ECreatureState.None;
+            CreatureState = ECreatureState.Idle;
         }
     }
 

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class UI_GameScene : UI_Scene
 {
@@ -14,6 +12,7 @@ public class UI_GameScene : UI_Scene
     enum GameObjects
     {
         StatInfoObject,
+        ActionControllerObject,
         SkillScrollView,
         SkillContent,
     }
@@ -51,6 +50,9 @@ public class UI_GameScene : UI_Scene
         BindEvent(GetButton((int)Buttons.EndTurnButton).gameObject, OnClickEndTurnButton);
         BindEvent(GetButton((int)Buttons.SettingButton).gameObject, OnClickSettingButton);
 
+        Managers.Game.OnActionStateChanged -= HandleOnActionStateChanged;
+        Managers.Game.OnActionStateChanged += HandleOnActionStateChanged;
+
         return true;
     }
 
@@ -74,19 +76,52 @@ public class UI_GameScene : UI_Scene
         GetText((int)Texts.DEFVauleText).text = unit.Hp.ToString();
     }
 
+    void HandleOnActionStateChanged(EActionState actionState)
+    {
+        switch (actionState)
+        {
+            case EActionState.None:
+                HandleNoneAction();
+                break;
+            case EActionState.Hand:
+                HandleHandAction();
+                break;
+            case EActionState.Move:
+                break;
+            case EActionState.Skill:
+                break;
+            case EActionState.Spawn:
+                break;
+        }
+    }
+
+    void HandleNoneAction()
+    {
+        GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
+    }
+
+    void HandleHandAction()
+    {
+        Refresh(Managers.Game.CurrentUnit);
+        gameObject.SetActive(true);
+        GetObject((int)GameObjects.ActionControllerObject).SetActive(true);
+        GetObject((int)GameObjects.SkillScrollView).SetActive(false);
+    }
+
     void OnClickMoveButton()
     {
         Debug.Log("OnClickMoveButton");
         
-        //gameObject.SetActive(false);
+        gameObject.SetActive(false);
         Managers.Game.ActionState = EActionState.Move;
     }
 
     void OnClickSkillButton()
     {
         Debug.Log("OnClickSkillButton");
+        
         ClearSkillList();
-
+        
         // 현재 유닛의 스킬을 가져온다
         CreatureController unit = Managers.Game.CurrentUnit;
         if (unit != null)
@@ -110,18 +145,6 @@ public class UI_GameScene : UI_Scene
         }
     }
 
-    void OnClickEndTurnButton()
-    {
-        Debug.Log("OnClickEndTurnButton");
-        Managers.Game.ActionState = EActionState.Hand;
-    }
-
-    void OnClickSettingButton()
-    {
-        // 설정창 팝업 활성화
-        Debug.Log("OnClickSettingButton");
-    }
-
     void ClearSkillList()
     {
         GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
@@ -135,11 +158,24 @@ public class UI_GameScene : UI_Scene
         {
             if (skill.SkillData.PrefabLabel == name)
             {
-                // gameObject.SetActive(false);
+                gameObject.SetActive(false);
                 Managers.Game.CurrentUnit.CastingSkill = skill;
                 Managers.Game.ActionState = EActionState.Skill;
                 break;
             }
         }
+    }
+
+    void OnClickEndTurnButton()
+    {
+        Debug.Log("OnClickEndTurnButton");
+        Managers.Game.ActionState = EActionState.None;
+        Managers.Game.CurrentUnit.CreatureState = ECreatureState.EndTurn;
+    }
+
+    void OnClickSettingButton()
+    {
+        // 설정창 팝업 활성화
+        Debug.Log("OnClickSettingButton");
     }
 }

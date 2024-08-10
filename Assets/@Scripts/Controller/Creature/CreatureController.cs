@@ -2,7 +2,6 @@ using Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static Define;
@@ -35,6 +34,9 @@ public abstract class CreatureController : BaseController
         set
         {
             _castingSkill = value;
+            if (_castingSkill == null)
+                return;
+            
             _castingSkill.SetCastingRange();
         }
     }
@@ -131,10 +133,7 @@ public abstract class CreatureController : BaseController
 
     protected virtual void UpdateIdle() { }
     protected virtual void UpdateMove() { }
-    protected virtual void UpdateSkill() 
-    {
-
-    }
+    protected virtual void UpdateSkill() { }
 
     #region Map
     public EFindPathResult FindPathAndMoveToCellPos(Vector3 destWorldPos, int maxDepth, bool forceMoveCloser = false)
