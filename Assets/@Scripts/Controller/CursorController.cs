@@ -65,6 +65,9 @@ public class CursorController : InitBase
 
     void OnMouseEvent(EMouseEvent type, bool isLeftMouseClick = true)
     {
+        if (Managers.Game.GameState != EGameState.PlayerTurn)
+            return;
+
         if (isLeftMouseClick == false)
         {
             HandleRigthMouth();

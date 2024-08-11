@@ -127,7 +127,8 @@ public abstract class CreatureController : BaseController
                 case ECreatureState.Skill:
                     UpdateSkill();
                     break;
-                case ECreatureState.Dead: 
+                case ECreatureState.Dead:
+                    UpdateDead();
                     break;
                 case ECreatureState.EndTurn:
                     UpdateEndTurn();
@@ -141,6 +142,7 @@ public abstract class CreatureController : BaseController
     protected virtual void UpdateIdle() { }
     protected virtual void UpdateMove() { }
     protected virtual void UpdateSkill() { }
+    protected virtual void UpdateDead() { }
     protected virtual void UpdateEndTurn() { }
 
     #region Map

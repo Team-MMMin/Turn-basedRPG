@@ -10,7 +10,11 @@ public class GameManager
     public EGameState GameState
     {
         get { return _gameState; }
-        set { _gameState = value; }
+        set 
+        {
+            _gameState = value;
+            OnGameStateChanged?.Invoke(_gameState);
+        }
     }
 
     EActionState _actionState;
@@ -45,4 +49,5 @@ public class GameManager
     }
 
     public event Action<EActionState> OnActionStateChanged;
+    public event Action<EGameState> OnGameStateChanged;
 }

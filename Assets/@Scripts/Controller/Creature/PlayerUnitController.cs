@@ -30,6 +30,9 @@ public class PlayerUnitController : CreatureController
         OnDestPosChanged -= HandleOnDestPosChanged;
         OnDestPosChanged += HandleOnDestPosChanged;
 
+        Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
+        Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
+
         StartCoroutine(CoUpdate());
         return true;
     }
@@ -37,6 +40,14 @@ public class PlayerUnitController : CreatureController
     public override void SetInfo(int templateID)
     {
         base.SetInfo(templateID);
+    }
+
+    void HandleOnGameStateChanged(EGameState gameState)
+    {
+        if (gameState != EGameState.PlayerTurn)
+            return;
+
+        CreatureState = ECreatureState.Idle;
     }
 
     protected override void UpdateIdle()

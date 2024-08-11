@@ -12,11 +12,23 @@ public class MonsterController : CreatureController
 
         CreatureType = ECreatureType.Monster;
         CreatureState = ECreatureState.Idle;
+
+        Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
+        Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
+
         return true;
     }
 
     public override void SetInfo(int templateID)
     {
         base.SetInfo(templateID);
+    }
+
+    void HandleOnGameStateChanged(EGameState gameState)
+    {
+        if (gameState != EGameState.MonsterTurn)
+            return;
+
+        CreatureState = ECreatureState.Idle;
     }
 }
