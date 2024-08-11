@@ -125,6 +125,9 @@ public abstract class CreatureController : BaseController
                     break;
                 case ECreatureState.Dead: 
                     break;
+                case ECreatureState.EndTurn:
+                    UpdateEndTurn();
+                    break;
             }
 
             yield return null;
@@ -134,6 +137,7 @@ public abstract class CreatureController : BaseController
     protected virtual void UpdateIdle() { }
     protected virtual void UpdateMove() { }
     protected virtual void UpdateSkill() { }
+    protected virtual void UpdateEndTurn() { }
 
     #region Map
     public EFindPathResult FindPathAndMoveToCellPos(Vector3 destWorldPos, int maxDepth, bool forceMoveCloser = false)

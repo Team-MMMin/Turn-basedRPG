@@ -79,6 +79,36 @@ public class PlayerUnitController : CreatureController
         }
     }
 
+    protected override void UpdateEndTurn()
+    {
+        if (CreatureState == ECreatureState.EndTurn)
+        {
+            Debug.Log("UpdateEndTurn");
+
+            // 모든 플레이어 유닛이 턴 종료 상태인지 확인
+            bool isValid = true;
+            foreach (var unit in Managers.Object.PlayerUnits)
+            {
+                if (unit == this)
+                    continue;
+
+                if (unit.CreatureState == ECreatureState.Dead)
+                    continue;
+
+                if (unit.CreatureState != ECreatureState.EndTurn)
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            CreatureState = ECreatureState.Idle;
+
+            if (isValid)
+                Managers.Game.GameState = EGameState.MonsterTurn;
+        }
+    }
+
     void HandleOnDestPosChanged()
     {
         FindPathAndMoveToCellPos(_destPos, Mov);

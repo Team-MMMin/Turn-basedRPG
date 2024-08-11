@@ -95,7 +95,7 @@ public class CursorController : InitBase
 
     void HandleRigthMouth()
     {
-        // 이미 유닛을 조작 중이라면 취소
+        // 현재 유닛의 행동을 선택하지 않았다면 조작을 취소한다.
         if (Managers.Game.ActionState == EActionState.Hand)
         {
             Managers.Game.ActionState = EActionState.None;
