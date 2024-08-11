@@ -19,6 +19,7 @@ public class GameScene : BaseScene
         GameObject cursor = Managers.Resource.Instantiate("Cursor");
         Managers.Object.Spawn<PlayerUnitController>(new Vector3(0, 4.5f, 0), Define.PLAYER_UNIT_WARRIOR_ID);
         Managers.Object.Spawn<PlayerUnitController>(new Vector3(0, 5.5f, 0), Define.PLAYER_UNIT_WARRIOR_ID + 1);
+        Managers.Object.Spawn<MonsterController>(new Vector3(0, 6.5f, 0), Define.MONSTER_WARRIOR_ID);
 
         Managers.Game.GameState = Define.EGameState.PlayerTurn;
         #endregion

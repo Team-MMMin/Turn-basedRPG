@@ -83,7 +83,11 @@ public abstract class CreatureController : BaseController
     {
         DataTemplateID = templateID;
 
-        CreatureData = Managers.Data.PlayerUnitDataDic[templateID];
+        if (CreatureType == ECreatureType.PlayerUnit)
+            CreatureData = Managers.Data.PlayerUnitDataDic[templateID];
+        else if (CreatureType == ECreatureType.Monster)
+            CreatureData = Managers.Data.MonsterDataDic[templateID];
+
         ClassData = Managers.Data.ClassDataDic[CreatureData.ClassDataID];
         gameObject.name = $"{CreatureData.DataID}_{CreatureData.Name}";
 
