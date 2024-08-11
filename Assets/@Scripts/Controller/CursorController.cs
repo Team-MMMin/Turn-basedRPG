@@ -66,7 +66,10 @@ public class CursorController : InitBase
     void OnMouseEvent(EMouseEvent type, bool isLeftMouseClick = true)
     {
         if (isLeftMouseClick == false)
+        {
             HandleRigthMouth();
+            return;
+        }
 
         if (type == EMouseEvent.Click)
         {
@@ -95,16 +98,21 @@ public class CursorController : InitBase
 
     void HandleRigthMouth()
     {
+        if (Managers.Game.CurrentUnit == null)
+            return;
+
+        Managers.Game.CurrentUnit.CreatureState = ECreatureState.Idle;
+        
         // 현재 유닛의 행동을 선택하지 않았다면 조작을 취소한다.
         if (Managers.Game.ActionState == EActionState.Hand)
         {
             Managers.Game.ActionState = EActionState.None;
             return;
         }
+        else if (Managers.Game.ActionState == EActionState.None)
+            return;
 
-        Managers.Game.CurrentUnit.CreatureState = ECreatureState.Idle;
         Managers.Game.ActionState = EActionState.Hand;
-        return;
     }
 
     Vector3 GetMouseWorldPosition()

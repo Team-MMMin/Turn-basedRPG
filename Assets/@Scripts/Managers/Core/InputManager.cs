@@ -56,7 +56,6 @@ public class InputManager
                 // 클릭이라면 행동 캔슬
                 if (Time.time < _pressedTime + 0.2f)
                 {
-                    Managers.Game.ActionState = EActionState.Hand;
                     MouseAction.Invoke(EMouseEvent.Click, false);
                 }
             }

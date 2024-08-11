@@ -102,8 +102,6 @@ public class PlayerUnitController : CreatureController
                 }
             }
 
-            CreatureState = ECreatureState.Idle;
-
             if (isValid)
                 Managers.Game.GameState = EGameState.MonsterTurn;
         }
