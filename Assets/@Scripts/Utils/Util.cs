@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using UnityEditor;
 using UnityEngine;
 
 public static class Util
@@ -51,5 +52,17 @@ public static class Util
         }
 
         return null;
+    }
+
+    public static void DestroyTile(string tileName)
+    {
+        GameObject tile = GameObject.Find(tileName);
+        if (tile == null)
+            return;
+
+        foreach (Transform child in tile.transform)
+        {
+            Managers.Resource.Destroy(child.gameObject);
+        }
     }
 }

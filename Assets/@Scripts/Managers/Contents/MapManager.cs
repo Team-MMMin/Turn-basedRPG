@@ -95,7 +95,7 @@ public class MapManager
         return worldPos;
     }
 
-    public bool MoveTo(CreatureController obj,Vector3Int cellPos, bool forceMove = false)
+    public bool MoveTo(CreatureController obj, Vector3Int cellPos, bool forceMove = false)
     {
         if (CanGo(cellPos) == false) 
             return false;
