@@ -44,6 +44,7 @@ public class UI_GameScene : UI_Scene
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
+        GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
         GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
         BindEvent(GetButton((int)Buttons.MoveButton).gameObject, OnClickMoveButton);
         BindEvent(GetButton((int)Buttons.SkillButton).gameObject, OnClickSkillButton);

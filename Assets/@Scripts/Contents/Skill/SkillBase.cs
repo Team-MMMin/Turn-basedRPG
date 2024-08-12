@@ -114,12 +114,20 @@ public abstract class SkillBase : InitBase
     public void ClearCastingRange()
     {
         CastingRange.Clear();
-        Util.DestroyTile("RangeTile");
+        GameObject go = GameObject.Find("RangeTile");
+        if (go == null)
+            return;
+
+        Util.DestroyTile(go.transform.parent);
     }
 
     public void ClearSizeRange()
     {
         SkillSizeRange.Clear();
-        Util.DestroyTile("SelectTile");
+        GameObject go = GameObject.Find("SelectTile");
+        if (go == null)
+            return;
+
+        Util.DestroyTile(go.transform.parent);
     }
 }
