@@ -52,15 +52,4 @@ public static class Util
 
         return null;
     }
-
-    public static void DestroyTile(Transform parent)
-    {
-        if (parent == null)
-            return;
-
-        foreach (Transform child in parent)
-        {
-            Managers.Resource.Destroy(child.gameObject);
-        }
-    }
 }

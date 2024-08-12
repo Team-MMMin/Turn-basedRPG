@@ -56,7 +56,12 @@ public class PlayerUnitController : CreatureController
         {
             Debug.Log("UpdateIdle");
 
-            if (Managers.Game.CurrentUnit == this && CastingSkill != null)
+            if (MovementRange.Count > 0)
+            {
+                ClearMovementRange();
+            }
+
+            if (CastingSkill != null)
             {
                 CastingSkill.ClearCastingRange();
                 CastingSkill.ClearSizeRange();
@@ -122,4 +127,5 @@ public class PlayerUnitController : CreatureController
     {
         FindPathAndMoveToCellPos(_destPos, Mov);
     }
+
 }

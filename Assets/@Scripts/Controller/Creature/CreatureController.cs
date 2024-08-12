@@ -41,6 +41,8 @@ public abstract class CreatureController : BaseController
         }
     }
 
+    public List<Vector3> MovementRange = new List<Vector3>();
+
     public Vector3 TargetPos;
 
     public CreatureData CreatureData { get; protected set; }
@@ -145,7 +147,73 @@ public abstract class CreatureController : BaseController
     protected virtual void UpdateDead() { }
     protected virtual void UpdateEndTurn() { }
 
+    public void SetMovementRange()
+    {
+        ClearMovementRange();
+        for (int dx = -Mov; dx <= Mov; dx++)
+        {
+            for (int dy = -Mov; dy <= Mov; dy++)
+            {
+                int distance = Math.Abs(dx) + Math.Abs(dy);
+                if (distance <= Mov && distance > 0)
+                {
+                    Vector3 destPos = Managers.Map.GetTilePosition(transform.position, new Vector3Int(dx, dy), new Vector3(0, -0.25f, 0));
+                    if (FindPath(destPos, Mov) == EFindPathResult.Success)
+                    {
+                        MovementRange.Add(destPos);
+                        if (CreatureType == ECreatureType.PlayerUnit)
+                        {
+                            GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
+                            go.transform.position = destPos;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void ClearMovementRange()
+    {
+        MovementRange.Clear();
+        GameObject go = GameObject.Find("RangeTile");
+        if (go == null)
+            return;
+
+        foreach (Transform child in go.transform.parent)
+        {
+            if (child != null)
+                Managers.Resource.Destroy(child.gameObject);
+        }
+    }
+
     #region Map
+    public EFindPathResult FindPath(Vector3 destWorldPos, int maxDepth)
+    {
+        Vector3Int destCellPos = Managers.Map.WorldToCell(destWorldPos);
+        return FindPath(destCellPos, maxDepth);
+    }
+
+    public EFindPathResult FindPath(Vector3Int destCellPos, int maxDepth)
+    {
+        // A*
+        List<Vector3Int> path = Managers.Map.FindPath(this, CellPos, destCellPos, maxDepth);
+        if (path.Count <= 0)
+            return EFindPathResult.Fail_NoPath;
+
+        int idx = 1;
+        while (path.Count > idx)
+        {
+            Vector3Int dirCellPos = path[idx] - CellPos;
+            Vector3Int nextPos = CellPos + dirCellPos;
+            idx++;
+
+            if (Managers.Map.CanGo(nextPos) == false)
+                return EFindPathResult.Fail_MoveTo;
+        }
+
+        return EFindPathResult.Success;
+    }
+
     public EFindPathResult FindPathAndMoveToCellPos(Vector3 destWorldPos, int maxDepth, bool forceMoveCloser = false)
     {
         Vector3Int destCellPos = Managers.Map.WorldToCell(destWorldPos);

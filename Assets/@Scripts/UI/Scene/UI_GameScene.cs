@@ -88,6 +88,7 @@ public class UI_GameScene : UI_Scene
                 HandleHandAction();
                 break;
             case EActionState.Move:
+                HandleMoveAction();
                 break;
             case EActionState.Skill:
                 break;
@@ -107,6 +108,11 @@ public class UI_GameScene : UI_Scene
         gameObject.SetActive(true);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(true);
         GetObject((int)GameObjects.SkillScrollView).SetActive(false);
+    }
+
+    void HandleMoveAction()
+    {
+        Managers.Game.CurrentUnit.SetMovementRange();
     }
 
     void OnClickMoveButton()

@@ -59,6 +59,13 @@ public class CursorController : InitBase
                 Managers.Game.CurrentUnit.CastingSkill.ClearSizeRange();
         }
 
+        // 커서가 이동 범위 내에 있는지 확인한다
+        if (Managers.Game.ActionState == EActionState.Move)
+        {
+            if (worldPos == Managers.Game.CursorPos)
+                return;
+        }
+
         ShowCreatureInfoUI(worldPos);
         transform.position = worldPos;
     }

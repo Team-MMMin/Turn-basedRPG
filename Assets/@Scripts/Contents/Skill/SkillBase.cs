@@ -118,7 +118,12 @@ public abstract class SkillBase : InitBase
         if (go == null)
             return;
 
-        Util.DestroyTile(go.transform.parent);
+        foreach (Transform child in go.transform.parent)
+        {
+            if (child != null)
+                Managers.Resource.Destroy(child.gameObject);
+        }
+
     }
 
     public void ClearSizeRange()
@@ -128,6 +133,10 @@ public abstract class SkillBase : InitBase
         if (go == null)
             return;
 
-        Util.DestroyTile(go.transform.parent);
+        foreach (Transform child in go.transform.parent)
+        {
+            if (child != null)
+                Managers.Resource.Destroy(child.gameObject);
+        }
     }
 }
