@@ -47,6 +47,8 @@ public class PlayerUnitController : CreatureController
         if (gameState != EGameState.PlayerTurn)
             return;
 
+        IsMove = false;
+        IsSkill = false;
         CreatureState = ECreatureState.Idle;
     }
 

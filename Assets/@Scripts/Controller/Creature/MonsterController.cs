@@ -29,6 +29,8 @@ public class MonsterController : CreatureController
         if (gameState != EGameState.MonsterTurn)
             return;
 
+        IsMove = false;
+        IsSkill = false;
         CreatureState = ECreatureState.Idle;
     }
 }

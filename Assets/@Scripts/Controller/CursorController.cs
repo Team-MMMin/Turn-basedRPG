@@ -169,9 +169,8 @@ public class CursorController : InitBase
         {
             PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
             Managers.Game.CurrentUnit = playerUnit;
+            Managers.Game.PlayerActionState = EPlayerActionState.Hand;
         }
-        
-        Managers.Game.PlayerActionState = EPlayerActionState.Hand;
     }
 
     void HandleMoveAction(Vector3 worldPos)
@@ -182,6 +181,7 @@ public class CursorController : InitBase
             if (playerUnit != null)
             {
                 playerUnit.DestPos = worldPos;
+                playerUnit.IsMove = true;
                 playerUnit.CreatureState = ECreatureState.Move;
             }
         }
@@ -200,6 +200,7 @@ public class CursorController : InitBase
             if (IsValidRange(worldPos, castingRange))
             {
                 Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
+                Managers.Game.CurrentUnit.IsSkill = true;
                 Managers.Game.PlayerActionState = EPlayerActionState.Hand;
             }
             else

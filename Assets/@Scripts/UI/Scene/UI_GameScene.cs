@@ -87,6 +87,9 @@ public class UI_GameScene : UI_Scene
             case EPlayerActionState.Hand:
                 HandleHandAction();
                 break;
+            case EPlayerActionState.EndTurn:
+                HandleEndTurnAction();
+                break;
         }
     }
 
@@ -98,10 +101,13 @@ public class UI_GameScene : UI_Scene
 
     void HandleHandAction()
     {
-        Refresh(Managers.Game.CurrentUnit);
+        Debug.Log("HandleHandAction");
         gameObject.SetActive(true);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(true);
         GetObject((int)GameObjects.SkillScrollView).SetActive(false);
+        GetButton((int)Buttons.MoveButton).interactable = !Managers.Game.CurrentUnit.IsMove;
+        GetButton((int)Buttons.SkillButton).interactable = !Managers.Game.CurrentUnit.IsSkill;
+        Refresh(Managers.Game.CurrentUnit);
     }
 
     void HandleEndTurnAction()
@@ -109,10 +115,17 @@ public class UI_GameScene : UI_Scene
         gameObject.SetActive(false);
     }
 
+    void HandleOnPlayerActionSelected()
+    {
+        Refresh(Managers.Game.CurrentUnit);
+    }
+
     void OnClickMoveButton()
     {
         Debug.Log("OnClickMoveButton");
-        
+        if (Managers.Game.CurrentUnit.IsMove)
+            return;
+
         gameObject.SetActive(false);
         Managers.Game.CurrentUnit.SetMovementRange();
         Managers.Game.PlayerActionState = EPlayerActionState.Move;
@@ -121,7 +134,9 @@ public class UI_GameScene : UI_Scene
     void OnClickSkillButton()
     {
         Debug.Log("OnClickSkillButton");
-        
+        if (Managers.Game.CurrentUnit.IsSkill)
+            return;
+
         ClearSkillList();
         GetObject((int)GameObjects.SkillScrollView).SetActive(true);
         GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
@@ -157,7 +172,6 @@ public class UI_GameScene : UI_Scene
                 gameObject.SetActive(false);
                 Managers.Game.CurrentUnit.CastingSkill = skill;
                 skill.SetCastingRange();
-                
                 Managers.Game.PlayerActionState = EPlayerActionState.Skill;
                 break;
             }

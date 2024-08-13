@@ -52,6 +52,9 @@ public abstract class CreatureController : BaseController
     public int Mov { get; set; }
     #endregion
 
+    public bool IsMove { get; set; } = false;
+    public bool IsSkill { get; set; } = false;
+
     void Awake()
     {
         Init();    
