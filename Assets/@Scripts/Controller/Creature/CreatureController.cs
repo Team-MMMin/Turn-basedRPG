@@ -181,7 +181,7 @@ public abstract class CreatureController : BaseController
 
         foreach (Transform child in go.transform.parent)
         {
-            if (child != null)
+            if (child != null && child.gameObject.activeInHierarchy)
                 Managers.Resource.Destroy(child.gameObject);
         }
     }

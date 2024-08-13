@@ -28,9 +28,6 @@ class Pool
 
     public void Push(GameObject go) 
     {
-        if (go.activeInHierarchy == false)
-            return;
-
         _pool.Release(go);
     }
 

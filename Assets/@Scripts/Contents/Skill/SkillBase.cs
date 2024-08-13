@@ -120,7 +120,7 @@ public abstract class SkillBase : InitBase
 
         foreach (Transform child in go.transform.parent)
         {
-            if (child != null)
+            if (child != null && child.gameObject.activeInHierarchy)
                 Managers.Resource.Destroy(child.gameObject);
         }
 
@@ -135,7 +135,7 @@ public abstract class SkillBase : InitBase
 
         foreach (Transform child in go.transform.parent)
         {
-            if (child != null)
+            if (child != null && child.gameObject.activeInHierarchy)
                 Managers.Resource.Destroy(child.gameObject);
         }
     }
