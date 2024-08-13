@@ -26,6 +26,7 @@ public class InputManager
             if (_pressed == false)
                 _pressedTime = Time.time;
 
+            Managers.Game.Camera.isDragging = true;
             MouseAction.Invoke(EMouseEvent.Drag, true);
             _pressed = true;
         }
@@ -37,6 +38,7 @@ public class InputManager
                     MouseAction.Invoke(EMouseEvent.Click, true);
             }
 
+            Managers.Game.Camera.isDragging = false;
             _pressed = false;
             _pressedTime = 0;
         }

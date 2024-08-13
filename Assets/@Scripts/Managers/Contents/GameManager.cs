@@ -35,8 +35,14 @@ public class GameManager
         set 
         {
             _currentUnit = value;
+            if (_currentUnit != null)
+                Camera.Target = _currentUnit;
+            else
+                Camera.Target = null;
         }
     }
+
+    public CameraController Camera;
 
     public event Action<EPlayerActionState> OnActionStateChanged;
     public event Action<EGameState> OnGameStateChanged;

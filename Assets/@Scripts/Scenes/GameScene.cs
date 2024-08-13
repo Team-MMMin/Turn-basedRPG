@@ -16,6 +16,7 @@ public class GameScene : BaseScene
         #region Test
         Managers.Map.LoadMap("001");
         CameraController camera = Camera.main.GetOrAddComponent<CameraController>();
+        Managers.Game.Camera = camera;
         GameObject cursor = Managers.Resource.Instantiate("Cursor");
         Managers.Object.Spawn<PlayerUnitController>(new Vector3(0, 4.5f, 0), Define.PLAYER_UNIT_WARRIOR_ID);
         Managers.Object.Spawn<PlayerUnitController>(new Vector3(0, 5.5f, 0), Define.PLAYER_UNIT_WARRIOR_ID + 1);

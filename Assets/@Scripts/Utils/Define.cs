@@ -21,6 +21,7 @@ public static class Define
         Spawn,
         Move,
         Skill,
+        EndTurn,
     }
 
     public enum EScene

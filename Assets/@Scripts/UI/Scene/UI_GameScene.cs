@@ -92,6 +92,7 @@ public class UI_GameScene : UI_Scene
 
     void HandleNoneAction()
     {
+        Managers.Game.CurrentUnit = null;
         GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
     }
 
@@ -101,6 +102,11 @@ public class UI_GameScene : UI_Scene
         gameObject.SetActive(true);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(true);
         GetObject((int)GameObjects.SkillScrollView).SetActive(false);
+    }
+
+    void HandleEndTurnAction()
+    {
+        gameObject.SetActive(false);
     }
 
     void OnClickMoveButton()
@@ -179,12 +185,15 @@ public class UI_GameScene : UI_Scene
             }
         }
 
+        Managers.Game.CurrentUnit.CreatureState = ECreatureState.EndTurn;
+        Managers.Game.PlayerActionState = EPlayerActionState.None;
+
         // 모든 유닛이 턴을 종료했다면 몬스터 턴으로 전환
         if (isValid)
+        {
+            gameObject.SetActive(false);
             Managers.Game.GameState = EGameState.MonsterTurn;
-
-        Managers.Game.PlayerActionState = EPlayerActionState.None;
-        Managers.Game.CurrentUnit.CreatureState = ECreatureState.EndTurn;
+        }
     }
 
     void OnClickSettingButton()

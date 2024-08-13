@@ -11,6 +11,8 @@ public class CameraController : InitBase
         set { _target = value; } 
     }
 
+    public bool isDragging = false;
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -24,6 +26,9 @@ public class CameraController : InitBase
     void LateUpdate()
     {
         if (Target == null)
+            return;
+
+        if (isDragging)
             return;
 
         Vector3 targetPosition = new Vector3(Target.CenterPosition.x, Target.CenterPosition.y, -10);
