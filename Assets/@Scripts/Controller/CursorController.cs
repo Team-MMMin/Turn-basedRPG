@@ -22,48 +22,42 @@ public class CursorController : InitBase
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
-        Managers.Game.ActionState = EActionState.Spawn; // Spawn Test
-
+        Managers.Game.PlayerActionState = EPlayerActionState.Spawn; // Spawn Test
         return true;
     }
 
     void Update()
     {
         Managers.Input.OnUpdate();
-        UpdateCursorPosition();
+        UpdateCursor();
     }
 
-    void UpdateCursorPosition()
+    void UpdateCursor()
     {
         Vector3 worldPos = GetMouseWorldPosition();
         if (IsValidPosition(worldPos, true) == false)
             return;
 
-        // 커서가 캐스팅 범위 내에 있는지 확인한다
-        if (Managers.Game.ActionState == EActionState.Skill)
+        EPlayerActionState actionState = Managers.Game.PlayerActionState;
+        CreatureController unit = Managers.Game.CurrentUnit;
+        
+        if (actionState == EPlayerActionState.Skill)    // 커서가 캐스팅 범위 내에 있는지 확인한다
         {
-            if (worldPos == Managers.Game.CursorPos)
-                return;
-
-            List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
+            List<Vector3> castingRange = unit.CastingSkill.CastingRange;
             if (castingRange == null)
                 return;
 
             if (IsValidRange(worldPos, castingRange))
             {
-                Managers.Game.CursorPos = worldPos;
-                Managers.Game.CurrentUnit.TargetPos = worldPos;
-                Managers.Game.CurrentUnit.CastingSkill.SetSizeRange();
+                unit.TargetPos = worldPos;
+                unit.CastingSkill.SetSizeRange();
             }
             else
-                Managers.Game.CurrentUnit.CastingSkill.ClearSizeRange();
+                unit.CastingSkill.ClearSizeRange();
         }
-
-        // 커서가 이동 범위 내에 있는지 확인한다
-        if (Managers.Game.ActionState == EActionState.Move)
+        else if (actionState == EPlayerActionState.Move)    // 커서가 이동 범위 내에 있는지 확인한다
         {
-            if (worldPos == Managers.Game.CursorPos)
-                return;
+
         }
 
         ShowCreatureInfoUI(worldPos);
@@ -72,30 +66,35 @@ public class CursorController : InitBase
 
     void OnMouseEvent(EMouseEvent type, bool isLeftMouseClick = true)
     {
+        // 플레이어의 턴일 때 마우스 조작이 가능하다
         if (Managers.Game.GameState != EGameState.PlayerTurn)
             return;
 
+        // 왼쪽 마우스 클릭 여부
         if (isLeftMouseClick == false)
         {
-            HandleRigthMouth();
+            OnClickRigthMouthButton();
             return;
         }
 
+        // 왼쪽 마우스 클릭 이벤트
         if (type == EMouseEvent.Click)
         {
             Vector3 worldPos = GetMouseWorldPosition();
-            switch (Managers.Game.ActionState)
+            transform.position = worldPos;
+
+            switch (Managers.Game.PlayerActionState)
             {
-                case EActionState.None:
+                case EPlayerActionState.None:
                     HandleNoneAction(worldPos);
                     break;
-                case EActionState.Spawn:
+                case EPlayerActionState.Spawn:
                     HandleSpawnAction(worldPos);
                     break;
-                case EActionState.Move:
+                case EPlayerActionState.Move:
                     HandleMoveAction(worldPos);
                     break;
-                case EActionState.Skill:
+                case EPlayerActionState.Skill:
                     HandleSkillAction(worldPos);
                     break;
             }
@@ -106,32 +105,31 @@ public class CursorController : InitBase
         }
     }
 
-    void HandleRigthMouth()
+    void OnClickRigthMouthButton()  // 오른쪽 마우스 클릭 이벤트
     {
-        if (Managers.Game.CurrentUnit == null)
+        CreatureController unit = Managers.Game.CurrentUnit;
+        if (unit == null)
             return;
 
-        Managers.Game.CurrentUnit.CreatureState = ECreatureState.Idle;
-        
-        // 현재 유닛의 행동을 선택하지 않았다면 조작을 취소한다.
-        if (Managers.Game.ActionState == EActionState.Hand)
+        EPlayerActionState playerActionState = Managers.Game.PlayerActionState;
+        if (playerActionState != EPlayerActionState.None)
         {
-            Managers.Game.ActionState = EActionState.None;
-            return;
-        }
-        else if (Managers.Game.ActionState == EActionState.None)
-            return;
+            if (playerActionState == EPlayerActionState.Hand)
+                Managers.Game.PlayerActionState = EPlayerActionState.None;
+            else
+                Managers.Game.PlayerActionState = EPlayerActionState.Hand;
 
-        Managers.Game.ActionState = EActionState.Hand;
+            unit.CreatureState = ECreatureState.Idle;
+        }
     }
 
     Vector3 GetMouseWorldPosition()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
-        return Managers.Map.GetTilePosition(mousePos, Vector3Int.zero, new Vector3(0, -0.25f, 0));
+        return Managers.Map.GetTilePosition(mousePos, Vector3Int.zero);
     }
 
-    void ShowCreatureInfoUI(Vector3 worldPos)
+    void ShowCreatureInfoUI(Vector3 worldPos)   // 해당 위치에 크리처가 있다면 UI 정보를 띄운다
     {
         BaseController obj = Managers.Map.GetObject(worldPos);
         if (obj != null)
@@ -143,10 +141,9 @@ public class CursorController : InitBase
 
     void HandleNoneAction(Vector3 worldPos)
     {
+        // 조작할 플레이어 유닛을 선택한다
         if (IsValidPosition(worldPos, true))
         {
-            transform.position = worldPos;
-
             BaseController obj = Managers.Map.GetObject(worldPos);
             if (obj == null)
                 return;
@@ -158,7 +155,7 @@ public class CursorController : InitBase
             if (unit.CreatureType == ECreatureType.PlayerUnit && unit.CreatureState != ECreatureState.EndTurn)
             {
                 Managers.Game.CurrentUnit = unit;
-                Managers.Game.ActionState = EActionState.Hand;
+                Managers.Game.PlayerActionState = EPlayerActionState.Hand;
             }
         }
     }
@@ -167,19 +164,17 @@ public class CursorController : InitBase
     {
         if (IsValidPosition(worldPos))
         {
-            transform.position = worldPos;
             PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
             Managers.Game.CurrentUnit = playerUnit;
         }
         
-        Managers.Game.ActionState = EActionState.Hand;
+        Managers.Game.PlayerActionState = EPlayerActionState.Hand;
     }
 
     void HandleMoveAction(Vector3 worldPos)
     {
         if (IsValidPosition(worldPos) && Managers.Game.CurrentUnit != null)
         {
-            transform.position = worldPos;
             PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
             if (playerUnit != null)
             {
@@ -188,7 +183,7 @@ public class CursorController : InitBase
             }
         }
      
-        Managers.Game.ActionState = EActionState.Hand;
+        Managers.Game.PlayerActionState = EPlayerActionState.Hand;
     }
 
     void HandleSkillAction(Vector3 worldPos)
@@ -201,15 +196,12 @@ public class CursorController : InitBase
 
             if (IsValidRange(worldPos, castingRange))
             {
-                transform.position = worldPos;
                 Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
-                Managers.Game.ActionState = EActionState.Hand;
+                Managers.Game.PlayerActionState = EPlayerActionState.Hand;
             }
             else
             {
                 Debug.Log("캐스팅 범위내에서 스킬을 사용해주세요.");
-                transform.position = worldPos;
-                return;
             }
         }
     }

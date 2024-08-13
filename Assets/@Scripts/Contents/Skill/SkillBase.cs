@@ -80,10 +80,11 @@ public abstract class SkillBase : InitBase
         ClearCastingRange();
         foreach (Vector3Int delta in SkillData.CastingRange)
         {
-            Vector3 pos = Managers.Map.GetTilePosition(transform.position, delta, new Vector3(0, -0.25f, 0));
+            Vector3 pos = Managers.Map.GetTilePosition(transform.position, delta);
             if (Managers.Map.CanGo(pos, true))
             {
                 CastingRange.Add(pos);
+                // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
                 if (Owner.CreatureType == ECreatureType.PlayerUnit)
                 {
                     GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
@@ -102,6 +103,7 @@ public abstract class SkillBase : InitBase
             if (Managers.Map.CanGo(pos, true))
             {
                 SkillSizeRange.Add(pos);
+                // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
                 if (Owner.CreatureType == ECreatureType.PlayerUnit)
                 {
                     GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
@@ -114,29 +116,38 @@ public abstract class SkillBase : InitBase
     public void ClearCastingRange()
     {
         CastingRange.Clear();
-        GameObject go = GameObject.Find("RangeTile");
-        if (go == null)
-            return;
 
-        foreach (Transform child in go.transform.parent)
+        // 스킬을 사용한 크리처가 플레이어 유닛이라면 시각화한 범위를 없앤다
+        if (Owner.CreatureType == ECreatureType.PlayerUnit)
         {
-            if (child != null && child.gameObject.activeInHierarchy)
-                Managers.Resource.Destroy(child.gameObject);
-        }
+            GameObject go = GameObject.Find("RangeTile");
+            if (go == null)
+                return;
 
+            foreach (Transform child in go.transform.parent)
+            {
+                if (child != null && child.gameObject.activeInHierarchy)
+                    Managers.Resource.Destroy(child.gameObject);
+            }
+        }
     }
 
     public void ClearSizeRange()
     {
         SkillSizeRange.Clear();
-        GameObject go = GameObject.Find("SelectTile");
-        if (go == null)
-            return;
 
-        foreach (Transform child in go.transform.parent)
+        // 스킬을 사용한 크리처가 플레이어 유닛이라면 시각화한 범위를 없앤다
+        if (Owner.CreatureType == ECreatureType.PlayerUnit)
         {
-            if (child != null && child.gameObject.activeInHierarchy)
-                Managers.Resource.Destroy(child.gameObject);
+            GameObject go = GameObject.Find("SelectTile");
+            if (go == null)
+                return;
+
+            foreach (Transform child in go.transform.parent)
+            {
+                if (child != null && child.gameObject.activeInHierarchy)
+                    Managers.Resource.Destroy(child.gameObject);
+            }
         }
     }
 }

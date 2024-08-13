@@ -77,22 +77,15 @@ public class UI_GameScene : UI_Scene
         GetText((int)Texts.DEFVauleText).text = unit.Hp.ToString();
     }
 
-    void HandleOnActionStateChanged(EActionState actionState)
+    void HandleOnActionStateChanged(EPlayerActionState actionState)
     {
         switch (actionState)
         {
-            case EActionState.None:
+            case EPlayerActionState.None:
                 HandleNoneAction();
                 break;
-            case EActionState.Hand:
+            case EPlayerActionState.Hand:
                 HandleHandAction();
-                break;
-            case EActionState.Move:
-                HandleMoveAction();
-                break;
-            case EActionState.Skill:
-                break;
-            case EActionState.Spawn:
                 break;
         }
     }
@@ -110,17 +103,13 @@ public class UI_GameScene : UI_Scene
         GetObject((int)GameObjects.SkillScrollView).SetActive(false);
     }
 
-    void HandleMoveAction()
-    {
-        Managers.Game.CurrentUnit.SetMovementRange();
-    }
-
     void OnClickMoveButton()
     {
         Debug.Log("OnClickMoveButton");
         
         gameObject.SetActive(false);
-        Managers.Game.ActionState = EActionState.Move;
+        Managers.Game.CurrentUnit.SetMovementRange();
+        Managers.Game.PlayerActionState = EPlayerActionState.Move;
     }
 
     void OnClickSkillButton()
@@ -128,27 +117,21 @@ public class UI_GameScene : UI_Scene
         Debug.Log("OnClickSkillButton");
         
         ClearSkillList();
+        GetObject((int)GameObjects.SkillScrollView).SetActive(true);
+        GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
         
-        // 현재 유닛의 스킬을 가져온다
-        CreatureController unit = Managers.Game.CurrentUnit;
-        if (unit != null)
+        // 스킬 스크롤 뷰
+        List<SkillBase> skillList = Managers.Game.CurrentUnit.Skills.SkillList; // 현재 유닛의 스킬을 가져온다
+        for (int i = 0; i < skillList.Count; i++)
         {
-            // 스킬 스크롤 뷰
-            GetObject((int)GameObjects.SkillScrollView).SetActive(true);
-            GameObject content = GetObject((int)GameObjects.SkillContent).gameObject;
-
-            List<SkillBase> skillList = unit.Skills.SkillList;
-            for (int i = 0; i < skillList.Count; i++)
-            {
-                GameObject go = Managers.Resource.Instantiate("UI_Skill_Item", content.transform);
-                go.name = skillList[i].SkillData.PrefabLabel;
-
-                TMP_Text txt = Util.FindChild<TMP_Text>(go);
-                txt.text = skillList[i].Name;
-
-                Button button = go.GetComponent<Button>();
-                button.onClick.AddListener(() => OnClickSkill_ItemButton(go.name));
-            }
+            GameObject go = Managers.Resource.Instantiate("UI_Skill_Item", content.transform);
+            go.name = skillList[i].SkillData.PrefabLabel;
+            // 텍스트
+            TMP_Text txt = Util.FindChild<TMP_Text>(go);
+            txt.text = skillList[i].Name;
+            // 이벤트 바인딩
+            Button button = go.GetComponent<Button>();
+            button.onClick.AddListener(() => OnClickSkill_ItemButton(go.name));
         }
     }
 
@@ -167,7 +150,9 @@ public class UI_GameScene : UI_Scene
             {
                 gameObject.SetActive(false);
                 Managers.Game.CurrentUnit.CastingSkill = skill;
-                Managers.Game.ActionState = EActionState.Skill;
+                skill.SetCastingRange();
+                
+                Managers.Game.PlayerActionState = EPlayerActionState.Skill;
                 break;
             }
         }
@@ -176,7 +161,29 @@ public class UI_GameScene : UI_Scene
     void OnClickEndTurnButton()
     {
         Debug.Log("OnClickEndTurnButton");
-        Managers.Game.ActionState = EActionState.None;
+
+        // 모든 유닛이 턴 종료 상태인지 확인
+        bool isValid = true;
+        foreach (var unit in Managers.Object.PlayerUnits)
+        {
+            if (unit == this)
+                continue;
+
+            if (unit.CreatureState == ECreatureState.Dead)
+                continue;
+
+            if (unit.CreatureState != ECreatureState.EndTurn)
+            {
+                isValid = false;
+                break;
+            }
+        }
+
+        // 모든 유닛이 턴을 종료했다면 몬스터 턴으로 전환
+        if (isValid)
+            Managers.Game.GameState = EGameState.MonsterTurn;
+
+        Managers.Game.PlayerActionState = EPlayerActionState.None;
         Managers.Game.CurrentUnit.CreatureState = ECreatureState.EndTurn;
     }
 

@@ -34,10 +34,6 @@ public abstract class CreatureController : BaseController
         set
         {
             _castingSkill = value;
-            if (_castingSkill == null)
-                return;
-            
-            _castingSkill.SetCastingRange();
         }
     }
 
@@ -157,7 +153,7 @@ public abstract class CreatureController : BaseController
                 int distance = Math.Abs(dx) + Math.Abs(dy);
                 if (distance <= Mov && distance > 0)
                 {
-                    Vector3 destPos = Managers.Map.GetTilePosition(transform.position, new Vector3Int(dx, dy), new Vector3(0, -0.25f, 0));
+                    Vector3 destPos = Managers.Map.GetTilePosition(transform.position, new Vector3Int(dx, dy));
                     if (FindPath(destPos, Mov) == EFindPathResult.Success)
                     {
                         MovementRange.Add(destPos);

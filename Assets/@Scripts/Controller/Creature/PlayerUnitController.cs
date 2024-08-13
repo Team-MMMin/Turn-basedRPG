@@ -56,11 +56,13 @@ public class PlayerUnitController : CreatureController
         {
             Debug.Log("UpdateIdle");
 
+            // 이동 범위 비시각화
             if (MovementRange.Count > 0)
             {
                 ClearMovementRange();
             }
 
+            // 캐스팅 스킬 범위 비시각화 및 초기화
             if (CastingSkill != null)
             {
                 CastingSkill.ClearCastingRange();
@@ -99,27 +101,7 @@ public class PlayerUnitController : CreatureController
     {
         if (CreatureState == ECreatureState.EndTurn)
         {
-            Debug.Log("UpdateEndTurn");
-
-            // 모든 플레이어 유닛이 턴 종료 상태인지 확인
-            bool isValid = true;
-            foreach (var unit in Managers.Object.PlayerUnits)
-            {
-                if (unit == this)
-                    continue;
-
-                if (unit.CreatureState == ECreatureState.Dead)
-                    continue;
-
-                if (unit.CreatureState != ECreatureState.EndTurn)
-                {
-                    isValid = false;
-                    break;
-                }
-            }
-
-            if (isValid)
-                Managers.Game.GameState = EGameState.MonsterTurn;
+            //Debug.Log("UpdateEndTurn");
         }
     }
 

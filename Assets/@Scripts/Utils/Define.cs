@@ -14,7 +14,7 @@ public static class Define
         Drag,
     }
 
-    public enum EActionState
+    public enum EPlayerActionState
     {
         None,
         Hand,

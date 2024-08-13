@@ -86,11 +86,11 @@ public class MapManager
         }
     }
 
-    public Vector3 GetTilePosition(Vector3 worldPos, Vector3Int delta, Vector3 pivotOffset)
+    public Vector3 GetTilePosition(Vector3 worldPos, Vector3Int delta)
     {
         worldPos.z = 0;
         Vector3Int cellPos = Managers.Map.WorldToCell(worldPos) + delta;
-        worldPos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos) + pivotOffset;    // 중앙에서 약간 아래로 피벗 보정
+        worldPos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos) + new Vector3(0, -0.25f, 0);    // 중앙에서 약간 아래로 피벗 보정
 
         return worldPos;
     }
