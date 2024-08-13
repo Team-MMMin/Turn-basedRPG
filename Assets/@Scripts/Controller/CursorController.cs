@@ -34,6 +34,9 @@ public class CursorController : InitBase
 
     void UpdateCursor()
     {
+        if (Managers.Game.Camera.isDragging)
+            return;
+        
         Vector3 worldPos = GetMouseWorldPosition();
         if (IsValidPosition(worldPos, true) == false)
             return;
