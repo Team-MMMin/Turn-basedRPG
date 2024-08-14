@@ -13,8 +13,14 @@ public class UI_GameScene : UI_Scene
     {
         StatInfoObject,
         ActionControllerObject,
+        CurrentUnitInfoObject,
         SkillScrollView,
         SkillContent,
+    }
+
+    enum Images
+    {
+        ProfileImage,
     }
 
     enum Texts
@@ -24,6 +30,13 @@ public class UI_GameScene : UI_Scene
         MPVauleText,
         ATKVauleText,
         DEFVauleText,
+        CurrentUnitNameValueText,
+        CurrentUnitClassValueText,
+        CurrentUnitLvVauleText,
+        CurrentUnitHPVauleText,
+        CurrentUnitMPVauleText,
+        CurrentUnitATKVauleText,
+        CurrentUnitDEFVauleText,
     }
 
     enum Buttons
@@ -40,16 +53,21 @@ public class UI_GameScene : UI_Scene
         if (base.Init() == false) 
             return false;
 
+        #region Obejct Bind
         BindObject(typeof(GameObjects));
+        BindImage(typeof(Images));
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
+        GetObject((int)GameObjects.StatInfoObject).SetActive(false);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
+        GetObject((int)GameObjects.CurrentUnitInfoObject).gameObject.SetActive(false);
         GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
         BindEvent(GetButton((int)Buttons.MoveButton).gameObject, OnClickMoveButton);
         BindEvent(GetButton((int)Buttons.SkillButton).gameObject, OnClickSkillButton);
         BindEvent(GetButton((int)Buttons.EndTurnButton).gameObject, OnClickEndTurnButton);
         BindEvent(GetButton((int)Buttons.SettingButton).gameObject, OnClickSettingButton);
+        #endregion
 
         Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
         Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
@@ -61,6 +79,9 @@ public class UI_GameScene : UI_Scene
 
     public void SetInfo(CreatureController unit) // 데이터 받아올때
     {
+        if (unit == Managers.Game.CurrentUnit)
+            return;
+
         Refresh(unit);
     }
 
@@ -74,6 +95,20 @@ public class UI_GameScene : UI_Scene
         GetText((int)Texts.MPVauleText).text = unit.Mp.ToString();
         GetText((int)Texts.ATKVauleText).text = unit.Atk.ToString();
         GetText((int)Texts.DEFVauleText).text = unit.Hp.ToString();
+    }
+
+    void CurrentUnitRefresh()
+    {
+        if (Managers.Game.CurrentUnit == null)
+            return;
+
+        GetText((int)Texts.CurrentUnitNameValueText).text = Managers.Game.CurrentUnit.CreatureData.Name;    // 한글 폰트를 지원하지 않아 깨진다
+        GetText((int)Texts.CurrentUnitClassValueText).text = Managers.Game.CurrentUnit.ClassData.PrefabLabel;   // 한글 폰트를 지원하지 않아 임시적으로 프리팹 라벨을 사용하기로 했다
+        GetText((int)Texts.CurrentUnitLvVauleText).text = Managers.Game.CurrentUnit.CreatureData.Level.ToString();
+        GetText((int)Texts.CurrentUnitHPVauleText).text = Managers.Game.CurrentUnit.Hp.ToString();
+        GetText((int)Texts.CurrentUnitMPVauleText).text = Managers.Game.CurrentUnit.Mp.ToString();
+        GetText((int)Texts.CurrentUnitATKVauleText).text = Managers.Game.CurrentUnit.Atk.ToString();
+        GetText((int)Texts.CurrentUnitDEFVauleText).text = Managers.Game.CurrentUnit.Hp.ToString();
     }
 
     void HandleOnActionStateChanged(EPlayerActionState actionState)
@@ -114,22 +149,30 @@ public class UI_GameScene : UI_Scene
     void HandleNoneAction()
     {
         Managers.Game.CurrentUnit = null;
+        GetObject((int)GameObjects.StatInfoObject).SetActive(false);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
+        GetObject((int)GameObjects.CurrentUnitInfoObject).SetActive(false);
+        GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
     }
 
     void HandleHandAction()
     {
         Debug.Log("HandleHandAction");
-        GetObject((int)GameObjects.StatInfoObject).SetActive(true); // 현재 유닛 스탯 정보만 보이도록 수정이 필요
+        GetObject((int)GameObjects.StatInfoObject).SetActive(false);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(true);
+        GetObject((int)GameObjects.CurrentUnitInfoObject).SetActive(true);
+        GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
         GetButton((int)Buttons.MoveButton).interactable = !Managers.Game.CurrentUnit.IsMove;
         GetButton((int)Buttons.SkillButton).interactable = !Managers.Game.CurrentUnit.IsSkill;
-        Refresh(Managers.Game.CurrentUnit);
+        CurrentUnitRefresh();
     }
 
     void HandleEndTurnAction()
     {
-        gameObject.SetActive(false);
+        GetObject((int)GameObjects.StatInfoObject).SetActive(false);
+        GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
+        GetObject((int)GameObjects.CurrentUnitInfoObject).gameObject.SetActive(false);
+        GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
     }
 
     void HandlePlayerTurnAction()
@@ -162,7 +205,11 @@ public class UI_GameScene : UI_Scene
         if (Managers.Game.CurrentUnit.IsMove)
             return;
 
+        GetObject((int)GameObjects.StatInfoObject).SetActive(false);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
+        GetObject((int)GameObjects.CurrentUnitInfoObject).SetActive(false);
+        GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
+
         Managers.Game.CurrentUnit.SetMovementRange();
         Managers.Game.PlayerActionState = EPlayerActionState.Move;
     }
@@ -207,8 +254,9 @@ public class UI_GameScene : UI_Scene
             {
                 GetObject((int)GameObjects.StatInfoObject).SetActive(true);
                 GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
-                GetObject((int)GameObjects.SkillScrollView).SetActive(false);
-                
+                GetObject((int)GameObjects.CurrentUnitInfoObject).SetActive(true);
+                GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
+
                 Managers.Game.CurrentUnit.CastingSkill = skill;
                 skill.SetCastingRange();
                 Managers.Game.PlayerActionState = EPlayerActionState.Skill;
@@ -244,7 +292,10 @@ public class UI_GameScene : UI_Scene
         // 모든 유닛이 턴을 종료했다면 몬스터 턴으로 전환
         if (isValid)
         {
-            gameObject.SetActive(false);
+            GetObject((int)GameObjects.StatInfoObject).SetActive(false);
+            GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
+            GetObject((int)GameObjects.CurrentUnitInfoObject).gameObject.SetActive(false);
+            GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
             Managers.Game.GameState = EGameState.MonsterTurn;
         }
     }

@@ -2182,7 +2182,7 @@ GameObject:
   - component: {fileID: 2647296651124580000}
   - component: {fileID: 7787364724575224402}
   m_Layer: 5
-  m_Name: CurrentUnitLvText
+  m_Name: CurrentUnitLvVauleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
