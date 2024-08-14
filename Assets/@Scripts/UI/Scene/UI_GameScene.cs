@@ -57,15 +57,12 @@ public class UI_GameScene : UI_Scene
         return true;
     }
 
-    public void SetInfo(CreatureController unit = null) // 데이터 받아올때
+    public void SetInfo(CreatureController unit) // 데이터 받아올때
     {
-        if (unit == null)
-            unit = Managers.Game.CurrentUnit;
-
         Refresh(unit);
     }
 
-    void Refresh(CreatureController unit = null)
+    void Refresh(CreatureController unit)
     {
         if (unit == null)
             return;
@@ -102,9 +99,8 @@ public class UI_GameScene : UI_Scene
     void HandleHandAction()
     {
         Debug.Log("HandleHandAction");
-        gameObject.SetActive(true);
+        GetObject((int)GameObjects.StatInfoObject).SetActive(true);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(true);
-        GetObject((int)GameObjects.SkillScrollView).SetActive(false);
         GetButton((int)Buttons.MoveButton).interactable = !Managers.Game.CurrentUnit.IsMove;
         GetButton((int)Buttons.SkillButton).interactable = !Managers.Game.CurrentUnit.IsSkill;
         Refresh(Managers.Game.CurrentUnit);
@@ -115,18 +111,13 @@ public class UI_GameScene : UI_Scene
         gameObject.SetActive(false);
     }
 
-    void HandleOnPlayerActionSelected()
-    {
-        Refresh(Managers.Game.CurrentUnit);
-    }
-
     void OnClickMoveButton()
     {
         Debug.Log("OnClickMoveButton");
         if (Managers.Game.CurrentUnit.IsMove)
             return;
 
-        gameObject.SetActive(false);
+        GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
         Managers.Game.CurrentUnit.SetMovementRange();
         Managers.Game.PlayerActionState = EPlayerActionState.Move;
     }
@@ -169,9 +160,13 @@ public class UI_GameScene : UI_Scene
         {
             if (skill.SkillData.PrefabLabel == name)
             {
-                gameObject.SetActive(false);
+                GetObject((int)GameObjects.StatInfoObject).SetActive(true);
+                GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
+                GetObject((int)GameObjects.SkillScrollView).SetActive(false);
+                
                 Managers.Game.CurrentUnit.CastingSkill = skill;
                 skill.SetCastingRange();
+                
                 Managers.Game.PlayerActionState = EPlayerActionState.Skill;
                 break;
             }

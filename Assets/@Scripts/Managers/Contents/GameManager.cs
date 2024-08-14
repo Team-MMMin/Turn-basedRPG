@@ -43,6 +43,7 @@ public class GameManager
     }
 
     public CameraController Camera;
+    public CursorController Cursor;
 
     public event Action<EPlayerActionState> OnActionStateChanged;
     public event Action<EGameState> OnGameStateChanged;

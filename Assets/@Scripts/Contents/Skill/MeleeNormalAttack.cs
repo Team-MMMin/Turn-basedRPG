@@ -40,6 +40,9 @@ public class MeleeNormalAttack : SkillBase
 
             creature.Hp -= SkillData.DamageMultiplier;
             Debug.Log($"스킬에 맞은 {creature.name}의 HP가 {creature.Hp}로 됐다.");
+
+            // TODO
+            // 스킬에 맞은 대상은 HP가 감소하는 UI가 나타난다. (피가 줄어드는 UI, 대미지 폰트)
         }
 
         return true;
