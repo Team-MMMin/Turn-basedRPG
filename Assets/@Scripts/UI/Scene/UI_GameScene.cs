@@ -51,6 +51,8 @@ public class UI_GameScene : UI_Scene
         BindEvent(GetButton((int)Buttons.EndTurnButton).gameObject, OnClickEndTurnButton);
         BindEvent(GetButton((int)Buttons.SettingButton).gameObject, OnClickSettingButton);
 
+        Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
+        Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
         Managers.Game.OnActionStateChanged -= HandleOnActionStateChanged;
         Managers.Game.OnActionStateChanged += HandleOnActionStateChanged;
 
@@ -90,6 +92,25 @@ public class UI_GameScene : UI_Scene
         }
     }
 
+    void HandleOnGameStateChanged(EGameState gameState)
+    {
+        switch (gameState)
+        {
+            case EGameState.PlayerTurn:
+                HandlePlayerTurnAction();
+                break;
+            case EGameState.MonsterTurn:
+                HandleMonsterTurnAction();
+                break;
+            case EGameState.Win:
+                HandleWinAction();
+                break;
+            case EGameState.Lose:
+                HandleLoseAction();
+                break;
+        }
+    }
+
     void HandleNoneAction()
     {
         Managers.Game.CurrentUnit = null;
@@ -99,7 +120,7 @@ public class UI_GameScene : UI_Scene
     void HandleHandAction()
     {
         Debug.Log("HandleHandAction");
-        GetObject((int)GameObjects.StatInfoObject).SetActive(true);
+        GetObject((int)GameObjects.StatInfoObject).SetActive(true); // 현재 유닛 스탯 정보만 보이도록 수정이 필요
         GetObject((int)GameObjects.ActionControllerObject).SetActive(true);
         GetButton((int)Buttons.MoveButton).interactable = !Managers.Game.CurrentUnit.IsMove;
         GetButton((int)Buttons.SkillButton).interactable = !Managers.Game.CurrentUnit.IsSkill;
@@ -109,6 +130,30 @@ public class UI_GameScene : UI_Scene
     void HandleEndTurnAction()
     {
         gameObject.SetActive(false);
+    }
+
+    void HandlePlayerTurnAction()
+    {
+        // TODO
+        // 현재 턴의 주체를 화면에 표시
+    }
+
+    void HandleMonsterTurnAction()
+    {
+        // TODO
+        // 현재 턴의 주체를 화면에 표시
+    }
+
+    void HandleWinAction()
+    {
+        // TODO
+        // 승패 결과를 화면에 표시
+    }
+
+    void HandleLoseAction()
+    {
+        // TODO
+        // 승패 결과를 화면에 표시
     }
 
     void OnClickMoveButton()
@@ -166,7 +211,6 @@ public class UI_GameScene : UI_Scene
                 
                 Managers.Game.CurrentUnit.CastingSkill = skill;
                 skill.SetCastingRange();
-                
                 Managers.Game.PlayerActionState = EPlayerActionState.Skill;
                 break;
             }
