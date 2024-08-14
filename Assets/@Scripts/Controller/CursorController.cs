@@ -37,7 +37,10 @@ public class CursorController : InitBase
     {
         if (Managers.Game.Camera.isDragging)
             return;
-        
+
+        if (Managers.Game.GameState != EGameState.PlayerTurn)
+            return;
+
         Vector3 worldPos = GetMouseWorldPosition();
         if (IsValidPosition(worldPos, true) == false)
             return;
@@ -200,7 +203,10 @@ public class CursorController : InitBase
                 playerUnit.CreatureState = ECreatureState.Move;
             }
             else
+            {
                 Debug.Log("이동가능한 범위을 확인하세요.");
+                Managers.Game.CurrentUnit.CreatureState = ECreatureState.Idle;
+            }
         }
      
         Managers.Game.PlayerActionState = EPlayerActionState.Hand;
@@ -220,7 +226,10 @@ public class CursorController : InitBase
                 Managers.Game.CurrentUnit.IsSkill = true;
             }
             else
+            {
                 Debug.Log("캐스팅 범위에서 스킬을 사용해주세요.");
+                Managers.Game.CurrentUnit.CreatureState = ECreatureState.Idle;
+            }
         }
 
         Managers.Game.PlayerActionState = EPlayerActionState.Hand;
