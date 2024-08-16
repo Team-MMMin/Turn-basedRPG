@@ -50,6 +50,7 @@ public class UI_GameScene : UI_Scene
 
     public override bool Init()
     {
+        Debug.Log("UI_GameScene");
         if (base.Init() == false) 
             return false;
 
@@ -73,6 +74,8 @@ public class UI_GameScene : UI_Scene
         Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
         Managers.Game.OnActionStateChanged -= HandleOnActionStateChanged;
         Managers.Game.OnActionStateChanged += HandleOnActionStateChanged;
+        Managers.Game.Cursor.OnCreatureInfoUIShowed -= HandleOnCreatureInfoUIShowed;
+        Managers.Game.Cursor.OnCreatureInfoUIShowed += HandleOnCreatureInfoUIShowed;
 
         return true;
     }
@@ -146,10 +149,15 @@ public class UI_GameScene : UI_Scene
         }
     }
 
+    void HandleOnCreatureInfoUIShowed(bool active)
+    {
+        GetObject((int)GameObjects.StatInfoObject).SetActive(active);
+    }
+
+    #region ActionState에 따른 UI변화
     void HandleNoneAction()
     {
         Managers.Game.CurrentUnit = null;
-        GetObject((int)GameObjects.StatInfoObject).SetActive(false);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
         GetObject((int)GameObjects.CurrentUnitInfoObject).SetActive(false);
         GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
@@ -174,7 +182,9 @@ public class UI_GameScene : UI_Scene
         GetObject((int)GameObjects.CurrentUnitInfoObject).gameObject.SetActive(false);
         GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
     }
+    #endregion
 
+    #region GameState에 따른 UI변화
     void HandlePlayerTurnAction()
     {
         // TODO
@@ -198,6 +208,7 @@ public class UI_GameScene : UI_Scene
         // TODO
         // 승패 결과를 화면에 표시
     }
+    #endregion
 
     void OnClickMoveButton()
     {
@@ -205,7 +216,6 @@ public class UI_GameScene : UI_Scene
         if (Managers.Game.CurrentUnit.IsMove)
             return;
 
-        GetObject((int)GameObjects.StatInfoObject).SetActive(false);
         GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
         GetObject((int)GameObjects.CurrentUnitInfoObject).SetActive(false);
         GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
@@ -252,7 +262,6 @@ public class UI_GameScene : UI_Scene
         {
             if (skill.SkillData.PrefabLabel == name)
             {
-                GetObject((int)GameObjects.StatInfoObject).SetActive(true);
                 GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
                 GetObject((int)GameObjects.CurrentUnitInfoObject).SetActive(true);
                 GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
@@ -287,16 +296,16 @@ public class UI_GameScene : UI_Scene
         }
 
         Managers.Game.CurrentUnit.CreatureState = ECreatureState.EndTurn;
-        Managers.Game.PlayerActionState = EPlayerActionState.None;
 
         // 모든 유닛이 턴을 종료했다면 몬스터 턴으로 전환
         if (isValid)
         {
-            GetObject((int)GameObjects.StatInfoObject).SetActive(false);
-            GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
-            GetObject((int)GameObjects.CurrentUnitInfoObject).gameObject.SetActive(false);
-            GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
+            Managers.Game.PlayerActionState = EPlayerActionState.EndTurn;
             Managers.Game.GameState = EGameState.MonsterTurn;
+        }
+        else
+        {
+            Managers.Game.PlayerActionState = EPlayerActionState.None;
         }
     }
 
