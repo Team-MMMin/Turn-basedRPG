@@ -13,11 +13,8 @@ public class PlayerUnitController : CreatureController
         set 
         {
             _destPos = value;
-            OnDestPosChanged?.Invoke();
         }
     }
-
-    public event Action OnDestPosChanged;
 
     public override bool Init()
     {
@@ -26,9 +23,6 @@ public class PlayerUnitController : CreatureController
 
         CreatureType = ECreatureType.PlayerUnit;
         CreatureState = ECreatureState.Idle;
-
-        OnDestPosChanged -= HandleOnDestPosChanged;
-        OnDestPosChanged += HandleOnDestPosChanged;
 
         Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
         Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
@@ -81,6 +75,7 @@ public class PlayerUnitController : CreatureController
         if (CreatureState == ECreatureState.Move)
         {
             Debug.Log("UpdateMove");
+            FindPathAndMoveToCellPos(DestPos, Mov);
             // TODO
             // 이동을 완료할 때까지 애니메이션 재생
 
@@ -106,10 +101,4 @@ public class PlayerUnitController : CreatureController
             //Debug.Log("UpdateEndTurn");
         }
     }
-
-    void HandleOnDestPosChanged()
-    {
-        FindPathAndMoveToCellPos(_destPos, Mov);
-    }
-
 }

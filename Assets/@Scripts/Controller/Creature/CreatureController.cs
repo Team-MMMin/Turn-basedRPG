@@ -290,7 +290,7 @@ public abstract class CreatureController : BaseController
     {
         while (true)
         {
-            LerpToCellPos(5f);
+            LerpToCellPos(10f);
             yield return null;
         }
     }
