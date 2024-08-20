@@ -34,15 +34,11 @@ public class MeleeNormalAttack : SkillBase
             if (obj == null)
                 continue;
 
-            CreatureController creature = obj.GetComponent<CreatureController>();
-            if (creature == null)
+            CreatureController target = obj.GetComponent<CreatureController>();
+            if (target == null)
                 continue;
 
-            creature.Hp -= SkillData.DamageMultiplier;
-            Debug.Log($"스킬에 맞은 {creature.name}의 HP가 {creature.Hp}로 됐다.");
-
-            // TODO
-            // 스킬에 맞은 대상은 HP가 감소하는 UI가 나타난다. (피가 줄어드는 UI, 대미지 폰트)
+            target.OnDamaged((SkillData.DamageMultiplier * Owner.Atk) - target.Def + 1);
         }
 
         return true;

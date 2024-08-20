@@ -1,4 +1,4 @@
-using Data;
+﻿using Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -95,7 +95,7 @@ public abstract class CreatureController : BaseController
         SortingGroup sg = gameObject.GetOrAddComponent<SortingGroup>();
         sg.sortingOrder = SortingLayers.CREATURE;
 
-        // ��ų
+        // 스킬
         Skills = gameObject.GetOrAddComponent<SkillComponent>();
         Skills.SetInfo(this);
 
@@ -145,6 +145,21 @@ public abstract class CreatureController : BaseController
     protected virtual void UpdateSkill() { }
     protected virtual void UpdateDead() { }
     protected virtual void UpdateEndTurn() { }
+
+    public void OnDamaged(float damage)
+    {
+        Hp -= Mathf.Clamp(damage, 1, Hp);
+        Debug.Log($"스킬에 맞은 {name}의 HP가 {Hp}로 됐다.");
+        
+        // TODO
+        // 스킬에 맞은 대상은 HP가 감소하는 UI가 나타난다. (피가 줄어드는 UI, 대미지 폰트)
+        
+        // 사망
+        if (Hp <= 0)
+        {
+            CreatureState = ECreatureState.Dead;
+        }
+    }
 
     public void SetMovementRange()
     {

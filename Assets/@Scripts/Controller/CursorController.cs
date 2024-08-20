@@ -153,8 +153,10 @@ public class CursorController : InitBase
     void ShowCreatureInfoUI(Vector3 worldPos)   // 해당 위치에 크리처가 있다면 UI 정보를 띄운다
     {
         BaseController obj = Managers.Map.GetObject(worldPos);
-        CreatureController unit = obj?.GetComponent<CreatureController>();
-
+        if (obj == null)
+            return;
+        
+        CreatureController unit = obj.GetComponent<CreatureController>();
         if (unit == null)
         {
             OnCreatureInfoUIShowed?.Invoke(false);
@@ -176,7 +178,10 @@ public class CursorController : InitBase
         if (IsValidPosition(worldPos, true))
         {
             BaseController obj = Managers.Map.GetObject(worldPos);
-            CreatureController unit = obj?.GetComponent<CreatureController>();
+            if (obj == null) 
+                return;
+            
+            CreatureController unit = obj.GetComponent<CreatureController>();
             if (unit == null)
                 return;
 

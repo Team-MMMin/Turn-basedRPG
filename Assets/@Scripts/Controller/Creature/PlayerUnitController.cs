@@ -88,9 +88,16 @@ public class PlayerUnitController : CreatureController
         if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
             Debug.Log("UpdateSkill");
-            
             CastingSkill.DoSkill();
             CreatureState = ECreatureState.Idle;
+        }
+    }
+
+    protected override void UpdateDead()
+    {
+        if (CreatureState == ECreatureState.Dead)
+        {
+            Managers.Object.Despawn(this);
         }
     }
 
