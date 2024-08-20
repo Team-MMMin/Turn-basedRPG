@@ -39,20 +39,16 @@ public class CursorController : InitBase
         if (Managers.Game.Camera.isDragging)
             return;
 
-        if (Managers.Game.GameState != EGameState.PlayerTurn)
-            return;
-
         Vector3 worldPos = GetMouseWorldPosition();
         if (IsValidPosition(worldPos, true) == false)
             return;
-
-        _sprite.enabled = true; // 기본적으로 커서 활성화
 
         #region 플레이어 행동 상태 -> 커서 이벤트
         EPlayerActionState actionState = Managers.Game.PlayerActionState;
         switch (actionState)
         {
             case EPlayerActionState.Skill:
+                _sprite.enabled = true;
                 HandleSkillState(worldPos);
                 break;
 
@@ -61,10 +57,11 @@ public class CursorController : InitBase
                 return;
 
             case EPlayerActionState.Spawn:
-                // 커서가 이미 활성화된 상태로 설정되어 있으므로 추가 작업 불필요
+                _sprite.enabled = true;
                 break;
 
             default:
+                _sprite.enabled = true;
                 ShowCreatureInfoUI(worldPos);
                 break;
         }

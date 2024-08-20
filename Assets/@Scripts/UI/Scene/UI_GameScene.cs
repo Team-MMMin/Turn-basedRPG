@@ -16,6 +16,7 @@ public class UI_GameScene : UI_Scene
         CurrentUnitInfoObject,
         SkillScrollView,
         SkillContent,
+        GameStateObject,
     }
 
     enum Images
@@ -37,6 +38,7 @@ public class UI_GameScene : UI_Scene
         CurrentUnitMPVauleText,
         CurrentUnitATKVauleText,
         CurrentUnitDEFVauleText,
+        GameStateText,
     }
 
     enum Buttons
@@ -64,6 +66,7 @@ public class UI_GameScene : UI_Scene
         GetObject((int)GameObjects.ActionControllerObject).SetActive(false);
         GetObject((int)GameObjects.CurrentUnitInfoObject).gameObject.SetActive(false);
         GetObject((int)GameObjects.SkillScrollView).gameObject.SetActive(false);
+        GetObject((int)GameObjects.GameStateObject).SetActive(false);
         BindEvent(GetButton((int)Buttons.MoveButton).gameObject, OnClickMoveButton);
         BindEvent(GetButton((int)Buttons.SkillButton).gameObject, OnClickSkillButton);
         BindEvent(GetButton((int)Buttons.EndTurnButton).gameObject, OnClickEndTurnButton);
@@ -187,26 +190,43 @@ public class UI_GameScene : UI_Scene
     #region GameState에 따른 UI변화
     void HandlePlayerTurnAction()
     {
-        // TODO
-        // 현재 턴의 주체를 화면에 표시
+        GetObject((int)GameObjects.GameStateObject).SetActive(true);
+        GetText((int)Texts.GameStateText).text = "Player Turn";
+        Managers.Game.Cursor.gameObject.SetActive(false);
+        Invoke("CloseGameStateObjectAndActivateCursor", 1.0f);
     }
 
     void HandleMonsterTurnAction()
     {
-        // TODO
-        // 현재 턴의 주체를 화면에 표시
+        Debug.Log("HandleMonsterTurnAction");
+        GetObject((int)GameObjects.GameStateObject).SetActive(true);
+        GetText((int)Texts.GameStateText).text = "Monster Turn";
+        Invoke("CloseGameStateObject", 1.0f);
+        Managers.Game.Cursor.gameObject.SetActive(false);
     }
 
     void HandleWinAction()
     {
-        // TODO
-        // 승패 결과를 화면에 표시
+        GetObject((int)GameObjects.GameStateObject).SetActive(true);
+        GetText((int)Texts.GameStateText).text = "Win!";
     }
 
     void HandleLoseAction()
     {
-        // TODO
-        // 승패 결과를 화면에 표시
+        GetObject((int)GameObjects.GameStateObject).SetActive(true);
+        GetText((int)Texts.GameStateText).text = "Lose";
+    }
+
+    void CloseGameStateObject()
+    {
+        Debug.Log("CloseGameStateObject");
+        GetObject((int)GameObjects.GameStateObject).SetActive(false);
+    }
+
+    void CloseGameStateObjectAndActivateCursor()
+    {
+        CloseGameStateObject();
+        Managers.Game.Cursor.gameObject.SetActive(true);
     }
     #endregion
 
@@ -277,6 +297,7 @@ public class UI_GameScene : UI_Scene
     void OnClickEndTurnButton()
     {
         Debug.Log("OnClickEndTurnButton");
+        Managers.Game.CurrentUnit.CreatureState = ECreatureState.EndTurn;
 
         // 모든 유닛이 턴 종료 상태인지 확인
         bool isValid = true;
@@ -294,8 +315,6 @@ public class UI_GameScene : UI_Scene
                 break;
             }
         }
-
-        Managers.Game.CurrentUnit.CreatureState = ECreatureState.EndTurn;
 
         // 모든 유닛이 턴을 종료했다면 몬스터 턴으로 전환
         if (isValid)
