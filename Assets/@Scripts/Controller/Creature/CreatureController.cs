@@ -37,6 +37,8 @@ public abstract class CreatureController : BaseController
         }
     }
 
+    public UI_HPBar HPBar { get; protected set; }
+
     public List<Vector3> MovementRange = new List<Vector3>();
 
     public Vector3 TargetPos;
@@ -106,6 +108,10 @@ public abstract class CreatureController : BaseController
         Def = CreatureData.Def;
         Mov = ClassData.Mov;
 
+        // HP bar
+        HPBar = Util.FindChild<UI_HPBar>(gameObject);
+        HPBar.SetInfo(this);
+
         // State
         CreatureState = ECreatureState.Idle;
 
@@ -149,13 +155,10 @@ public abstract class CreatureController : BaseController
     public void OnDamaged(float damage)
     {
         Hp -= Mathf.Clamp(damage, 1, Hp);
+        HPBar.SetHpRatio(Hp);
+        
         Debug.Log($"스킬에 맞은 {name}의 HP가 {Hp}로 됐다.");
-        
-        // TODO
-        // 스킬에 맞은 대상은 HP가 감소하는 UI가 나타난다. (피가 줄어드는 UI, 대미지 폰트)
-        
-        // 사망
-        if (Hp <= 0)
+        if (Hp <= 0)    // 사망
         {
             CreatureState = ECreatureState.Dead;
         }

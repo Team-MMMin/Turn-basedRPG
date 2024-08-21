@@ -132,4 +132,5 @@ public static class SortingLayers
 {
     public const int CREATURE = 300;
     public const int CURSOR = 300;
+    public const int DAMAGE_FONT = 310;
 }

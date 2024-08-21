@@ -38,7 +38,7 @@ public class MeleeNormalAttack : SkillBase
             if (target == null)
                 continue;
 
-            target.OnDamaged((SkillData.DamageMultiplier * Owner.Atk) - target.Def + 1);
+            target.OnDamaged((SkillData.DamageMultiplier * Owner.Atk) - target.Def);
         }
 
         return true;
