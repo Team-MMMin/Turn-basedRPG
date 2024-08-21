@@ -155,13 +155,15 @@ public abstract class CreatureController : BaseController
     public void OnDamaged(float damage)
     {
         Hp -= Mathf.Clamp(damage, 1, Hp);
-        HPBar.SetHpRatio(Hp);
-        
-        Debug.Log($"스킬에 맞은 {name}의 HP가 {Hp}로 됐다.");
+        Managers.Object.ShowDamageFont(CenterPos, damage, transform);   // 폰트
+        HPBar.SetHpRatio(Hp);   // HP바
+
         if (Hp <= 0)    // 사망
         {
             CreatureState = ECreatureState.Dead;
         }
+
+        Debug.Log($"스킬에 맞은 {name}의 HP가 {Hp}로 됐다.");
     }
 
     public void SetMovementRange()

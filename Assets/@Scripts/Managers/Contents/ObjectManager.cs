@@ -22,6 +22,13 @@ public class ObjectManager
     public Transform MonsterRoot { get { return GetRootTransform("@Monsters"); } }
     #endregion
 
+    public void ShowDamageFont(Vector2 pos, float damage, Transform parent)
+    {
+        GameObject go = Managers.Resource.Instantiate("DamageFont", pooling: true);
+        DamageFont damageText = go.GetComponent<DamageFont>();
+        damageText.SetInfo(pos, damage, parent);
+    }
+
     public T Spawn<T>(Vector3Int cellPos, int templateID) where T : BaseController
     {
         Vector3 spawnPos = Managers.Map.CellToWorld(cellPos);

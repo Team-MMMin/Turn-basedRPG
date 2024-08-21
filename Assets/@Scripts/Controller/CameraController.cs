@@ -31,7 +31,7 @@ public class CameraController : InitBase
         if (isDragging)
             return;
 
-        Vector3 targetPosition = new Vector3(Target.CenterPosition.x, Target.CenterPosition.y, -10);
+        Vector3 targetPosition = new Vector3(Target.CenterPos.x, Target.CenterPos.y, -10);
         transform.position = targetPosition;
     }
 }

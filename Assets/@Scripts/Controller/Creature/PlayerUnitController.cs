@@ -97,6 +97,7 @@ public class PlayerUnitController : CreatureController
     {
         if (CreatureState == ECreatureState.Dead)
         {
+            Debug.Log("UpdateDead");
             Managers.Object.Despawn(this);
         }
     }

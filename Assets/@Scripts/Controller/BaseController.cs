@@ -11,7 +11,7 @@ public class BaseController : InitBase
     public BoxCollider2D Collider { get; private set; }
     public Rigidbody2D RigidBody { get; private set; }
 
-    public Vector3 CenterPosition { get { return transform.position + new Vector3(Collider.offset.x, Collider.offset.y); } }
+    public Vector3 CenterPos { get { return transform.position + new Vector3(Collider.offset.x, Collider.offset.y); } }
 
     public int DataTemplateID { get; set; }
 
