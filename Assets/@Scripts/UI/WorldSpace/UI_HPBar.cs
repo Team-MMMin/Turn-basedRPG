@@ -16,6 +16,12 @@ public class UI_HPBar : UI_Base
             return false;
 
         Bind<GameObject>(typeof(GameObjects));
+        
+        Canvas canvas = gameObject.GetOrAddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.worldCamera = Camera.main;
+        canvas.sortingOrder = SortingLayers.HP_BAR;
+
         return true;
     }
 
