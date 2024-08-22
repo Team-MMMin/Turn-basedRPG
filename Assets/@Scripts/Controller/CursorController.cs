@@ -39,25 +39,25 @@ public class CursorController : InitBase
         if (Managers.Game.Camera.isDragging)
             return;
 
-        Vector3 worldPos = GetMouseWorldPosition();
-        if (IsValidPosition(worldPos, true) == false)
+        Vector3 worldPos = GetMouseWorldPos();
+        if (IsValidPos(worldPos, true) == false)
             return;
 
         #region 플레이어 행동 상태 -> 커서 이벤트
         EPlayerActionState actionState = Managers.Game.PlayerActionState;
         switch (actionState)
         {
-            case EPlayerActionState.Skill:
-                _sprite.enabled = true;
-                HandleSkillState(worldPos);
-                break;
-
             case EPlayerActionState.Hand:
                 _sprite.enabled = false;  // 커서 가리기
                 return;
 
             case EPlayerActionState.Spawn:
                 _sprite.enabled = true;
+                break;
+
+            case EPlayerActionState.Skill:
+                _sprite.enabled = true;
+                HandleSkillState(worldPos);
                 break;
 
             default:
@@ -82,20 +82,14 @@ public class CursorController : InitBase
             Managers.Game.CurrentUnit.CastingSkill.SetSizeRange();
         }
         else
-        {
             Managers.Game.CurrentUnit.CastingSkill.ClearSizeRange();
-        }
 
         ShowCreatureInfoUI(worldPos);
     }
 
     void OnMouseEvent(EMouseEvent type, bool isLeftMouseClick = true)
     {
-        // 플레이어의 턴일 때 마우스 조작이 가능하다
-        if (Managers.Game.GameState != EGameState.PlayerTurn)
-            return;
-
-        // 왼쪽 마우스 클릭 여부
+        // 오른쪽 마우스 클릭 확인
         if (isLeftMouseClick == false)
         {
             OnClickRigthMouthButton();
@@ -105,8 +99,7 @@ public class CursorController : InitBase
         // 왼쪽 마우스 클릭 이벤트
         if (type == EMouseEvent.Click)
         {
-            Vector3 worldPos = GetMouseWorldPosition();
-
+            Vector3 worldPos = GetMouseWorldPos();
             switch (Managers.Game.PlayerActionState)
             {
                 case EPlayerActionState.None:
@@ -130,6 +123,7 @@ public class CursorController : InitBase
         }
     }
 
+    #region 마우스 클릭 이벤트
     void OnClickRigthMouthButton()  // 오른쪽 마우스 클릭 이벤트
     {
         CreatureController unit = Managers.Game.CurrentUnit;
@@ -144,44 +138,11 @@ public class CursorController : InitBase
         }
     }
 
-    Vector3 GetMouseWorldPosition()
-    {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
-        return Managers.Map.GetTilePosition(mousePos, Vector3Int.zero);
-    }
-
-    void ShowCreatureInfoUI(Vector3 worldPos)   // 해당 위치에 크리처가 있다면 UI 정보를 띄운다
-    {
-        BaseController obj = Managers.Map.GetObject(worldPos);
-        if (obj == null)
-            return;
-        
-        CreatureController unit = obj.GetComponent<CreatureController>();
-        if (unit == null)
-        {
-            OnCreatureInfoUIShowed?.Invoke(false);
-            return;
-        }
-
-        if (unit == Managers.Game.CurrentUnit)
-        {
-            OnCreatureInfoUIShowed?.Invoke(false);
-            return;
-        }
-
-        Managers.UI.GetSceneUI<UI_GameScene>().SetInfo(unit);
-        OnCreatureInfoUIShowed?.Invoke(true);
-    }
-
     void HandleNoneAction(Vector3 worldPos) // 조작할 플레이어 유닛을 선택한다
     {
-        if (IsValidPosition(worldPos, true))
+        if (IsValidPos(worldPos, true))
         {
-            BaseController obj = Managers.Map.GetObject(worldPos);
-            if (obj == null) 
-                return;
-            
-            CreatureController unit = obj.GetComponent<CreatureController>();
+            CreatureController unit = Managers.Map.GetObject(worldPos) as CreatureController;
             if (unit == null)
                 return;
 
@@ -196,7 +157,7 @@ public class CursorController : InitBase
 
     void HandleSpawnAction(Vector3 worldPos)
     {
-        if (IsValidPosition(worldPos))
+        if (IsValidPos(worldPos))
         {
             transform.position = worldPos;
             PlayerUnitController playerUnit = Managers.Object.Spawn<PlayerUnitController>(worldPos, PLAYER_UNIT_WARRIOR_ID);
@@ -207,7 +168,7 @@ public class CursorController : InitBase
 
     void HandleMoveAction(Vector3 worldPos)
     {
-        if (IsValidPosition(worldPos))
+        if (IsValidPos(worldPos))
         {
             List<Vector3> movementRange = Managers.Game.CurrentUnit.MovementRange;
             if (movementRange == null)
@@ -233,7 +194,7 @@ public class CursorController : InitBase
 
     void HandleSkillAction(Vector3 worldPos)
     {
-        if (IsValidPosition(worldPos, true))
+        if (IsValidPos(worldPos, true))
         {
             List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
             if (castingRange == null)
@@ -253,8 +214,29 @@ public class CursorController : InitBase
 
         Managers.Game.PlayerActionState = EPlayerActionState.Hand;
     }
+    #endregion
 
-    bool IsValidPosition(Vector3 worldPos, bool ignoreObjects = false)
+    void ShowCreatureInfoUI(Vector3 worldPos)   // 해당 위치에 크리처가 있다면 UI 정보를 띄운다
+    {
+        CreatureController unit = Managers.Map.GetObject(worldPos) as CreatureController;
+        if (unit == null || unit == Managers.Game.CurrentUnit)
+        {
+            OnCreatureInfoUIShowed?.Invoke(false);
+            return;
+        }
+
+        Managers.UI.GetSceneUI<UI_GameScene>().SetInfo(unit);
+        OnCreatureInfoUIShowed?.Invoke(true);
+    }
+
+    #region Helpers
+    Vector3 GetMouseWorldPos()
+    {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return Managers.Map.GetTilePos(mousePos, Vector3Int.zero);
+    }
+
+    bool IsValidPos(Vector3 worldPos, bool ignoreObjects = false)
     {
         return Managers.Map.CanGo(worldPos, ignoreObjects);
     }
@@ -269,4 +251,5 @@ public class CursorController : InitBase
 
         return false;
     }
+    #endregion
 }

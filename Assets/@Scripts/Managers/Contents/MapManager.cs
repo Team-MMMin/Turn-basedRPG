@@ -86,7 +86,7 @@ public class MapManager
         }
     }
 
-    public Vector3 GetTilePosition(Vector3 worldPos, Vector3Int delta)
+    public Vector3 GetTilePos(Vector3 worldPos, Vector3Int delta)
     {
         worldPos.z = 0;
         Vector3Int cellPos = Managers.Map.WorldToCell(worldPos) + delta;

@@ -22,7 +22,7 @@ public class UI_HPBar : UI_Base
     public void SetInfo(CreatureController owner)
     {
         GetObject((int)GameObjects.HPBar).GetComponent<Slider>().maxValue = owner.Hp;
-        SetHpRatio(owner.Hp);
+        GetObject((int)GameObjects.HPBar).GetComponent<Slider>().value = owner.Hp;
     }
 
     public void SetHpRatio(float ratio)

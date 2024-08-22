@@ -24,7 +24,6 @@ public abstract class CreatureController : BaseController
 
     [SerializeField]
     protected SpriteRenderer CreatureSprite;
-    protected string SpriteName;
     
     public SkillComponent Skills { get; protected set; }
     protected SkillBase _castingSkill;
@@ -39,9 +38,9 @@ public abstract class CreatureController : BaseController
 
     public UI_HPBar HPBar { get; protected set; }
 
-    public List<Vector3> MovementRange = new List<Vector3>();
+    public List<Vector3> MovementRange { get; set; } = new List<Vector3>();
 
-    public Vector3 TargetPos;
+    public Vector3 TargetPos { get; set; }
 
     public CreatureData CreatureData { get; protected set; }
     public ClassData ClassData { get; protected set; }
@@ -176,7 +175,7 @@ public abstract class CreatureController : BaseController
                 int distance = Math.Abs(dx) + Math.Abs(dy);
                 if (distance <= Mov && distance > 0)
                 {
-                    Vector3 destPos = Managers.Map.GetTilePosition(transform.position, new Vector3Int(dx, dy));
+                    Vector3 destPos = Managers.Map.GetTilePos(transform.position, new Vector3Int(dx, dy));
                     if (FindPath(destPos, Mov) == EFindPathResult.Success)
                     {
                         MovementRange.Add(destPos);

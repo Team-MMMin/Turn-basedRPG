@@ -80,7 +80,7 @@ public abstract class SkillBase : InitBase
         ClearCastingRange();
         foreach (Vector3Int delta in SkillData.CastingRange)
         {
-            Vector3 pos = Managers.Map.GetTilePosition(transform.position, delta);
+            Vector3 pos = Managers.Map.GetTilePos(transform.position, delta);
             if (Managers.Map.CanGo(pos, true))
             {
                 CastingRange.Add(pos);
