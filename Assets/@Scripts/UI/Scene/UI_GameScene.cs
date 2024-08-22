@@ -75,8 +75,8 @@ public class UI_GameScene : UI_Scene
 
         Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
         Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
-        Managers.Game.OnActionStateChanged -= HandleOnActionStateChanged;
-        Managers.Game.OnActionStateChanged += HandleOnActionStateChanged;
+        Managers.Game.OnActionStateChanged -= HandleOnPlayerActionStateChanged;
+        Managers.Game.OnActionStateChanged += HandleOnPlayerActionStateChanged;
         Managers.Game.Cursor.OnCreatureInfoUIShowed -= HandleOnCreatureInfoUIShowed;
         Managers.Game.Cursor.OnCreatureInfoUIShowed += HandleOnCreatureInfoUIShowed;
 
@@ -117,7 +117,7 @@ public class UI_GameScene : UI_Scene
         GetText((int)Texts.CurrentUnitDEFVauleText).text = Managers.Game.CurrentUnit.Hp.ToString();
     }
 
-    void HandleOnActionStateChanged(EPlayerActionState actionState)
+    void HandleOnPlayerActionStateChanged(EPlayerActionState actionState)
     {
         switch (actionState)
         {
@@ -157,7 +157,7 @@ public class UI_GameScene : UI_Scene
         GetObject((int)GameObjects.StatInfoObject).SetActive(active);
     }
 
-    #region ActionState에 따른 UI변화
+    #region PlayerActionState에 따른 UI변화
     void HandleNoneAction()
     {
         Managers.Game.CurrentUnit = null;
@@ -303,10 +303,7 @@ public class UI_GameScene : UI_Scene
         bool isValid = true;
         foreach (var unit in Managers.Object.PlayerUnits)
         {
-            if (unit == this)
-                continue;
-
-            if (unit.CreatureState == ECreatureState.Dead)
+            if (unit == this || unit.CreatureState == ECreatureState.Dead)
                 continue;
 
             if (unit.CreatureState != ECreatureState.EndTurn)
@@ -323,9 +320,7 @@ public class UI_GameScene : UI_Scene
             Managers.Game.GameState = EGameState.MonsterTurn;
         }
         else
-        {
             Managers.Game.PlayerActionState = EPlayerActionState.None;
-        }
     }
 
     void OnClickSettingButton()

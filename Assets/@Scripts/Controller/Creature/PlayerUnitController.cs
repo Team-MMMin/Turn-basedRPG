@@ -51,7 +51,6 @@ public class PlayerUnitController : CreatureController
         if (CreatureState == ECreatureState.Idle)
         {
             Debug.Log("UpdateIdle");
-
             // 이동 범위 비시각화
             if (MovementRange.Count > 0)
             {

@@ -43,7 +43,7 @@ public class CursorController : InitBase
         if (IsValidPos(worldPos, true) == false)
             return;
 
-        #region 플레이어 행동 상태 -> 커서 이벤트
+        #region PlayerActionState에 따른 커서 변화 및 이벤트
         EPlayerActionState actionState = Managers.Game.PlayerActionState;
         switch (actionState)
         {
