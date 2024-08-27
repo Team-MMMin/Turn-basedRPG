@@ -182,10 +182,9 @@ public class CursorController : InitBase
             if (IsValidRange(pos, movementRange))
             {
                 transform.position = pos;
-                PlayerUnitController playerUnit = Managers.Game.CurrentUnit.GetComponent<PlayerUnitController>();
-                playerUnit.DestPos = pos;
-                playerUnit.IsMove = true;
-                playerUnit.CreatureState = ECreatureState.Move;
+                Managers.Game.CurrentUnit.DestPos = pos;
+                Managers.Game.CurrentUnit.IsMove = true;
+                Managers.Game.CurrentUnit.CreatureState = ECreatureState.Move;
             }
             else
             {

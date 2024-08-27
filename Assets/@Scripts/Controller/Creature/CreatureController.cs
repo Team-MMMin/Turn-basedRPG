@@ -18,6 +18,7 @@ public abstract class CreatureController : BaseController
             if (_creatureState != value) 
             {
                 _creatureState = value;
+                UpdateAnimation();
             }
         }
     }
@@ -38,6 +39,15 @@ public abstract class CreatureController : BaseController
 
     public UI_HPBar HPBar { get; protected set; }
 
+    Vector3 _destPos;
+    public Vector3 DestPos
+    {
+        get { return _destPos; }
+        set
+        {
+            _destPos = value;
+        }
+    }
     public List<Vector3> MovementRange { get; set; } = new List<Vector3>();
 
     public Vector3 TargetPos { get; set; }
@@ -46,6 +56,7 @@ public abstract class CreatureController : BaseController
     public ClassData ClassData { get; protected set; }
 
     #region Stats
+    public float MaxHp { get; protected set; }
     public float Hp { get; set; }
     public float Mp { get; set; }
     public float Atk { get; set; }
@@ -102,6 +113,7 @@ public abstract class CreatureController : BaseController
 
         // Stat
         Hp = CreatureData.Hp;
+        MaxHp = Hp;
         Mp = CreatureData.Mp;
         Atk = CreatureData.Atk;
         Def = CreatureData.Def;
@@ -116,6 +128,23 @@ public abstract class CreatureController : BaseController
 
         // Map
         StartCoroutine(CoLerpToCellPos());
+    }
+
+    protected void UpdateAnimation()
+    {
+        switch (CreatureState)
+        {
+            case ECreatureState.Idle:
+                break;
+            case ECreatureState.Move:
+                break;
+            case ECreatureState.Skill:
+                break;
+            case ECreatureState.Dead:
+                break;
+            case ECreatureState.EndTurn:
+                break;
+        }
     }
 
     protected IEnumerator CoUpdate()
@@ -153,7 +182,8 @@ public abstract class CreatureController : BaseController
 
     public void OnDamaged(float damage)
     {
-        Hp -= Mathf.Clamp(damage, 1, Hp);
+        damage = Mathf.Clamp(damage, 1, Hp);
+        Hp -= damage;
         Managers.Object.ShowDamageFont(CenterPos, damage, transform);   // 폰트
         HPBar.SetHpRatio(Hp);   // HP바
 
@@ -179,6 +209,7 @@ public abstract class CreatureController : BaseController
                     if (FindPath(destPos, Mov) == EFindPathResult.Success)
                     {
                         MovementRange.Add(destPos);
+                        // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
                         if (CreatureType == ECreatureType.PlayerUnit)
                         {
                             GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
@@ -193,14 +224,19 @@ public abstract class CreatureController : BaseController
     public void ClearMovementRange()
     {
         MovementRange.Clear();
-        GameObject go = GameObject.Find("RangeTile");
-        if (go == null)
-            return;
 
-        foreach (Transform child in go.transform.parent)
+        // 스킬을 사용한 크리처가 플레이어 유닛이라면 시각화한 범위를 없앤다
+        if (CreatureType == ECreatureType.PlayerUnit)
         {
-            if (child != null && child.gameObject.activeInHierarchy)
-                Managers.Resource.Destroy(child.gameObject);
+            GameObject go = GameObject.Find("RangeTile");
+            if (go == null)
+                return;
+
+            foreach (Transform child in go.transform.parent)
+            {
+                if (child != null && child.gameObject.activeInHierarchy)
+                    Managers.Resource.Destroy(child.gameObject);
+            }
         }
     }
 
@@ -251,27 +287,6 @@ public abstract class CreatureController : BaseController
         EFindPathResult findPathResult = EFindPathResult.None;
         StartCoroutine(CoMoveAlongPath(path, forceMoveCloser, callback => findPathResult = callback));
         return findPathResult;
-
-        //int idx = 1;
-        //while (path.Count > idx)
-        //{
-        //    if (forceMoveCloser)
-        //    {
-        //        Vector3Int diff1 = CellPos - destCellPos;
-        //        Vector3Int diff2 = path[idx] - destCellPos;
-        //        if (diff1.sqrMagnitude <= diff2.sqrMagnitude)
-        //            return EFindPathResult.Fail_NoPath;
-        //    }
-
-        //    Vector3Int dirCellPos = path[idx] - CellPos;
-        //    Vector3Int nextPos = CellPos + dirCellPos;
-        //    idx++;
-
-        //    if (Managers.Map.CanGo(nextPos) == false)
-        //        return EFindPathResult.Fail_MoveTo;
-        //}
-
-        //return EFindPathResult.Success;
     }
 
     IEnumerator CoMoveAlongPath(List<Vector3Int> path, bool forceMoveCloser, Action<EFindPathResult> callback)

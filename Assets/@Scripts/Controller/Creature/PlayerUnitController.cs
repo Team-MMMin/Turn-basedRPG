@@ -6,16 +6,6 @@ using static Define;
 
 public class PlayerUnitController : CreatureController
 {
-    Vector3 _destPos;
-    public Vector3 DestPos
-    {
-        get { return _destPos; }
-        set 
-        {
-            _destPos = value;
-        }
-    }
-
     public override bool Init()
     {
         if (base.Init() == false) 
