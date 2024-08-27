@@ -78,6 +78,9 @@ public abstract class SkillBase : InitBase
     public void SetCastingRange()
     {
         ClearCastingRange();
+        if (SkillData.CastingRange == null)
+            return;
+
         foreach (Vector3Int delta in SkillData.CastingRange)
         {
             Vector3 pos = Managers.Map.GetTilePos(transform.position, delta);
@@ -97,9 +100,12 @@ public abstract class SkillBase : InitBase
     public void SetSizeRange()
     {
         ClearSizeRange();
+        if (SkillData.SkillSize == null)
+            return;
+
         foreach (Vector3Int delta in SkillData.SkillSize)
         {
-            Vector3 pos = Owner.TargetPos + delta;
+            Vector3 pos = Managers.Map.GetTilePos(Owner.TargetPos, delta);
             if (Managers.Map.CanGo(pos, true))
             {
                 SkillSizeRange.Add(pos);

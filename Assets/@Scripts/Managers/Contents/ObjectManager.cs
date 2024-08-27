@@ -43,7 +43,7 @@ public class ObjectManager
 
         GameObject go = Managers.Resource.Instantiate(prefabName);
         go.name = prefabName;
-        go.transform.position = pos;
+        //go.transform.position = pos;
 
         BaseController obj = go.GetComponent<BaseController>();
         EObjectType objectType = obj.ObjectType;
@@ -58,14 +58,14 @@ public class ObjectManager
                     PlayerUnitController playerUnit = go.GetComponent<PlayerUnitController>();
                     playerUnit.SetInfo(templateID);
                     PlayerUnits.Add(playerUnit);
-                    Managers.Map.MoveTo(playerUnit, Managers.Map.WorldToCell(pos));
+                    Managers.Map.MoveTo(playerUnit, Managers.Map.WorldToCell(pos), true);
                     break;
                 case ECreatureType.Monster:
                     obj.transform.parent = MonsterRoot;
                     MonsterController monster = go.GetComponent<MonsterController>();
                     monster.SetInfo(templateID);
                     Monsters.Add(monster);
-                    Managers.Map.MoveTo(monster, Managers.Map.WorldToCell(pos));
+                    Managers.Map.MoveTo(monster, Managers.Map.WorldToCell(pos), true);
                     break;
             }
         }

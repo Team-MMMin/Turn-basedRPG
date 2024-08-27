@@ -51,7 +51,7 @@ public class PlayerUnitController : CreatureController
         if (CreatureState == ECreatureState.Idle)
         {
             Debug.Log("UpdateIdle");
-            // 이동 범위 비시각화
+            // 이동 범위 비시각화 및 초기화
             if (MovementRange.Count > 0)
             {
                 ClearMovementRange();
@@ -75,9 +75,6 @@ public class PlayerUnitController : CreatureController
         {
             Debug.Log("UpdateMove");
             FindPathAndMoveToCellPos(DestPos, Mov);
-            // TODO
-            // 이동을 완료할 때까지 애니메이션 재생
-
             CreatureState = ECreatureState.Idle;
         }
     }
