@@ -1,4 +1,4 @@
-public static class Define
+Ôªøpublic static class Define
 {
     public enum EUIEvent
     {
@@ -65,6 +65,14 @@ public static class Define
         Tile,
     }
 
+    public enum EMonsterBehaviorPattern
+    {
+        None,
+        Aggressive,
+        Defensive,
+        Strategic,
+    }
+
     public enum ETileType
     {
         None,
@@ -96,7 +104,7 @@ public static class Define
     public enum ECellCollisionType
     {
         None, 
-        SemiWall, //ƒ´∏ﬁ∂Û∏∏ ∞•ºˆ¿÷¥¬∫Æ
+        SemiWall,   // Ïπ¥Î©îÎùºÎßå Í∞à Ïàò ÏûàÎäî Î≤Ω
         Wall,
     }
 
@@ -119,9 +127,11 @@ public static class Define
         StrongAoEMagic = 20031,
     }
 
-    public const int PLAYER_UNIT_WARRIOR_ID = 201000;
+    public const int WARRIOR_ID = 101001;
+    public const int MAGE_ID = 101002; 
     
-    public const int MONSTER_WARRIOR_ID = 202000;
+    public const int PLAYER_UNIT_WARRIOR_ID = 201001;
+    public const int MONSTER_WARRIOR_ID = 202001;
 
     public const char MAP_TOOL_WALL = '0';
     public const char MAP_TOOL_NONE = '1';

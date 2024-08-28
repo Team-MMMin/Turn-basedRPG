@@ -215,7 +215,7 @@ public class MapManager
 		//new Vector3Int(-1, 1, 0), // LU
     };
 
-    public List<Vector3Int> FindPath(BaseController self, Vector3Int startCellPos, Vector3Int destCellPos, int maxDepth = 10)
+    public List<Vector3Int> FindPath(BaseController self, Vector3Int startCellPos, Vector3Int destCellPos, int maxDepth = 10, bool findClosestPos = false)
     {
         // 지금까지 제일 좋은 후보 기록
         Dictionary<Vector3Int, int> best = new Dictionary<Vector3Int, int>();
@@ -229,8 +229,8 @@ public class MapManager
         Vector3Int dest = destCellPos;
 
         // destCellPos에 도착 못하더라도 제일 가까운 애
-        //Vector3Int closestCellPos = startCellPos;
-        //int closestH = (dest - pos).sqrMagnitude;
+        Vector3Int closestCellPos = startCellPos;
+        int closestH = (dest - pos).sqrMagnitude;
 
         // 시작점 발견 (예약 진행)
         {
@@ -275,17 +275,17 @@ public class MapManager
                 parent[next] = pos;
 
                 // 목적지까지는 못 가더라도, 그나마 제일 좋았던 후보 기억.
-                //if (closestH > h)
-                //{
-                //    closestH = h;
-                //    closestCellPos = next;
-                //}
+                if (closestH > h)
+                {
+                    closestH = h;
+                    closestCellPos = next;
+                }
             }
         }
 
         // 제일 가까운 애라도 찾는다
-        //if (parent.ContainsKey(dest) == false)
-        //    return CalcCellPathFromParent(parent, closestCellPos);
+        if (findClosestPos && parent.ContainsKey(dest) == false)
+            return CalcCellPathFromParent(parent, closestCellPos);
 
         return CalcCellPathFromParent(parent, dest);
     }

@@ -87,12 +87,4 @@ public class PlayerUnitController : CreatureController
             Managers.Object.Despawn(this);
         }
     }
-
-    protected override void UpdateEndTurn()
-    {
-        if (CreatureState == ECreatureState.EndTurn)
-        {
-            //Debug.Log("UpdateEndTurn");
-        }
-    }
 }

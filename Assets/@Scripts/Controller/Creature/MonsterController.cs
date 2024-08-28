@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +7,7 @@ using static Define;
 public class MonsterController : CreatureController
 {
     public bool IsMyTurn = false;
+    EMonsterBehaviorPattern _behaviorPattern;
 
     public override bool Init()
     {
@@ -15,6 +16,7 @@ public class MonsterController : CreatureController
 
         CreatureType = ECreatureType.Monster;
         CreatureState = ECreatureState.Idle;
+        _behaviorPattern = EMonsterBehaviorPattern.None;
 
         Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
         Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
@@ -42,25 +44,8 @@ public class MonsterController : CreatureController
     {
         if (CreatureState == ECreatureState.Idle)
         {
-            if (Managers.Game.CurrentUnit == this)
-            {
+            if (IsMyTurn)
                 ExecuteAI();
-                return;
-            }
-
-            // ÀÌµ¿ ¹üÀ§ ÃÊ±âÈ­
-            if (MovementRange.Count > 0)
-            {
-                ClearMovementRange();
-            }
-
-            // Ä³½ºÆÃ ½ºÅ³ ¹üÀ§ ÃÊ±âÈ­
-            if (CastingSkill != null)
-            {
-                CastingSkill.ClearCastingRange();
-                CastingSkill.ClearSizeRange();
-                CastingSkill = null;
-            }
         }
     }
 
@@ -71,7 +56,7 @@ public class MonsterController : CreatureController
             Debug.Log("UpdateMove");
             FindPathAndMoveToCellPos(DestPos, Mov);
             // TODO
-            // ÀÌµ¿À» ¿Ï·áÇÒ ¶§±îÁö ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
+            // ì´ë™ì„ ì™„ë£Œí•  ë•Œê¹Œì§€ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
 
             CreatureState = ECreatureState.Idle;
         }
@@ -93,16 +78,8 @@ public class MonsterController : CreatureController
         {
             Debug.Log("UpdateDead");
             // TODO
-            // º¸»ó Á¦°ø
+            // ë³´ìƒ ì œê³µ
             Managers.Object.Despawn(this);
-        }
-    }
-
-    protected override void UpdateEndTurn()
-    {
-        if (CreatureState == ECreatureState.EndTurn)
-        {
-            //Debug.Log("UpdateEndTurn");
         }
     }
 
@@ -112,12 +89,13 @@ public class MonsterController : CreatureController
         public float Distance;
         public float Hp;
         public float Def;
+        public Vector3Int CellPos;
 
         public int CompareTo(PQUnit other)
         {
-            float distanceWeight = 1.0f;   // °Å¸®ÀÇ °¡ÁßÄ¡ (°¡±î¿ï¼ö·Ï ¿ì¼±¼øÀ§ ³ôÀ½)
-            float hpWeight = 0.5f;         // HPÀÇ °¡ÁßÄ¡ (³·À»¼ö·Ï ¿ì¼±¼øÀ§ ³ôÀ½)
-            float defWeight = 0.3f;        // ¹æ¾î·ÂÀÇ °¡ÁßÄ¡ (³·À»¼ö·Ï ¿ì¼±¼øÀ§ ³ôÀ½)
+            float distanceWeight = 1.0f;   // ê±°ë¦¬ì˜ ê°€ì¤‘ì¹˜ (ê°€ê¹Œìš¸ìˆ˜ë¡ ìš°ì„ ìˆœìœ„ ë†’ìŒ)
+            float hpWeight = 0.5f;         // HPì˜ ê°€ì¤‘ì¹˜ (ë‚®ì„ìˆ˜ë¡ ìš°ì„ ìˆœìœ„ ë†’ìŒ)
+            float defWeight = 0.3f;        // ë°©ì–´ë ¥ì˜ ê°€ì¤‘ì¹˜ (ë‚®ì„ìˆ˜ë¡ ìš°ì„ ìˆœìœ„ ë†’ìŒ)
 
             float score = (Distance * distanceWeight) + (Hp * hpWeight) + (Def * defWeight);
             float otherScore = (other.Distance * distanceWeight) + (other.Hp * hpWeight) + (other.Def * defWeight);
@@ -130,27 +108,59 @@ public class MonsterController : CreatureController
 
     void ExecuteAI()
     {
-        // ÀÌµ¿ °¡´ÉÇÑ ¹üÀ§ ¼³Á¤
-        SetMovementRange();
+        Debug.Log("ExecuteAI");
+        _behaviorPattern = EMonsterBehaviorPattern.Aggressive;
+        if (Hp <= MaxHp * 0.3)  // í˜„ì¬ ì²´ë ¥ì´ 30%ì´í•˜ë¼ë©´
+            _behaviorPattern = EMonsterBehaviorPattern.Defensive;
+        else if (CreatureData.ClassDataID == MAGE_ID)   // ë§ˆë²•ì‚¬ë¼ë©´
+            _behaviorPattern = EMonsterBehaviorPattern.Strategic;
 
-        // Å¸°Ù ¿ì¼± ¼øÀ§ ¼³Á¤
+        switch (_behaviorPattern)
+        {
+            case EMonsterBehaviorPattern.Aggressive:
+                HandleAggressivePattern();
+                break;
+            case EMonsterBehaviorPattern.Defensive:
+                HandleDefensivePattern();
+                break;
+            case EMonsterBehaviorPattern.Strategic:
+                HandleStrategicPattern();
+                break;
+        }
+
+        IsMyTurn = false;
+    }
+
+    void HandleAggressivePattern()
+    {
+        // íƒ€ê²Ÿ ìš°ì„  ìˆœìœ„ ì„¤ì •
         PriorityQueue<PQUnit> units = new PriorityQueue<PQUnit>();
         foreach (PlayerUnitController unit in Managers.Object.PlayerUnits)
         {
-            float distance = Mathf.Abs(transform.position.x - unit.transform.position.x) + Mathf.Abs(transform.position.y - unit.transform.position.y); // ¸ÇÇØÆ° °Å¸® °è»ê
-            units.Push(new PQUnit() { Distance = distance, Hp = unit.Hp, Def = unit.Def });
+            float distance = Mathf.Abs(transform.position.x - unit.transform.position.x) + Mathf.Abs(transform.position.y - unit.transform.position.y); // ë§¨í•´íŠ¼ ê±°ë¦¬ ê³„ì‚°
+            units.Push(new PQUnit() { Distance = distance, Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos });
         }
 
-        // ÇöÀç Ã¼·ÂÀÌ 30%ÀÌÇÏ¶ó¸é
-        if (Hp <= MaxHp * 0.3)
-        {
-            // ¾î¶² ½ºÅ³À» »ç¿ëÇÒ Áö °áÁ¤ or ½ºÅ³ »ç¿ëx
-            // ÀûÀ¸·ÎºÎÅÍ ÈÄÅğ or °¡¸¸È÷ ÀÖ±â
-        }
-        else
-        {
-            // ¾î¶² ½ºÅ³À» »ç¿ëÇÒ Áö °áÁ¤: ´Ù¼öÀÇ Àû
-        }
+        // íƒ€ê²Ÿì´ ì—†ëŠ”ì§€ í™•ì¸
+        if (units.Count <= 0)
+            return;
+
+        PQUnit target = units.Pop();
+        Vector3 pos = Managers.Map.CellToWorld(target.CellPos);
+        FindPathAndMoveToCellPos(pos, Mov, findClosestPos: true);
     }
+
+    void HandleDefensivePattern()
+    {
+        // TODO
+        // íƒ€ê²Ÿê³¼ ìµœëŒ€í•œ ê±°ë¦¬ë¥¼ ìœ ì§€
+    }
+
+    void HandleStrategicPattern()
+    {
+        // TODO
+        // íƒ€ê²Ÿê³¼ ìµœëŒ€í•œ ê±°ë¦¬ë¥¼ ìœ ì§€
+    }
+
     #endregion
 }

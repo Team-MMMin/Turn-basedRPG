@@ -165,9 +165,6 @@ public abstract class CreatureController : BaseController
                 case ECreatureState.Dead:
                     UpdateDead();
                     break;
-                case ECreatureState.EndTurn:
-                    UpdateEndTurn();
-                    break;
             }
 
             yield return null;
@@ -178,7 +175,6 @@ public abstract class CreatureController : BaseController
     protected virtual void UpdateMove() { }
     protected virtual void UpdateSkill() { }
     protected virtual void UpdateDead() { }
-    protected virtual void UpdateEndTurn() { }
 
     public void OnDamaged(float damage)
     {
@@ -268,19 +264,19 @@ public abstract class CreatureController : BaseController
         return EFindPathResult.Success;
     }
 
-    public EFindPathResult FindPathAndMoveToCellPos(Vector3 destWorldPos, int maxDepth, bool forceMoveCloser = false)
+    public EFindPathResult FindPathAndMoveToCellPos(Vector3 destWorldPos, int maxDepth, bool forceMoveCloser = false, bool findClosestPos = false)
     {
         Vector3Int destCellPos = Managers.Map.WorldToCell(destWorldPos);
-        return FindPathAndMoveToCellPos(destCellPos, maxDepth, forceMoveCloser);
+        return FindPathAndMoveToCellPos(destCellPos, maxDepth, forceMoveCloser, findClosestPos);
     }
 
-    public EFindPathResult FindPathAndMoveToCellPos(Vector3Int destCellPos, int maxDepth, bool forceMoveCloser = false)
+    public EFindPathResult FindPathAndMoveToCellPos(Vector3Int destCellPos, int maxDepth, bool forceMoveCloser = false, bool findClosestPos = false)
     {
         if (LerpCellPosCompleted == false)
             return EFindPathResult.Fail_LerpCell;
 
         // A*
-        List<Vector3Int> path = Managers.Map.FindPath(this, CellPos, destCellPos, maxDepth);
+        List<Vector3Int> path = Managers.Map.FindPath(this, CellPos, destCellPos, maxDepth, findClosestPos);
         if (path.Count < 2)
             return EFindPathResult.Fail_NoPath;
 

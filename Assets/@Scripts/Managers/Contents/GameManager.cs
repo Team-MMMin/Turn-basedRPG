@@ -14,9 +14,6 @@ public class GameManager
         {
             _gameState = value;
             OnGameStateChanged?.Invoke(_gameState);
-            
-            if (_gameState == EGameState.MonsterTurn)
-                SetMonsterTurnPriority();
         }
     }
 
@@ -51,19 +48,22 @@ public class GameManager
     public event Action<EPlayerActionState> OnActionStateChanged;
     public event Action<EGameState> OnGameStateChanged;
 
-    public void SetMonsterTurnPriority()
+    public IEnumerator CoHandletMonsterTurn()   // 랜덤으로 몬스터의 턴을 설정한다
     {
         Debug.Log("SetMonsterTurnPriority");
         List<MonsterController> monsters = new List<MonsterController>(Managers.Object.Monsters);
         List<MonsterController> selectedMonsters = new List<MonsterController>();
 
-        for (int i = 0; i < monsters.Count; i++)
+        int count = monsters.Count;
+        for (int i = 0; i < count; i++)
         {
-            Debug.Log("Find Monster");
             int idx = UnityEngine.Random.Range(0, monsters.Count);
             selectedMonsters.Add(monsters[idx]);
             CurrentUnit = monsters[idx];
+            monsters[idx].IsMyTurn = true;
             monsters.RemoveAt(idx);
+            
+            yield return new WaitForSeconds(0.7f);
         }
     }
 }

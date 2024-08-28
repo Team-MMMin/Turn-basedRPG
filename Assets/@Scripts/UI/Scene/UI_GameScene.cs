@@ -50,6 +50,8 @@ public class UI_GameScene : UI_Scene
     }
     #endregion
 
+    Coroutine _coHandletMonsterTurn;
+
     public override bool Init()
     {
         Debug.Log("UI_GameScene");
@@ -193,7 +195,7 @@ public class UI_GameScene : UI_Scene
         GetObject((int)GameObjects.GameStateObject).SetActive(true);
         GetText((int)Texts.GameStateText).text = "Player Turn";
         Managers.Game.Cursor.gameObject.SetActive(false);
-        Invoke("CloseGameStateObjectAndActivateCursor", 1.0f);
+        Invoke("CloseGameStateObject", 1.0f);
     }
 
     void HandleMonsterTurnAction()
@@ -202,7 +204,6 @@ public class UI_GameScene : UI_Scene
         GetObject((int)GameObjects.GameStateObject).SetActive(true);
         GetText((int)Texts.GameStateText).text = "Monster Turn";
         Invoke("CloseGameStateObject", 1.0f);
-        Managers.Game.Cursor.gameObject.SetActive(false);
     }
 
     void HandleWinAction()
@@ -221,12 +222,18 @@ public class UI_GameScene : UI_Scene
     {
         Debug.Log("CloseGameStateObject");
         GetObject((int)GameObjects.GameStateObject).SetActive(false);
-    }
 
-    void CloseGameStateObjectAndActivateCursor()
-    {
-        CloseGameStateObject();
-        Managers.Game.Cursor.gameObject.SetActive(true);
+        if (Managers.Game.GameState == EGameState.MonsterTurn)
+        {
+            Managers.Game.Cursor.gameObject.SetActive(false);
+            _coHandletMonsterTurn = StartCoroutine(Managers.Game.CoHandletMonsterTurn());
+        }
+        else
+        {
+            Managers.Game.Cursor.gameObject.SetActive(true);
+            if (_coHandletMonsterTurn != null)
+                StopCoroutine(_coHandletMonsterTurn);
+        }
     }
     #endregion
 
