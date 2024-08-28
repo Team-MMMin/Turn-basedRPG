@@ -1,10 +1,10 @@
 {
   "monsters": [
     {
-      "DataID": 202000,
+      "DataID": 202001,
       "Name": "전사",
       "Description": "평범한 전사이다.",
-      "ClassDataID": 101,
+      "ClassDataID": 101001,
       "Level": 1,
       "Hp": 10.0,
       "Mp": 5.0,

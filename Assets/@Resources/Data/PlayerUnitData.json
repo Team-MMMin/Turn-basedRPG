@@ -1,10 +1,10 @@
 {
   "playerUnits": [
     {
-      "DataID": 201000,
+      "DataID": 201001,
       "Name": "전사",
       "Description": "평범한 전사이다.",
-      "ClassDataID": 101,
+      "ClassDataID": 101001,
       "Level": 1,
       "Hp": 10.0,
       "Mp": 5.0,
@@ -12,10 +12,10 @@
       "Def": 2.0
     },
     {
-      "DataID": 201001,
+      "DataID": 201002,
       "Name": "마법사",
       "Description": "평범한 마법사이다.",
-      "ClassDataID": 102,
+      "ClassDataID": 101002,
       "Level": 1,
       "Hp": 5.0,
       "Mp": 10.0,

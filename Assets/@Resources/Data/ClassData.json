@@ -1,7 +1,7 @@
 {
   "classes": [
     {
-      "DataID": 101,
+      "DataID": 101001,
       "Name": "전사",
       "PrefabLabel": "Warrior",
       "Mov": 4,
@@ -18,7 +18,7 @@
       ]
     },
     {
-      "DataID": 102,
+      "DataID": 101002,
       "Name": "마법사",
       "PrefabLabel": "Mage",
       "Mov": 3,
