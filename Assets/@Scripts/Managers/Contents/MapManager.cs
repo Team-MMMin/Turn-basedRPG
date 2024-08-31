@@ -202,7 +202,7 @@ public class MapManager
         }
     }
 
-    public List<Vector3Int> Delta = new List<Vector3Int>()
+    List<Vector3Int> _delta = new List<Vector3Int>()
     {
         new Vector3Int(0, 1, 0), // U
 		//new Vector3Int(1, 1, 0), // UR
@@ -252,7 +252,7 @@ public class MapManager
                 break;
 
             // 상하좌우 등 이동할 수 있는 좌표인지 확인해서 예약
-            foreach (Vector3Int delta in Delta)
+            foreach (Vector3Int delta in _delta)
             {
                 Vector3Int next = pos + delta;
 

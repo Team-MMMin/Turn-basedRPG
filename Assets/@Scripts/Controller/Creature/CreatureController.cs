@@ -191,7 +191,7 @@ public abstract class CreatureController : BaseController
         Debug.Log($"스킬에 맞은 {name}의 HP가 {Hp}로 됐다.");
     }
 
-    public void SetMovementRange()
+    public void SetMovementRange()  // TODO: 최적화
     {
         ClearMovementRange();
         for (int dx = -Mov; dx <= Mov; dx++)
