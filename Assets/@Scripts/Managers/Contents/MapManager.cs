@@ -86,15 +86,6 @@ public class MapManager
         }
     }
 
-    public Vector3 GetTilePos(Vector3 worldPos, Vector3Int delta)
-    {
-        worldPos.z = 0;
-        Vector3Int cellPos = Managers.Map.WorldToCell(worldPos) + delta;
-        worldPos = Managers.Map.CellGrid.GetCellCenterWorld(cellPos) + new Vector3(0, -0.25f, 0);    // 중앙에서 약간 아래로 피벗 보정
-
-        return worldPos;
-    }
-
     public bool MoveTo(CreatureController obj, Vector3Int cellPos, bool forceMove = false)
     {
         if (CanGo(cellPos) == false) 
@@ -102,13 +93,21 @@ public class MapManager
 
         RemoveObject(obj);
 
-        AddObject(obj,cellPos);
+        AddObject(obj, cellPos);
 
         obj.SetCellPos(cellPos, forceMove);
         return true;
     }
 
     #region Helpers
+    public Vector3 GetTilePos(Vector3 pos, Vector3Int delta)
+    {
+        pos.z = 0;
+        Vector3Int cellPos = WorldToCell(pos) + delta;
+        pos = CellGrid.GetCellCenterWorld(cellPos) + new Vector3(0, -0.25f, 0);    // 중앙에서 약간 아래로 피벗 보정
+        return pos;
+    }
+
     public BaseController GetObject(Vector3Int cellPos)
     {
         _cells.TryGetValue(cellPos, out BaseController value);
@@ -203,7 +202,7 @@ public class MapManager
         }
     }
 
-    List<Vector3Int> _delta = new List<Vector3Int>()
+    public List<Vector3Int> Delta = new List<Vector3Int>()
     {
         new Vector3Int(0, 1, 0), // U
 		//new Vector3Int(1, 1, 0), // UR
@@ -253,7 +252,7 @@ public class MapManager
                 break;
 
             // 상하좌우 등 이동할 수 있는 좌표인지 확인해서 예약
-            foreach (Vector3Int delta in _delta)
+            foreach (Vector3Int delta in Delta)
             {
                 Vector3Int next = pos + delta;
 
