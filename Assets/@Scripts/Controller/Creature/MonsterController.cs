@@ -79,23 +79,21 @@ public class MonsterController : CreatureController
     }
 
     #region AI
-    EMonsterBehaviorPattern _behaviorPattern;
-
-    public struct PQUnit : IComparable<PQUnit>
+    public struct PQTarget : IComparable<PQTarget>  // 타겟 우선순위
     {
         public float Hp;
         public float Def;
         public Vector3Int CellPos;
-        public int Depth;
+        public int Distance;
 
-        public int CompareTo(PQUnit other)
+        public int CompareTo(PQTarget other)
         {
-            float depthWeight = 1.0f;   // 거리의 가중치 (가까울수록 우선순위 높음)
-            float hpWeight = 0.5f;         // HP의 가중치 (낮을수록 우선순위 높음)
-            float defWeight = 0.3f;        // 방어력의 가중치 (낮을수록 우선순위 높음)
+            float hpWeight = 0.5f;  // HP 가중치 (낮을수록 우선순위 높음)
+            float defWeight = 0.5f; // 방어력 가중치 (낮을수록 우선순위 높음)
+            float distanceWeight = 1.0f;
 
-            float score = (Depth * depthWeight) + (Hp * hpWeight) + (Def * defWeight);
-            float otherScore = (other.Depth * depthWeight) + (other.Hp * hpWeight) + (other.Def * defWeight);
+            float score = (Hp * hpWeight) + (Def * defWeight) + (Distance * distanceWeight);
+            float otherScore = (other.Hp * hpWeight) + (other.Def * defWeight) + (other.Distance * distanceWeight);
 
             if (score == otherScore)
                 return 0;
@@ -105,82 +103,98 @@ public class MonsterController : CreatureController
 
     void ExecuteAI()
     {
-        Debug.Log("ExecuteAI");
-        
-        // 타겟 우선 순위 설정
-        PriorityQueue<PQUnit> units = new PriorityQueue<PQUnit>();
-        foreach (PlayerUnitController unit in Managers.Object.PlayerUnits)
-        {
-            int depth = Managers.Map.FindPath(this, CellPos, unit.CellPos, Mov, findClosestPos: true).Count - 1;
-            units.Push(new PQUnit() { Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos, Depth = depth });
-        }
+        EMonsterBehaviorPattern behaviorPattern = EMonsterBehaviorPattern.Aggressive;
+        if (Hp <= MaxHp * 0.3 || CreatureData.ClassDataID == MAGE_ID)   // 현재 체력이 30%이하거나 마법사라면
+            behaviorPattern = EMonsterBehaviorPattern.Defensive;
 
-        // 타겟이 없는지 확인
-        if (units.Count <= 0)
-        {
-            IsMyTurn = false;
-            return;
-        }
-
-        _behaviorPattern = EMonsterBehaviorPattern.Aggressive;
-        if (Hp <= MaxHp * 0.3)  // 현재 체력이 30%이하라면
-            _behaviorPattern = EMonsterBehaviorPattern.Defensive;
-        else if (CreatureData.ClassDataID == MAGE_ID)   // 마법사라면
-            _behaviorPattern = EMonsterBehaviorPattern.Strategic;
-
-        PQUnit target = units.Pop();
-        Debug.Log(target.Depth);
-        switch (_behaviorPattern)
+        switch (behaviorPattern)
         {
             case EMonsterBehaviorPattern.Aggressive:
-                HandleAggressivePattern(target);
+                HandleAggressivePattern();
                 break;
             case EMonsterBehaviorPattern.Defensive:
-                HandleDefensivePattern(target);
-                break;
-            case EMonsterBehaviorPattern.Strategic:
-                HandleStrategicPattern(target);
+                HandleDefensivePattern();
                 break;
         }
 
         IsMyTurn = false;
     }
 
-    void HandleAggressivePattern(PQUnit target)
+    void HandleAggressivePattern()
     {
         Debug.Log("AggressivePattern");
 
+        // 타겟 우선순위 설정
+        PriorityQueue<PQTarget> units = new PriorityQueue<PQTarget>();
+        foreach (var unit in Managers.Object.PlayerUnits)
+        {
+            int distance = Mathf.Abs(CellPos.x - unit.CellPos.x) + Mathf.Abs(CellPos.y - unit.CellPos.y);   // 맨해튼 거리 계산
+            units.Push(new PQTarget() { Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos, Distance = distance});
+        }
+
+        // 유닛이 없는지 확인
+        if (units.Count <= 0)
+            return;
+
+        PQTarget target = units.Pop();
+
         // 목적지 설정
-        DestPos = Managers.Map.CellToWorld(target.CellPos);
+        DestPos = Managers.Map.CellToWorld(target.CellPos); // 타겟 근처로 이동
         CreatureState = ECreatureState.Move;
 
         // TODO
         // 스킬 사용
     }
 
-    void HandleDefensivePattern(PQUnit target)
+    void HandleDefensivePattern()
     {
         Debug.Log("DefensivePattern");
 
-        // TODO
-        // 가장 가까운 타겟에게 스킬 사용
-
-        // 타겟과 최대한 거리를 유지
-        if (target.Depth < Mov)
+        // 타겟 우선순위 설정
+        PriorityQueue<PQTarget> units = new PriorityQueue<PQTarget>();
+        foreach (var unit in Managers.Object.PlayerUnits)
         {
-            Dictionary<Vector3Int, bool> found = new Dictionary<Vector3Int, bool>();
-            Queue<(Vector3Int pos, int depth)> q = new Queue<(Vector3Int, int)>();
+            int distance = Mathf.Abs(CellPos.x - unit.CellPos.x) + Mathf.Abs(CellPos.y - unit.CellPos.y);   // 맨해튼 거리 계산
+            units.Push(new PQTarget() { Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos, Distance = distance });
         }
-    }
 
-    void HandleStrategicPattern(PQUnit target)
-    {
-        Debug.Log("StrategicPattern");
+        // 타겟이 없는지 확인
+        if (units.Count <= 0)
+            return;
 
-        // 타겟과 최대한 거리를 유지
+        PQTarget target = units.Pop();
 
         // TODO
-        // 가장 가까운 타겟에게 스킬 사용
+        // 타겟에게 스킬 사용 or 자기 자신에게 힐
+
+        Vector3Int destCellPos = CellPos;
+        int maxTotalDistance = 0; 
+        SetMovementRange();
+
+        // 주변 유닛과 최대한 거리를 유지
+        foreach (var pos in MovementRange)
+        {
+            Vector3Int cellPos = Managers.Map.WorldToCell(pos);
+            int totalDistance = 0; // 모든 유닛과의 총 거리
+
+            // 모든 유닛과의 거리 합산
+            foreach (var unit in Managers.Object.PlayerUnits)
+            {
+                int distance = Mathf.Abs(cellPos.x - unit.CellPos.x) + Mathf.Abs(cellPos.y - unit.CellPos.y); // 맨해튼 거리 계산
+                totalDistance += distance;
+            }
+
+            // 총 거리가 최대가 되는 위치를 찾기
+            if (totalDistance > maxTotalDistance)
+            {
+                maxTotalDistance = totalDistance;
+                destCellPos = cellPos;
+            }
+        }
+
+        // 목적지 설정
+        DestPos = Managers.Map.CellToWorld(destCellPos);
+        CreatureState = ECreatureState.Move;
     }
 
     //SkillBase FindSkill()
