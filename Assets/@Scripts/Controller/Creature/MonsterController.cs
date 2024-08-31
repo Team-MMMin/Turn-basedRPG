@@ -111,8 +111,8 @@ public class MonsterController : CreatureController
         PriorityQueue<PQUnit> units = new PriorityQueue<PQUnit>();
         foreach (PlayerUnitController unit in Managers.Object.PlayerUnits)
         {
-            int depth = Managers.Map.FindPath(this, CellPos, unit.CellPos, Mov).Count;
-            units.Push(new PQUnit() { Depth = depth, Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos });
+            int depth = Managers.Map.FindPath(this, CellPos, unit.CellPos, Mov, findClosestPos: true).Count - 1;
+            units.Push(new PQUnit() { Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos, Depth = depth });
         }
 
         // 타겟이 없는지 확인
@@ -129,6 +129,7 @@ public class MonsterController : CreatureController
             _behaviorPattern = EMonsterBehaviorPattern.Strategic;
 
         PQUnit target = units.Pop();
+        Debug.Log(target.Depth);
         switch (_behaviorPattern)
         {
             case EMonsterBehaviorPattern.Aggressive:
@@ -165,20 +166,10 @@ public class MonsterController : CreatureController
         // 가장 가까운 타겟에게 스킬 사용
 
         // 타겟과 최대한 거리를 유지
-        if (Mov < target.Depth)
+        if (target.Depth < Mov)
         {
             Dictionary<Vector3Int, bool> found = new Dictionary<Vector3Int, bool>();
-            Queue<(Vector3Int pos, int distance)> q = new Queue<(Vector3Int, int)>();
-            q.Enqueue((CellPos, 0));
-
-            while (q.Count > 0)
-            {
-                var (nowPos, nowDist) = q.Dequeue();
-
-                int distance = Mathf.Abs(CellPos.x - target.CellPos.x) + Mathf.Abs(CellPos.y - target.CellPos.y);
-                if (Mov < nowDist)
-                    continue;
-            }
+            Queue<(Vector3Int pos, int depth)> q = new Queue<(Vector3Int, int)>();
         }
     }
 
@@ -192,5 +183,6 @@ public class MonsterController : CreatureController
         // 가장 가까운 타겟에게 스킬 사용
     }
 
+    //SkillBase FindSkill()
     #endregion
 }
