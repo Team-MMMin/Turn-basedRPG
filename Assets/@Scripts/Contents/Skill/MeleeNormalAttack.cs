@@ -1,7 +1,6 @@
 ﻿using Data;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MeleeNormalAttack : SkillBase
@@ -19,6 +18,7 @@ public class MeleeNormalAttack : SkillBase
         base.SetInfo(owner, skillID);
 
         Name = "Melee Normal Attack";
+        Level = 1;  // test
     }
 
     public override bool DoSkill()
@@ -30,11 +30,7 @@ public class MeleeNormalAttack : SkillBase
 
         foreach (var pos in SkillSizeRange)
         {
-            BaseController obj = Managers.Map.GetObject(pos);
-            if (obj == null)
-                continue;
-
-            CreatureController target = obj.GetComponent<CreatureController>();
+            CreatureController target = Managers.Map.GetObject(pos) as CreatureController;
             if (target == null)
                 continue;
 

@@ -73,12 +73,12 @@ public class CursorController : InitBase
     void HandleSkillState(Vector3 pos)
     {
         List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
-        if (castingRange.Count == 0)
+        if (castingRange.Count == 0)    // 캐스팅 범위가 필요없는 스킬
         {
             Managers.Game.CurrentUnit.TargetPos = pos;
             Managers.Game.CurrentUnit.CastingSkill.SetSizeRange();
         }
-        else
+        else   // 캐스팅 범위 안에서만 사용하는 스킬
         {
             if (IsValidRange(pos, castingRange))
             {

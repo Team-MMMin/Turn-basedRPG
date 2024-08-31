@@ -220,7 +220,6 @@ public class UI_GameScene : UI_Scene
 
     void CloseGameStateObject()
     {
-        Debug.Log("CloseGameStateObject");
         GetObject((int)GameObjects.GameStateObject).SetActive(false);
 
         if (Managers.Game.GameState == EGameState.MonsterTurn)
@@ -265,14 +264,22 @@ public class UI_GameScene : UI_Scene
         List<SkillBase> skillList = Managers.Game.CurrentUnit.Skills.SkillList; // 현재 유닛의 스킬을 가져온다
         for (int i = 0; i < skillList.Count; i++)
         {
+            if (skillList[i].IsSkillUnlocked == false)
+                continue;
+
             GameObject go = Managers.Resource.Instantiate("UI_Skill_Item", content.transform);
             go.name = skillList[i].SkillData.PrefabLabel;
+
             // 텍스트
             TMP_Text txt = Util.FindChild<TMP_Text>(go);
             txt.text = skillList[i].Name;
+            
             // 이벤트 바인딩
             Button button = go.GetComponent<Button>();
-            button.onClick.AddListener(() => OnClickSkill_ItemButton(go.name));
+            if (skillList[i].IsSkillUsable())
+                button.onClick.AddListener(() => OnClickSkill_ItemButton(go.name));
+            else
+                button.interactable = false;
         }
     }
 
@@ -310,9 +317,6 @@ public class UI_GameScene : UI_Scene
         bool isValid = true;
         foreach (var unit in Managers.Object.PlayerUnits)
         {
-            if (unit == this || unit.CreatureState == ECreatureState.Dead)
-                continue;
-
             if (unit.CreatureState != ECreatureState.EndTurn)
             {
                 isValid = false;

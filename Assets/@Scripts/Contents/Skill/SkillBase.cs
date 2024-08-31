@@ -40,13 +40,24 @@ public abstract class SkillBase : InitBase
 
     public virtual bool DoSkill()
     {
-        if (Owner.Mp >= SkillData.ManaCost)
+        if (IsSkillUsable())
         {
             Owner.Mp -= SkillData.ManaCost;
             return true;
         }
 
         return false;
+    }
+
+    public bool IsSkillUsable()
+    {
+        if (IsSkillUnlocked == false)
+            return false;
+        
+        if (Owner.Mp < SkillData.ManaCost)
+            return false;
+
+        return true;
     }
 
     public Data.SkillData UpdateSkillData()
