@@ -51,7 +51,7 @@ public class PlayerUnitController : CreatureController
             if (CastingSkill != null)
             {
                 CastingSkill.ClearCastingRange();
-                CastingSkill.ClearSizeRange();
+                CastingSkill.ClearSize();
                 CastingSkill = null;
             }
 

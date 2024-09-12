@@ -72,21 +72,22 @@ public class CursorController : InitBase
 
     void HandleSkillState(Vector3 pos)
     {
-        List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
-        if (castingRange.Count == 0)    // 캐스팅 범위가 필요없는 스킬
+        if (Managers.Game.CurrentUnit.CastingSkill.CastingRange.Count == 0)    // 캐스팅 범위가 필요없는 스킬
         {
             Managers.Game.CurrentUnit.TargetPos = pos;
-            Managers.Game.CurrentUnit.CastingSkill.SetSizeRange();
+            Managers.Game.CurrentUnit.CastingSkill.SetSize();
         }
-        else   // 캐스팅 범위 안에서만 사용하는 스킬
+        else
         {
+            // 캐스팅 범위 안에서만 사용하는 스킬
+            List<Vector3> castingRange = new List<Vector3>(Managers.Game.CurrentUnit.CastingSkill.CastingRange);
             if (IsValidRange(pos, castingRange))
             {
                 Managers.Game.CurrentUnit.TargetPos = pos;
-                Managers.Game.CurrentUnit.CastingSkill.SetSizeRange();
+                Managers.Game.CurrentUnit.CastingSkill.SetSize();
             }
             else
-                Managers.Game.CurrentUnit.CastingSkill.ClearSizeRange();
+                Managers.Game.CurrentUnit.CastingSkill.ClearSize();
         }
 
         ShowCreatureInfoUI(pos);
@@ -200,14 +201,14 @@ public class CursorController : InitBase
     {
         if (IsValidPos(pos, true))
         {
-            List<Vector3> castingRange = Managers.Game.CurrentUnit.CastingSkill.CastingRange;
-            if (castingRange.Count == 0)
+            if (Managers.Game.CurrentUnit.CastingSkill.CastingRange.Count == 0)
             {
                 Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
                 Managers.Game.CurrentUnit.IsSkill = true;
             }
             else
             {
+                List<Vector3> castingRange = new List<Vector3>(Managers.Game.CurrentUnit.CastingSkill.CastingRange);
                 if (IsValidRange(pos, castingRange))
                 {
                     Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;

@@ -134,13 +134,13 @@
       "IconLabel": "",
       "DamageMultiplier": 1.0,
       "CoolTime": 0,
-      "ManaCost": 7,
-      "CastingRange": null,
-      "SkillSize": [
+      "ManaCost": 3,  // test용, 원래는 7이다.
+      "CastingRange": [
         {"x": -1, "y": 1}, {"x": 0, "y": 1}, {"x": 1, "y": 1},
         {"x": -1, "y": 0}, {"x": 1, "y": 0},
         {"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": 1, "y": -1}
-      ]
+      ],
+      "SkillSize": null
     },
     {
       "DataID": 10022,
@@ -151,12 +151,12 @@
       "DamageMultiplier": 2.0,
       "CoolTime": 0,
       "ManaCost": 7,
-      "CastingRange": null,
-      "SkillSize": [
+      "CastingRange": [
         {"x": -1, "y": 1}, {"x": 0, "y": 1}, {"x": 1, "y": 1},
         {"x": -1, "y": 0}, {"x": 1, "y": 0},
         {"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": 1, "y": -1}
-      ]
+      ],
+      "SkillSize": null
     },
     {
       "DataID": 10023,
@@ -167,14 +167,14 @@
       "DamageMultiplier": 3.0,
       "CoolTime": 0,
       "ManaCost": 7,
-      "CastingRange": null,
-      "SkillSize": [
+      "CastingRange": [
         {"x": -2, "y": 2}, {"x": -1, "y": 2}, {"x": 0, "y": 2}, {"x": 1, "y": 2}, {"x": 2, "y": 2},
         {"x": -2, "y": 1}, {"x": -1, "y": 1}, {"x": 0, "y": 1}, {"x": 1, "y": 1}, {"x": 2, "y": 1},
         {"x": -2, "y": 0}, {"x": -1, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0},
         {"x": -2, "y": -1}, {"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": 1, "y": -1}, {"x": 2, "y": -1},
         {"x": -2, "y": -2}, {"x": -1, "y": -2}, {"x": 0, "y": -2}, {"x": 1, "y": -2}, {"x": 2, "y": -2}
-      ]
+      ],
+      "SkillSize": null
     },
     {
       "DataID": 10031,
@@ -185,12 +185,12 @@
       "DamageMultiplier": 2.0,
       "CoolTime": 0,
       "ManaCost": 15,
-      "CastingRange": null,
-      "SkillSize": [
+      "CastingRange": [        
         {"x": -1, "y": 1}, {"x": 0, "y": 1}, {"x": 1, "y": 1},
         {"x": -1, "y": 0}, {"x": 1, "y": 0},
         {"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": 1, "y": -1}
-      ]
+      ],
+      "SkillSize": null
     },
     {
       "DataID": 10032,
@@ -201,12 +201,12 @@
       "DamageMultiplier": 4.0,
       "CoolTime": 0,
       "ManaCost": 15,
-      "CastingRange": null,
-      "SkillSize": [
+      "CastingRange": [        
         {"x": -1, "y": 1}, {"x": 0, "y": 1}, {"x": 1, "y": 1},
         {"x": -1, "y": 0}, {"x": 1, "y": 0},
         {"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": 1, "y": -1}
-      ]
+      ],
+      "SkillSize": null
     },
     {
       "DataID": 10033,
@@ -217,14 +217,14 @@
       "DamageMultiplier": 6.0,
       "CoolTime": 0,
       "ManaCost": 15,
-      "CastingRange": null,
-      "SkillSize": [
+      "CastingRange": [
         {"x": -2, "y": 2}, {"x": -1, "y": 2}, {"x": 0, "y": 2}, {"x": 1, "y": 2}, {"x": 2, "y": 2},
         {"x": -2, "y": 1}, {"x": -1, "y": 1}, {"x": 0, "y": 1}, {"x": 1, "y": 1}, {"x": 2, "y": 1},
         {"x": -2, "y": 0}, {"x": -1, "y": 0}, {"x": 1, "y": 0}, {"x": 2, "y": 0},
         {"x": -2, "y": -1}, {"x": -1, "y": -1}, {"x": 0, "y": -1}, {"x": 1, "y": -1}, {"x": 2, "y": -1},
         {"x": -2, "y": -2}, {"x": -1, "y": -2}, {"x": 0, "y": -2}, {"x": 1, "y": -2}, {"x": 2, "y": -2}
-      ]
+      ],
+      "SkillSize": null
     },
     {
       "DataID": 20001,

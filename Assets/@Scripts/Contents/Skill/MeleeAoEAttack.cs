@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeNormalAttack : SkillBase
+public class MeleeAoEAttack : SkillBase
 {
     public override bool Init()
     {
@@ -17,7 +17,7 @@ public class MeleeNormalAttack : SkillBase
     {
         base.SetInfo(owner, skillID);
 
-        Name = "Melee Normal Attack";
+        Name = "Melee AoE Attack";
         Level = 1;  // test
     }
 
@@ -26,9 +26,9 @@ public class MeleeNormalAttack : SkillBase
         if (base.DoSkill() == false) 
             return false;
 
-        Debug.Log("MeleeNormalAttack");
+        Debug.Log("MeleeAoEAttack");
 
-        foreach (var pos in SkillSize)
+        foreach (var pos in CastingRange)
         {
             CreatureController target = Managers.Map.GetObject(pos) as CreatureController;
             if (target == null)

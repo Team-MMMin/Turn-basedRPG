@@ -1,7 +1,6 @@
 ﻿using Data;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build.Pipeline;
 using UnityEngine;
 using static Define;
 
@@ -10,8 +9,8 @@ public abstract class SkillBase : InitBase
     public CreatureController Owner { get; private set; }
 
     public Data.SkillData SkillData { get; private set; }
-    public List<Vector3> CastingRange { get; set; } = new List<Vector3>();
-    public List<Vector3> SkillSizeRange  { get; set; } = new List<Vector3>();
+    public HashSet<Vector3> CastingRange { get; private set; } = new HashSet<Vector3>();
+    public HashSet<Vector3> SkillSize  { get; private set; } = new HashSet<Vector3>();
 
     public string Name { get; protected set; }
     
@@ -94,7 +93,7 @@ public abstract class SkillBase : InitBase
 
         foreach (Vector3Int delta in SkillData.CastingRange)
         {
-            Vector3 pos = Managers.Map.GetTilePos(transform.position, delta);
+            Vector3 pos = Managers.Map.GetTilePos(Owner.transform.position, delta);
             if (Managers.Map.CanGo(pos, true))
             {
                 CastingRange.Add(pos);
@@ -108,18 +107,27 @@ public abstract class SkillBase : InitBase
         }
     }
 
-    public void SetSizeRange()
+    public void SetSize()
     {
-        ClearSizeRange();
+        ClearSize();
+        
         if (SkillData.SkillSize == null)
-            return;
+        {
+            foreach (var pos in CastingRange)
+            {
+                GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
+                go.transform.position = pos;
+            }
 
+            return;
+        }
+        
         foreach (Vector3Int delta in SkillData.SkillSize)
         {
             Vector3 pos = Managers.Map.GetTilePos(Owner.TargetPos, delta);
             if (Managers.Map.CanGo(pos, true))
             {
-                SkillSizeRange.Add(pos);
+                SkillSize.Add(pos);
                 // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
                 if (Owner.CreatureType == ECreatureType.PlayerUnit)
                 {
@@ -149,9 +157,9 @@ public abstract class SkillBase : InitBase
         }
     }
 
-    public void ClearSizeRange()
+    public void ClearSize()
     {
-        SkillSizeRange.Clear();
+        SkillSize.Clear();
 
         // 스킬을 사용한 크리처가 플레이어 유닛이라면 시각화한 범위를 없앤다
         if (Owner.CreatureType == ECreatureType.PlayerUnit)
