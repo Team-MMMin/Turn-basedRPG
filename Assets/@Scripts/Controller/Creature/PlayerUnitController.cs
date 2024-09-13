@@ -14,8 +14,8 @@ public class PlayerUnitController : CreatureController
         CreatureType = ECreatureType.PlayerUnit;
         CreatureState = ECreatureState.Idle;
 
-        Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
-        Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
+        Managers.Game.GameStateChanged -= OnGameStateChanged;
+        Managers.Game.GameStateChanged += OnGameStateChanged;
 
         StartCoroutine(CoUpdate());
         return true;
@@ -26,7 +26,7 @@ public class PlayerUnitController : CreatureController
         base.SetInfo(templateID);
     }
 
-    void HandleOnGameStateChanged(EGameState gameState)
+    void OnGameStateChanged(EGameState gameState)
     {
         if (gameState != EGameState.PlayerTurn)
             return;

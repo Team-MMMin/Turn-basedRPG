@@ -7,7 +7,7 @@ using static Define;
 
 public class InputManager
 {
-    public Action<EMouseEvent, bool> MouseAction = null;
+    public Action<EMouseEvent, bool> MouseAction = null;    // 아무리 생각해도 좋은 이름이 안 떠오른다
 
     bool _pressed = false;
     float _pressedTime = 0;

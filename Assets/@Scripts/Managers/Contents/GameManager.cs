@@ -13,7 +13,7 @@ public class GameManager
         set 
         {
             _gameState = value;
-            OnGameStateChanged?.Invoke(_gameState);
+            GameStateChanged?.Invoke(_gameState);
         }
     }
 
@@ -24,7 +24,7 @@ public class GameManager
         set 
         {
             _playerActionState = value;
-            OnActionStateChanged?.Invoke(_playerActionState);
+            PlayerActionStateChanged?.Invoke(_playerActionState);
         }
     }
 
@@ -45,8 +45,8 @@ public class GameManager
     public CameraController Camera;
     public CursorController Cursor;
 
-    public event Action<EPlayerActionState> OnActionStateChanged;
-    public event Action<EGameState> OnGameStateChanged;
+    public event Action<EPlayerActionState> PlayerActionStateChanged;
+    public event Action<EGameState> GameStateChanged;
 
     public IEnumerator CoHandletMonsterTurn()   // 랜덤으로 몬스터의 턴을 설정한다
     {

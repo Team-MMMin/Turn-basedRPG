@@ -75,12 +75,12 @@ public class UI_GameScene : UI_Scene
         BindEvent(GetButton((int)Buttons.SettingButton).gameObject, OnClickSettingButton);
         #endregion
 
-        Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
-        Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
-        Managers.Game.OnActionStateChanged -= HandleOnPlayerActionStateChanged;
-        Managers.Game.OnActionStateChanged += HandleOnPlayerActionStateChanged;
-        Managers.Game.Cursor.OnCreatureInfoUIShowed -= HandleOnCreatureInfoUIShowed;
-        Managers.Game.Cursor.OnCreatureInfoUIShowed += HandleOnCreatureInfoUIShowed;
+        Managers.Game.GameStateChanged -= OnGameStateChanged;
+        Managers.Game.GameStateChanged += OnGameStateChanged;
+        Managers.Game.PlayerActionStateChanged -= OnPlayerActionStateChanged;
+        Managers.Game.PlayerActionStateChanged += OnPlayerActionStateChanged;
+        Managers.Game.Cursor.CreatureInfoUIShowed -= OnCreatureInfoUIShowed;
+        Managers.Game.Cursor.CreatureInfoUIShowed += OnCreatureInfoUIShowed;
 
         return true;
     }
@@ -119,7 +119,7 @@ public class UI_GameScene : UI_Scene
         GetText((int)Texts.CurrentUnitDEFVauleText).text = Managers.Game.CurrentUnit.Hp.ToString();
     }
 
-    void HandleOnPlayerActionStateChanged(EPlayerActionState actionState)
+    void OnPlayerActionStateChanged(EPlayerActionState actionState)
     {
         switch (actionState)
         {
@@ -135,7 +135,7 @@ public class UI_GameScene : UI_Scene
         }
     }
 
-    void HandleOnGameStateChanged(EGameState gameState)
+    void OnGameStateChanged(EGameState gameState)
     {
         switch (gameState)
         {
@@ -154,7 +154,7 @@ public class UI_GameScene : UI_Scene
         }
     }
 
-    void HandleOnCreatureInfoUIShowed(bool active)
+    void OnCreatureInfoUIShowed(bool active)
     {
         GetObject((int)GameObjects.StatInfoObject).SetActive(active);
     }

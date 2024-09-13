@@ -16,8 +16,8 @@ public class MonsterController : CreatureController
         CreatureType = ECreatureType.Monster;
         CreatureState = ECreatureState.Idle;
 
-        Managers.Game.OnGameStateChanged -= HandleOnGameStateChanged;
-        Managers.Game.OnGameStateChanged += HandleOnGameStateChanged;
+        Managers.Game.GameStateChanged -= OnGameStateChanged;
+        Managers.Game.GameStateChanged += OnGameStateChanged;
 
         StartCoroutine(CoUpdate());
         return true;
@@ -28,7 +28,7 @@ public class MonsterController : CreatureController
         base.SetInfo(templateID);
     }
 
-    void HandleOnGameStateChanged(EGameState gameState)
+    void OnGameStateChanged(EGameState gameState)
     {
         if (gameState != EGameState.MonsterTurn)
             return;
@@ -62,7 +62,8 @@ public class MonsterController : CreatureController
         if (CreatureState == ECreatureState.Skill && CastingSkill != null)
         {
             Debug.Log("UpdateSkill");
-            CastingSkill.DoSkill();
+            if (CastingSkill != null)
+                CastingSkill.DoSkill();
             CreatureState = ECreatureState.Idle;
         }
     }

@@ -10,7 +10,7 @@ public class CursorController : InitBase
     SpriteRenderer _sprite;
     public float Speed { get; set; } = 0.5f;
 
-    public event Action<bool> OnCreatureInfoUIShowed;
+    public event Action<bool> CreatureInfoUIShowed;
 
     public override bool Init()
     {
@@ -231,12 +231,12 @@ public class CursorController : InitBase
         CreatureController unit = Managers.Map.GetObject(pos) as CreatureController;
         if (unit == null || unit == Managers.Game.CurrentUnit)
         {
-            OnCreatureInfoUIShowed?.Invoke(false);
+            CreatureInfoUIShowed?.Invoke(false);
             return;
         }
 
         Managers.UI.GetSceneUI<UI_GameScene>().SetInfo(unit);
-        OnCreatureInfoUIShowed?.Invoke(true);
+        CreatureInfoUIShowed?.Invoke(true);
     }
 
     #region Helpers
