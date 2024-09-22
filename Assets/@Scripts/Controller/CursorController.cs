@@ -80,8 +80,7 @@ public class CursorController : InitBase
         else
         {
             // 캐스팅 범위 안에서만 사용하는 스킬
-            List<Vector3> castingRange = new List<Vector3>(Managers.Game.CurrentUnit.CastingSkill.CastingRange);
-            if (IsValidRange(pos, castingRange))
+            if (Managers.Game.CurrentUnit.CastingSkill.CastingRange.Contains(pos))
             {
                 Managers.Game.CurrentUnit.TargetPos = pos;
                 Managers.Game.CurrentUnit.CastingSkill.SetSize();
@@ -176,11 +175,7 @@ public class CursorController : InitBase
     {
         if (IsValidPos(pos))
         {
-            List<Vector3> movementRange = Managers.Game.CurrentUnit.MovementRange;
-            if (movementRange == null)
-                return;
-
-            if (IsValidRange(pos, movementRange))
+            if (Managers.Game.CurrentUnit.MovementRange.Contains(pos))
             {
                 transform.position = pos;
                 Managers.Game.CurrentUnit.DestPos = pos;
@@ -208,8 +203,7 @@ public class CursorController : InitBase
             }
             else
             {
-                List<Vector3> castingRange = new List<Vector3>(Managers.Game.CurrentUnit.CastingSkill.CastingRange);
-                if (IsValidRange(pos, castingRange))
+                if (Managers.Game.CurrentUnit.CastingSkill.CastingRange.Contains(pos))
                 {
                     Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
                     Managers.Game.CurrentUnit.IsSkill = true;
@@ -249,17 +243,6 @@ public class CursorController : InitBase
     bool IsValidPos(Vector3 pos, bool ignoreObjects = false)
     {
         return Managers.Map.CanGo(pos, ignoreObjects);
-    }
-
-    bool IsValidRange(Vector3 pos, List<Vector3> range)
-    {
-        foreach (var p in range)
-        {
-            if (p == pos)
-                return true;
-        }
-
-        return false;
     }
     #endregion
 }

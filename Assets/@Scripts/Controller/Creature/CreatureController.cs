@@ -48,7 +48,7 @@ public abstract class CreatureController : BaseController
             _destPos = value;
         }
     }
-    public List<Vector3> MovementRange { get; set; } = new List<Vector3>();
+    public HashSet<Vector3> MovementRange { get; set; } = new HashSet<Vector3>();
 
     public Vector3 TargetPos { get; set; }
 

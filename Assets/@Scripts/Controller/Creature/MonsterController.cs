@@ -82,15 +82,16 @@ public class MonsterController : CreatureController
     #region AI
     public struct PQTarget : IComparable<PQTarget>  // 타겟 우선순위
     {
-        public float Hp;
-        public float Def;
-        public Vector3Int CellPos;
-        public int Distance;
+        public float Hp;    // 체력
+        public float Def;   // 방어력
+        public Vector3Int CellPos;  // 위치
+        public int Distance;    // 타겟과 몬스터(this)와의 거리
 
         public int CompareTo(PQTarget other)
         {
-            float hpWeight = 0.5f;  // HP 가중치 (낮을수록 우선순위 높음)
-            float defWeight = 0.5f; // 방어력 가중치 (낮을수록 우선순위 높음)
+            // 각 가중치이다. 낮을수록 우선순위가 높다
+            float hpWeight = 0.5f;
+            float defWeight = 0.5f;
             float distanceWeight = 1.0f;
 
             float score = (Hp * hpWeight) + (Def * defWeight) + (Distance * distanceWeight);
@@ -102,13 +103,15 @@ public class MonsterController : CreatureController
         }
     }
 
+    EMonsterBehaviorPattern _behaviorPattern;
+
     void ExecuteAI()
     {
-        EMonsterBehaviorPattern behaviorPattern = EMonsterBehaviorPattern.Aggressive;
+        _behaviorPattern = EMonsterBehaviorPattern.Aggressive;
         if (Hp <= MaxHp * 0.3 || CreatureData.ClassDataID == MAGE_ID)   // 현재 체력이 30%이하거나 마법사라면
-            behaviorPattern = EMonsterBehaviorPattern.Defensive;
+            _behaviorPattern = EMonsterBehaviorPattern.Defensive;
 
-        switch (behaviorPattern)
+        switch (_behaviorPattern)
         {
             case EMonsterBehaviorPattern.Aggressive:
                 HandleAggressivePattern();
