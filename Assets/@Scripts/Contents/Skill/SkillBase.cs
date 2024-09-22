@@ -108,9 +108,7 @@ public abstract class SkillBase : InitBase
     public void SetSize()
     {
         ClearSize();
-        
-        if (SkillData.SkillSize == null)
-        if (SkillData.Size == null)
+        if (SkillData.Size == null && Owner.CreatureType == ECreatureType.PlayerUnit)
         {
             foreach (var pos in CastingRange)
             {
