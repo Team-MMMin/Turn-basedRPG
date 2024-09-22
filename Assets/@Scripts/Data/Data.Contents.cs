@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -135,11 +135,11 @@ namespace Data
         public string Description;
         public string PrefabLabel;
         public string IconLabel;
-        public float DamageMultiplier;    // µ¥¹ÌÁö ¹èÀ²
+        public float DamageMultiplier;    // ë°ë¯¸ì§€ ë°°ìœ¨
         public int CoolTime;
         public int ManaCost;
-        public List<Vector2Int> CastingRange;   // Ä³½ºÆÃ(½ÃÀü) ¹üÀ§
-        public List<Vector2Int> SkillSize;  // ½ºÅ³ÀÇ Å©±â¸¦ ³ªÅ¸³»¸ç, nullÀÏ ¶§´Â Ä³½ºÆÃ(½ÃÀü) ¹üÀ§ ³»ÀÇ ¸ğµç ÀûÀ» °ø°İ
+        public List<Vector3Int> CastingRange;   // ìºìŠ¤íŒ…(ì‹œì „) ë²”ìœ„
+        public List<Vector3Int> Size;  // ìŠ¤í‚¬ì˜ í¬ê¸°ë¥¼ ë‚˜íƒ€ë‚´ë©°, nullì¼ ë•ŒëŠ” ìºìŠ¤íŒ…(ì‹œì „) ë²”ìœ„ ë‚´ì˜ ëª¨ë“  ì ì„ ê³µê²©
     }
 
     [Serializable]

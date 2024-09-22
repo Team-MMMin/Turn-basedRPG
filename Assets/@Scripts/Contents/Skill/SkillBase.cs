@@ -10,7 +10,7 @@ public abstract class SkillBase : InitBase
 
     public Data.SkillData SkillData { get; private set; }
     public HashSet<Vector3> CastingRange { get; private set; } = new HashSet<Vector3>();
-    public HashSet<Vector3> SkillSize  { get; private set; } = new HashSet<Vector3>();
+    public HashSet<Vector3> Size  { get; private set; } = new HashSet<Vector3>();
 
     public string Name { get; protected set; }
     
@@ -66,8 +66,7 @@ public abstract class SkillBase : InitBase
             return SkillData;
 
         SkillData skillData = new SkillData();
-        // TODO
-        // 레벨에 따라 스킬 강화
+        // TODO: 레벨에 따라 스킬 강화
         if (Managers.Data.SkillDataDic.TryGetValue(skillID, out skillData) == false)    // 강화한 스킬 불러오기
             return SkillData;
 
@@ -97,8 +96,7 @@ public abstract class SkillBase : InitBase
             if (Managers.Map.CanGo(pos, true))
             {
                 CastingRange.Add(pos);
-                // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
-                if (Owner.CreatureType == ECreatureType.PlayerUnit)
+                if (Owner.CreatureType == ECreatureType.PlayerUnit) // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
                 {
                     GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
                     go.transform.position = pos;
@@ -112,17 +110,17 @@ public abstract class SkillBase : InitBase
         ClearSize();
         
         if (SkillData.SkillSize == null)
+        if (SkillData.Size == null)
         {
             foreach (var pos in CastingRange)
             {
                 GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
                 go.transform.position = pos;
             }
-
+            
             return;
         }
-        
-        foreach (Vector3Int delta in SkillData.SkillSize)
+
         {
             Vector3 pos = Managers.Map.GetTilePos(Owner.TargetPos, delta);
             if (Managers.Map.CanGo(pos, true))
@@ -135,6 +133,25 @@ public abstract class SkillBase : InitBase
                     go.transform.position = pos;
                 }
             }
+
+            return;
+        }
+
+        foreach (Vector3Int delta in SkillData.Size)
+        {
+            Vector3 pos = Managers.Map.GetTilePos(Owner.TargetPos, delta);
+            if (Managers.Map.CanGo(pos, true) == false)
+                continue;
+
+            if (CastingRange != null && CastingRange.Contains(pos) == false)
+                continue;
+
+            Size.Add(pos);
+            if (Owner.CreatureType == ECreatureType.PlayerUnit) // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
+            {
+                GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
+                go.transform.position = pos;
+            }
         }
     }
 
@@ -142,8 +159,7 @@ public abstract class SkillBase : InitBase
     {
         CastingRange.Clear();
 
-        // 스킬을 사용한 크리처가 플레이어 유닛이라면 시각화한 범위를 없앤다
-        if (Owner.CreatureType == ECreatureType.PlayerUnit)
+        if (Owner.CreatureType == ECreatureType.PlayerUnit) // 스킬을 사용한 크리처가 플레이어 유닛이라면 시각화한 범위를 없앤다
         {
             GameObject go = GameObject.Find("RangeTile");
             if (go == null)
@@ -159,10 +175,9 @@ public abstract class SkillBase : InitBase
 
     public void ClearSize()
     {
-        SkillSize.Clear();
+        Size.Clear();
 
-        // 스킬을 사용한 크리처가 플레이어 유닛이라면 시각화한 범위를 없앤다
-        if (Owner.CreatureType == ECreatureType.PlayerUnit)
+        if (Owner.CreatureType == ECreatureType.PlayerUnit) // 스킬을 사용한 크리처가 플레이어 유닛이라면 시각화한 범위를 없앤다
         {
             GameObject go = GameObject.Find("SelectTile");
             if (go == null)

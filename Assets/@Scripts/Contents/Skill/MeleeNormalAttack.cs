@@ -28,7 +28,7 @@ public class MeleeNormalAttack : SkillBase
 
         Debug.Log("MeleeNormalAttack");
 
-        foreach (var pos in SkillSize)
+        foreach (var pos in Size)
         {
             CreatureController target = Managers.Map.GetObject(pos) as CreatureController;
             if (target == null)
