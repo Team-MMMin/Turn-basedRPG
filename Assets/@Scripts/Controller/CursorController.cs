@@ -23,6 +23,8 @@ public class CursorController : InitBase
 
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
+        Managers.Input.MouseWheelAction -= OnMouseWheelEvent;
+        Managers.Input.MouseWheelAction += OnMouseWheelEvent;
 
         Managers.Game.PlayerActionState = EPlayerActionState.Spawn; // Spawn Test
         return true;
@@ -40,6 +42,9 @@ public class CursorController : InitBase
             return;
 
         Vector3 pos = GetMouseWorldPos();
+        if (pos == transform.position)  // 중복 처리 방지
+            return; 
+        
         if (IsValidPos(pos, true) == false)
             return;
 
@@ -219,6 +224,30 @@ public class CursorController : InitBase
         Managers.Game.PlayerActionState = EPlayerActionState.Hand;
     }
     #endregion
+
+    void OnMouseWheelEvent(EMouseEvent type)
+    {
+        switch (type)
+        {
+            case EMouseEvent.ScrollUp:
+                HandleScrollUp();
+                break;
+            case EMouseEvent.ScrollDown:
+                HandleScrollDown();
+                break;
+        }
+    }
+
+    void HandleScrollUp()
+    {
+        Debug.Log("HandleScrollUp");
+        // TODO: 카메라 줌인
+    }
+
+    void HandleScrollDown()
+    {
+        // TODO: 카메라 줌아웃
+    }
 
     void ShowCreatureInfoUI(Vector3 pos)   // 해당 위치에 크리처가 있다면 UI 정보를 띄운다
     {

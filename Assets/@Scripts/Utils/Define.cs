@@ -12,6 +12,8 @@
     {
         Click,
         Drag,
+        ScrollUp,
+        ScrollDown,
     }
 
     public enum EPlayerActionState

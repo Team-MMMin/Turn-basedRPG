@@ -8,6 +8,7 @@ using static Define;
 public class InputManager
 {
     public Action<EMouseEvent, bool> MouseAction = null;    // 아무리 생각해도 좋은 이름이 안 떠오른다
+    public Action<EMouseEvent> MouseWheelAction = null;
 
     bool _pressed = false;
     float _pressedTime = 0;
@@ -17,7 +18,7 @@ public class InputManager
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
-        if (MouseAction == null)
+        if (MouseAction == null || MouseWheelAction == null)
             return;
 
         // 왼쪽 마우스
@@ -65,6 +66,13 @@ public class InputManager
             _pressed = false;
             _pressedTime = 0;
         }
+
+        // 마우스 휠 감지
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0) // 마우스 휠 위로 스크롤
+            MouseWheelAction?.Invoke(EMouseEvent.ScrollUp);
+        else if (scroll < 0)    // 마우스 휠 아래로 스크롤
+            MouseWheelAction?.Invoke(EMouseEvent.ScrollDown);
     }
 
     public void Clear()
