@@ -12,6 +12,16 @@ public abstract class SkillBase : InitBase
     public HashSet<Vector3> CastingRange { get; private set; } = new HashSet<Vector3>();
     public HashSet<Vector3> Size  { get; private set; } = new HashSet<Vector3>();
 
+    enum Dir
+    {
+        Up,
+        Left,
+        Down,
+        Right,
+    }
+
+    Dir _dir = Dir.Up;
+
     public string Name { get; protected set; }
     
     int level = 0;
@@ -93,14 +103,14 @@ public abstract class SkillBase : InitBase
         foreach (Vector3Int delta in SkillData.CastingRange)
         {
             Vector3 pos = Managers.Map.GetTilePos(Owner.transform.position, delta);
-            if (Managers.Map.CanGo(pos, true))
+            if (Managers.Map.CanGo(pos, true) == false)
+                continue;
+
+            CastingRange.Add(pos);
+            if (Owner.CreatureType == ECreatureType.PlayerUnit) // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
             {
-                CastingRange.Add(pos);
-                if (Owner.CreatureType == ECreatureType.PlayerUnit) // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
-                {
-                    GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
-                    go.transform.position = pos;
-                }
+                GameObject go = Managers.Resource.Instantiate("RangeTile", pooling: true);
+                go.transform.position = pos;
             }
         }
     }
@@ -108,6 +118,8 @@ public abstract class SkillBase : InitBase
     public void SetSize()
     {
         ClearSize();
+
+        // 캐스팅 범위 전체에 스킬 적용
         if (SkillData.Size == null && Owner.CreatureType == ECreatureType.PlayerUnit)
         {
             foreach (var pos in CastingRange)
@@ -119,29 +131,32 @@ public abstract class SkillBase : InitBase
             return;
         }
 
-        {
-            Vector3 pos = Managers.Map.GetTilePos(Owner.TargetPos, delta);
-            if (Managers.Map.CanGo(pos, true))
-            {
-                SkillSize.Add(pos);
-                // 스킬을 사용한 크리처가 플레이어 유닛이라면 범위 시각화
-                if (Owner.CreatureType == ECreatureType.PlayerUnit)
-                {
-                    GameObject go = Managers.Resource.Instantiate("SelectTile", pooling: true);
-                    go.transform.position = pos;
-                }
-            }
-
-            return;
-        }
-
+        // 캐스팅 범위 안에서 스킬 적용
         foreach (Vector3Int delta in SkillData.Size)
         {
-            Vector3 pos = Managers.Map.GetTilePos(Owner.TargetPos, delta);
+            Vector3Int de;
+            switch (_dir)
+            {
+                case Dir.Left:
+                    de = new Vector3Int(-delta.y, delta.x);
+                    break;
+                case Dir.Down:
+                    de = new Vector3Int(-delta.x, -delta.y);
+                    break;
+                case Dir.Right:
+                    de = new Vector3Int(delta.y, -delta.x);
+                    break;
+                default:
+                    de = new Vector3Int(delta.x, delta.y);
+                    break;
+            }
+
+            Vector3 pos = Managers.Map.GetTilePos(Owner.TargetPos, de);
+
             if (Managers.Map.CanGo(pos, true) == false)
                 continue;
 
-            if (CastingRange != null && CastingRange.Contains(pos) == false)
+            if (SkillData.CastingRange != null && CastingRange.Contains(pos) == false)
                 continue;
 
             Size.Add(pos);
@@ -187,5 +202,20 @@ public abstract class SkillBase : InitBase
                     Managers.Resource.Destroy(child.gameObject);
             }
         }
+    }
+
+    public void Rotate(bool isCounterClockwise = true)   // 스킬 모양을 90도씩 회전한다
+    {
+        if (Size == null)
+            return;
+
+        Debug.Log($"Rotate");
+
+        if (isCounterClockwise)
+            _dir = (Dir)(((int)_dir + 1 + 4) % 4);
+        else
+            _dir = (Dir)(((int)_dir - 1 + 4) % 4);
+        
+        SetSize();
     }
 }

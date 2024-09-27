@@ -241,11 +241,24 @@ public class CursorController : InitBase
     void HandleScrollUp()
     {
         Debug.Log("HandleScrollUp");
+        if (Managers.Game.PlayerActionState == EPlayerActionState.Skill)
+        {
+            Managers.Game.CurrentUnit.CastingSkill.Rotate(true);
+            return;
+        }
+
         // TODO: 카메라 줌인
     }
 
     void HandleScrollDown()
     {
+        Debug.Log("HandleScrollDown");
+        if (Managers.Game.PlayerActionState == EPlayerActionState.Skill)
+        {
+            Managers.Game.CurrentUnit.CastingSkill.Rotate(false);
+            return;
+        }
+
         // TODO: 카메라 줌아웃
     }
 
