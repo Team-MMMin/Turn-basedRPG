@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeAoEAttack : SkillBase
+public class MeleeStrongAoEAttack : SkillBase
 {
     public override bool Init()
     {
@@ -17,7 +17,8 @@ public class MeleeAoEAttack : SkillBase
     {
         base.SetInfo(owner, skillID);
 
-        Name = "Melee AoE Attack";
+        Name = "Melee Strong AoEA ttack";
+        Level = 0;  // test
     }
 
     public override bool DoSkill()
@@ -25,7 +26,7 @@ public class MeleeAoEAttack : SkillBase
         if (base.DoSkill() == false) 
             return false;
 
-        Debug.Log("MeleeAoEAttack");
+        Debug.Log("MeleeStrongAoEAttack");
 
         foreach (var pos in CastingRange)
         {
