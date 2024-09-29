@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Magic01 : SkillBase
+public class StrongAoEMagic : SkillBase
 {
     public override bool Init()
     {
@@ -17,7 +17,7 @@ public class Magic01 : SkillBase
     {
         base.SetInfo(owner, skillID);
 
-        Name = "Magic 01";
+        Name = "Strong AoE Magic";
     }
 
     public override bool DoSkill()
@@ -25,7 +25,7 @@ public class Magic01 : SkillBase
         if (base.DoSkill() == false) 
             return false;
 
-        Debug.Log("Magic01");
+        Debug.Log("StrongAoEMagic");
 
         foreach (var pos in Size)
         {
