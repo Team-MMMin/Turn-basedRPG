@@ -101,8 +101,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CreatureSprite: {fileID: 0}
-  MovementRange: []
-  TargetPos: {x: 0, y: 0, z: 0}
 --- !u!50 &1768614488201147828
 Rigidbody2D:
   serializedVersion: 4
@@ -215,6 +213,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 3e33bda025a5e1d4eae51ae3933d9954, type: 3}
+    - target: {fileID: 2401882600556037889, guid: 9c419f7b405e6e14fa8768dbffcb41dd, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3462696706419364804, guid: 9c419f7b405e6e14fa8768dbffcb41dd, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
@@ -303,6 +305,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 3e33bda025a5e1d4eae51ae3933d9954, type: 3}
+    - target: {fileID: 5982576847168762820, guid: 9c419f7b405e6e14fa8768dbffcb41dd, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7477732406066674193, guid: 9c419f7b405e6e14fa8768dbffcb41dd, type: 3}
       propertyPath: m_Name
       value: UI_HPBar
