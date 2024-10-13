@@ -10,17 +10,9 @@ public abstract class SkillBase : InitBase
 
     public Data.SkillData SkillData { get; private set; }
     public HashSet<Vector3> CastingRange { get; private set; } = new HashSet<Vector3>();
-    public HashSet<Vector3> Size  { get; private set; } = new HashSet<Vector3>();
+    public HashSet<Vector3> Size { get; private set; } = new HashSet<Vector3>();
 
-    enum Dir
-    {
-        Up,
-        Left,
-        Down,
-        Right,
-    }
-
-    Dir _dir = Dir.Up;
+    EDir _dir = EDir.Up;
 
     public string Name { get; protected set; }
     
@@ -137,13 +129,13 @@ public abstract class SkillBase : InitBase
             Vector3Int de;
             switch (_dir)
             {
-                case Dir.Left:
+                case EDir.Left:
                     de = new Vector3Int(-delta.y, delta.x);
                     break;
-                case Dir.Down:
+                case EDir.Down:
                     de = new Vector3Int(-delta.x, -delta.y);
                     break;
-                case Dir.Right:
+                case EDir.Right:
                     de = new Vector3Int(delta.y, -delta.x);
                     break;
                 default:
@@ -204,18 +196,21 @@ public abstract class SkillBase : InitBase
         }
     }
 
-    public void Rotate(bool isCounterClockwise = true)   // 스킬 모양을 90도씩 회전한다
+    public void Rotate(bool isCounterClockwise = true, EDir dir = EDir.None)   // 스킬 모양을 90도씩 회전한다
     {
         if (Size == null)
             return;
 
-        Debug.Log($"Rotate");
-
-        if (isCounterClockwise)
-            _dir = (Dir)(((int)_dir + 1 + 4) % 4);
+        if (dir == EDir.None)
+        {
+            if (isCounterClockwise)
+                _dir = (EDir)(((int)_dir + 1 + 4) % 4);
+            else
+                _dir = (EDir)(((int)_dir - 1 + 4) % 4);
+        }
         else
-            _dir = (Dir)(((int)_dir - 1 + 4) % 4);
-        
+            _dir = dir;
+
         SetSize();
     }
 }

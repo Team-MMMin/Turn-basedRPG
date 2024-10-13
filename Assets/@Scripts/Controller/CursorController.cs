@@ -150,18 +150,15 @@ public class CursorController : InitBase
 
     void HandleNoneAction(Vector3 pos) // 조작할 플레이어 유닛을 선택한다
     {
-        if (IsValidPos(pos, true))
-        {
-            CreatureController unit = Managers.Map.GetObject(pos) as CreatureController;
-            if (unit == null)
-                return;
+        PlayerUnitController unit = Managers.Map.GetObject(pos) as PlayerUnitController;
+        if (unit == null)
+            return;
 
-            // 턴을 종료하지 않은 플레이어 유닛을 선택한다
-            if (unit.CreatureType == ECreatureType.PlayerUnit && unit.CreatureState != ECreatureState.EndTurn)
-            {
-                Managers.Game.CurrentUnit = unit;
-                Managers.Game.PlayerActionState = EPlayerActionState.Hand;
-            }
+        // 턴을 종료하지 않은 플레이어 유닛을 선택한다
+        if (unit.CreatureState != ECreatureState.EndTurn)
+        {
+            Managers.Game.CurrentUnit = unit;
+            Managers.Game.PlayerActionState = EPlayerActionState.Hand;
         }
     }
 

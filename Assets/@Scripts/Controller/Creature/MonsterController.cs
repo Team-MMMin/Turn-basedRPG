@@ -129,25 +129,21 @@ public class MonsterController : CreatureController
         Debug.Log("AggressivePattern");
 
         // 타겟 우선순위 설정
-        PriorityQueue<PQTarget> units = new PriorityQueue<PQTarget>();
-        foreach (var unit in Managers.Object.PlayerUnits)
-        {
-            int distance = Mathf.Abs(CellPos.x - unit.CellPos.x) + Mathf.Abs(CellPos.y - unit.CellPos.y);   // 맨해튼 거리 계산
-            units.Push(new PQTarget() { Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos, Distance = distance});
-        }
+        PriorityQueue<PQTarget> targets = SetTargetPriority();
 
-        // 유닛이 없는지 확인
-        if (units.Count <= 0)
+        // 타겟이 없는지 확인
+        if (targets.Count <= 0)
             return;
 
-        PQTarget target = units.Pop();
+        CastingSkill = FindSkill(targets);
+        PQTarget target = targets.Pop();
 
         // 목적지 설정
         DestPos = Managers.Map.CellToWorld(target.CellPos); // 타겟 근처로 이동
         CreatureState = ECreatureState.Move;
 
-        // TODO
         // 스킬 사용
+        CreatureState = ECreatureState.Skill;
     }
 
     void HandleDefensivePattern()
@@ -155,27 +151,21 @@ public class MonsterController : CreatureController
         Debug.Log("DefensivePattern");
 
         // 타겟 우선순위 설정
-        PriorityQueue<PQTarget> units = new PriorityQueue<PQTarget>();
-        foreach (var unit in Managers.Object.PlayerUnits)
-        {
-            int distance = Mathf.Abs(CellPos.x - unit.CellPos.x) + Mathf.Abs(CellPos.y - unit.CellPos.y);   // 맨해튼 거리 계산
-            units.Push(new PQTarget() { Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos, Distance = distance });
-        }
+        PriorityQueue<PQTarget> targets = SetTargetPriority();
 
         // 타겟이 없는지 확인
-        if (units.Count <= 0)
+        if (targets.Count <= 0)
             return;
 
-        PQTarget target = units.Pop();
-
-        // TODO
-        // 타겟에게 스킬 사용 or 자기 자신에게 힐
+        // 스킬 사용
+        CastingSkill = FindSkill(targets);
+        CreatureState = ECreatureState.Skill;
 
         Vector3Int destCellPos = CellPos;
         int maxTotalDistance = 0; 
         SetMovementRange();
 
-        // 주변 유닛과 최대한 거리를 유지
+        // 주변 타겟과 최대한 거리를 유지
         foreach (var pos in MovementRange)
         {
             Vector3Int cellPos = Managers.Map.WorldToCell(pos);
@@ -202,5 +192,17 @@ public class MonsterController : CreatureController
     }
 
     //SkillBase FindSkill()
+    PriorityQueue<PQTarget> SetTargetPriority()
+    {
+        PriorityQueue<PQTarget> units = new PriorityQueue<PQTarget>();
+        foreach (var unit in Managers.Object.PlayerUnits)
+        {
+            int distance = Mathf.Abs(CellPos.x - unit.CellPos.x) + Mathf.Abs(CellPos.y - unit.CellPos.y);   // 맨해튼 거리 계산
+            units.Push(new PQTarget() { Hp = unit.Hp, Def = unit.Def, CellPos = unit.CellPos, Distance = distance });
+        }
+
+        return units;
+    }
+
     #endregion
 }
