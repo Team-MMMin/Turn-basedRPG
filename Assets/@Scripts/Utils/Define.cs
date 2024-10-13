@@ -42,6 +42,15 @@
         Lose,
     }
 
+    public enum EDir
+    {
+        None = -1,
+        Up,
+        Left,
+        Down,
+        Right,
+    }
+
     public enum ECreatureState
     {
         None,
