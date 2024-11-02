@@ -50,13 +50,14 @@ public class GameManager
 
     public IEnumerator CoHandletMonsterTurn()   // 랜덤으로 몬스터의 턴을 설정한다
     {
-        Debug.Log("SetMonsterTurnPriority");
         List<MonsterController> monsters = new List<MonsterController>(Managers.Object.Monsters);
         List<MonsterController> selectedMonsters = new List<MonsterController>();
 
         int count = monsters.Count;
         for (int i = 0; i < count; i++)
         {
+            Debug.Log("SetMonsterTurn");
+
             int idx = UnityEngine.Random.Range(0, monsters.Count);
             selectedMonsters.Add(monsters[idx]);
             CurrentUnit = monsters[idx];

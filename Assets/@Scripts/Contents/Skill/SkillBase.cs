@@ -111,7 +111,7 @@ public abstract class SkillBase : InitBase
     {
         ClearSize();
 
-        // 캐스팅 범위 전체에 스킬 적용
+        // 전 영역 대상 스킬
         if (SkillData.Size == null && Owner.CreatureType == ECreatureType.PlayerUnit)
         {
             foreach (var pos in CastingRange)
@@ -123,7 +123,7 @@ public abstract class SkillBase : InitBase
             return;
         }
 
-        // 캐스팅 범위 안에서 스킬 적용
+        // 영역 내 선택 스킬, 무제한 범위 스킬
         foreach (Vector3Int delta in SkillData.Size)
         {
             Vector3Int de;
@@ -138,8 +138,11 @@ public abstract class SkillBase : InitBase
                 case EDir.Right:
                     de = new Vector3Int(delta.y, -delta.x);
                     break;
-                default:
+                case EDir.Up:
                     de = new Vector3Int(delta.x, delta.y);
+                    break;
+                default:
+                    de = new Vector3Int(0, 0);
                     break;
             }
 
@@ -198,7 +201,7 @@ public abstract class SkillBase : InitBase
 
     public void Rotate(bool isCounterClockwise = true, EDir dir = EDir.None)   // 스킬 모양을 90도씩 회전한다
     {
-        if (Size == null)
+        if (SkillData.Size == null)
             return;
 
         if (dir == EDir.None)

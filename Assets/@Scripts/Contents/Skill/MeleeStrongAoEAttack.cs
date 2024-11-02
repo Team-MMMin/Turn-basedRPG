@@ -17,8 +17,7 @@ public class MeleeStrongAoEAttack : SkillBase
     {
         base.SetInfo(owner, skillID);
 
-        Name = "Melee Strong AoEA ttack";
-        Level = 0;  // test
+        Name = "Melee Strong AoE Attack";
     }
 
     public override bool DoSkill()

@@ -77,21 +77,23 @@ public class CursorController : InitBase
 
     void HandleSkillState(Vector3 pos)
     {
-        if (Managers.Game.CurrentUnit.CastingSkill.CastingRange.Count == 0)    // 캐스팅 범위가 필요없는 스킬
+        var skill = Managers.Game.CurrentUnit.CastingSkill;
+
+        if (skill.SkillData.CastingRange == null)    // 무제한 범위 스킬
         {
             Managers.Game.CurrentUnit.TargetPos = pos;
-            Managers.Game.CurrentUnit.CastingSkill.SetSize();
+            skill.SetSize();
         }
         else
         {
-            // 캐스팅 범위 안에서만 사용하는 스킬
-            if (Managers.Game.CurrentUnit.CastingSkill.CastingRange.Contains(pos))
+            // 전 영역 대상 스킬, 영역 내 선택 스킬
+            if (skill.CastingRange.Contains(pos))
             {
                 Managers.Game.CurrentUnit.TargetPos = pos;
-                Managers.Game.CurrentUnit.CastingSkill.SetSize();
+                skill.SetSize();
             }
             else
-                Managers.Game.CurrentUnit.CastingSkill.ClearSize();
+                skill.ClearSize();
         }
 
         ShowCreatureInfoUI(pos);
@@ -196,16 +198,18 @@ public class CursorController : InitBase
 
     void HandleSkillAction(Vector3 pos)
     {
+        var skill = Managers.Game.CurrentUnit.CastingSkill;
+
         if (IsValidPos(pos, true))
         {
-            if (Managers.Game.CurrentUnit.CastingSkill.CastingRange.Count == 0)
+            if (skill.SkillData.CastingRange == null)   // 무제한 범위 스킬
             {
                 Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
                 Managers.Game.CurrentUnit.IsSkill = true;
             }
             else
             {
-                if (Managers.Game.CurrentUnit.CastingSkill.CastingRange.Contains(pos))
+                if (skill.CastingRange.Contains(pos))   // 전 영역 대상 스킬, 영역 내 선택 스킬
                 {
                     Managers.Game.CurrentUnit.CreatureState = ECreatureState.Skill;
                     Managers.Game.CurrentUnit.IsSkill = true;
