@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -99,7 +100,7 @@ public class MonsterController : CreatureController
 
             if (score == otherScore)
                 return 0;
-            return score < otherScore ? 1 : -1;
+            return score < otherScore ? 1 : -1; // 최소값 우선순위
         }
     }
 
@@ -143,7 +144,7 @@ public class MonsterController : CreatureController
         CreatureState = ECreatureState.Move;
 
         // 스킬 사용
-        if (castingSkill.AttackableTargetCount > 0)
+        if (castingSkill.TargetCount > 0)
         {
             CastingSkill = castingSkill.Skill;
 
@@ -170,7 +171,7 @@ public class MonsterController : CreatureController
 
         // 스킬 사용
         PQSkill castingSkill = FindSkill(targets);
-        if (castingSkill.AttackableTargetCount > 0)
+        if (castingSkill.TargetCount > 0)
         {
             CastingSkill = castingSkill.Skill;
 
@@ -231,174 +232,191 @@ public class MonsterController : CreatureController
     {
         public SkillBase Skill;
 
-        public int PrioritySum;
-        public int AttackableTargetCount;
-        public float DamageMultiplier;
-        public int ManaCost;
+        public int PrioritySum; // 타겟들의 우선순위 합
+        public int TargetCount; // 공격 가능한 타겟 수
+        public float DamageMultiplier;  // 데미지
+        public int ManaCost;    // 마나량
 
         public EDir Dir;
         public Vector3 TargetPos;
 
         public int CompareTo(PQSkill other)
         {
-            // 각 가중치 설정
-            float prioritySumWeight = -1.0f;
-            float attackableTargetCountWeight = 2.0f;
-            float damageMultiplierWeight = 1.5f;
-            float manaCostWeight = -0.3f;
-
-            float score = (PrioritySum * prioritySumWeight) +
-                (AttackableTargetCount * attackableTargetCountWeight) +
-                (DamageMultiplier * damageMultiplierWeight) + 
-                (ManaCost * manaCostWeight);
-
-            float otherScore = (other.PrioritySum * prioritySumWeight) +
-                (other.AttackableTargetCount * attackableTargetCountWeight) +
-                (other.DamageMultiplier * damageMultiplierWeight) + 
-                (other.ManaCost * manaCostWeight);
+            float score = EvaluateSkillScore(this);
+            float otherScore = EvaluateSkillScore(other);
 
             if (score == otherScore)
                 return 0;
-            return score > otherScore ? 1 : -1;
+            return score > otherScore ? 1 : -1; // 최대값 우선순위
+        }
+
+        float EvaluateSkillScore(PQSkill skill) // 스킬의 우선순위 점수 계산
+        {
+            float prioritySumWeight = -1.0f;
+            float targetCountWeight = 2.0f;
+            float damageMultiplierWeight = 1.5f;
+            float manaCostWeight = -0.3f;
+
+            return (skill.PrioritySum * prioritySumWeight) +
+                   (skill.TargetCount * targetCountWeight) +
+                   (skill.DamageMultiplier * damageMultiplierWeight) +
+                   (skill.ManaCost * manaCostWeight);
         }
     }
 
     PQSkill FindSkill(PriorityQueue<PQTarget> pqTarget)
     {
         Debug.Log("FindSkill");
-        
-        List<PQTarget> targets = new List<PQTarget>();
-        while (pqTarget.Count > 0)
-            targets.Add(pqTarget.Pop());
 
-        // 우선순위 큐에 데이터 다시 삽입
-        foreach (var target in targets)
-            pqTarget.Push(target);  
-
-        PriorityQueue<PQSkill> bestSkill = new PriorityQueue<PQSkill>();   // 가장 효율적인 스킬
+        List<PQTarget> targets = GetTargetListFromQueue(pqTarget);
+        PriorityQueue<PQSkill> pqBestSkill = new PriorityQueue<PQSkill>();   // 가장 효율적인 스킬
 
         foreach (var skill in Skills.SkillList) // 사용 가능한 스킬 탐색
         {
             if (skill.IsSkillUsable() == false)
                 continue;
 
-            int prioritySum = 0;    // 공격 가능한 타겟들의 우선순위 큐 인덱스 합
-            int attackableTargetCount = 0;  // 공격 가능한 타겟 수
+            PQSkill pqSkill = EvaluateSkill(skill, targets);
+            if (pqSkill.TargetCount > 0)
+                pqBestSkill.Push(pqSkill);
+        }
 
-            Data.SkillData data = skill.SkillData;
+        return pqBestSkill.Count > 0 ? pqBestSkill.Pop() : default(PQSkill);  // 가장 효율적인 스킬을 찾으면 반환
+    }
 
-            #region 전 영역 대상 스킬
-            if (data.Size == null)
+    List<PQTarget> GetTargetListFromQueue(PriorityQueue<PQTarget> pqTarget)
+    {
+        List<PQTarget> targets = new List<PQTarget>();
+        while (pqTarget.Count > 0)
+            targets.Add(pqTarget.Pop());    // 우선순위 큐를 리스트로 옮긴다
+
+        foreach (var target in targets)
+            pqTarget.Push(target);  // 복구
+        
+        return targets;
+    }
+
+    PQSkill EvaluateSkill(SkillBase skill, List<PQTarget> targets)
+    {
+        Data.SkillData data = skill.SkillData;
+        
+        if (data.Size == null)  // 전 영역 대상 스킬
+        {
+            skill.SetCastingRange();
+            PQSkill skillForAllTargets = EvaluateSkillForAllTargets(skill, targets);
+            return skillForAllTargets;
+        }
+        else if (data.CastingRange != null) // 영역 내 선택 스킬
+        {
+            skill.SetCastingRange();
+            PQSkill skillForPos = EvaluateSkillForPos(skill, targets);
+            return skillForPos;
+        }
+        else if (data.Size != null) // 무제한 범위 스킬
+        {
+            // TODO: 최적의 방향과 위치 구하기
+        }
+
+        return default(PQSkill);
+    }
+
+    #region 전 영역 대상 스킬
+    PQSkill EvaluateSkillForAllTargets(SkillBase skill, List<PQTarget> targets)
+    {
+        int prioritySum = 0;
+        int targetCount = 0;
+
+        Data.SkillData data = skill.SkillData;
+
+        foreach (var pos in skill.CastingRange) // 캐스팅 범위에서 탐색
+        {
+            PlayerUnitController target = Managers.Map.GetObject(pos) as PlayerUnitController;
+            if (target == null)
+                continue;
+
+            targetCount++;
+
+            for (int i = 0; i < targets.Count; i++) // 우선순위 합 구하기
             {
-                skill.SetCastingRange();
-                foreach (var pos in skill.CastingRange)
+                if (target.CellPos == targets[i].CellPos)   // 타겟 위치를 찾았다
+                    prioritySum += i;
+            }
+        }
+
+        return (new PQSkill()
+        {
+            Skill = skill,
+            PrioritySum = prioritySum,
+            TargetCount = targetCount,
+            DamageMultiplier = data.DamageMultiplier,
+            ManaCost = data.ManaCost,
+            Dir = EDir.None,    // 전 영역 대상 스킬이므로 방향은 필요없다
+            TargetPos = Vector3.zero    // 마찬가지로 타겟 위치도 필요없다
+        });
+    }
+    #endregion
+
+    #region 영역 내 선택 스킬
+    PQSkill EvaluateSkillForPos(SkillBase skill, List<PQTarget> targets)
+    {
+        PriorityQueue<PQSkill> pqBestPos = new PriorityQueue<PQSkill>();
+        Data.SkillData data = skill.SkillData;
+
+        foreach (var pos in skill.CastingRange)     // 스킬 캐스팅 범위에서 탐색
+        {
+            TargetPos = pos;
+            skill.SetSize();
+
+            PriorityQueue<PQSkill> pqBestRotation = new PriorityQueue<PQSkill>();   // 같은 좌표에서 가장 효율적인 스킬 방향
+
+            for (int rotationCount = 0; rotationCount < 4; rotationCount++)   // 스킬 회전
+            {
+                int prioritySum = 0;    // 공격 가능한 타겟들의 우선순위 큐 인덱스 합
+                int targetCount = 0;  // 공격 가능한 타겟 수
+
+                foreach (var spos in skill.Size)    // 공격 가능한 타겟 수와 우선순위 구하기
                 {
-                    PlayerUnitController playerUnit = Managers.Map.GetObject(pos) as PlayerUnitController;
-                    if (playerUnit == null)
+                    PlayerUnitController target = Managers.Map.GetObject(spos) as PlayerUnitController;
+                    if (target == null)
                         continue;
 
-                    attackableTargetCount++;
+                    targetCount++;
 
                     for (int i = 0; i < targets.Count; i++)
                     {
-                        if (targets[i].CellPos == playerUnit.CellPos)
+                        if (target.CellPos == targets[i].CellPos)   // 타겟 위치를 찾았다
                             prioritySum += i;
                     }
                 }
 
-                if (attackableTargetCount > 0)
+                if (targetCount > 0)  // 공격 가능한 타겟을 찾았다
                 {
-                    bestSkill.Push(new PQSkill()
+                    pqBestRotation.Push(new PQSkill()
                     {
                         Skill = skill,
                         PrioritySum = prioritySum,
-                        AttackableTargetCount = attackableTargetCount,
+                        TargetCount = targetCount,
                         DamageMultiplier = data.DamageMultiplier,
                         ManaCost = data.ManaCost,
-                        Dir = EDir.None,    // 방향은 필요없다
-                        TargetPos = Vector3.zero    // 타겟 위치도 필요없다
+                        Dir = (EDir)rotationCount,
+                        TargetPos = pos,
                     });
                 }
+
+                if (data.Size.Count <= 1)  // 스킬 칸이 기본적으로 한 칸이라면 회전할 필요가 없다
+                    break;
+
+                skill.Rotate();
             }
-            #endregion
 
-            #region 영역 내 선택 스킬
-            else if (data.CastingRange != null)
-            {
-                PriorityQueue<PQSkill> best = new PriorityQueue<PQSkill>();
-                skill.SetCastingRange();
-
-                foreach (var pos in skill.CastingRange)
-                {
-                    PriorityQueue<PQSkill> pq = new PriorityQueue<PQSkill>();   // 같은 좌표에서 회전
-                    prioritySum = 0;
-                    attackableTargetCount = 0;
-
-                    TargetPos = pos;
-                    skill.SetSize();
-                    
-                    for (int rotateCount = 0; rotateCount < 4; rotateCount++)   // 스킬 회전
-                    {
-                        prioritySum = 0;
-                        attackableTargetCount = 0;
-
-                        foreach (var spos in skill.Size)    // 공격 가능한 타겟 수와 우선 순위 인덱스 구하기
-                        {
-                            PlayerUnitController playerUnit = Managers.Map.GetObject(spos) as PlayerUnitController;
-                            if (playerUnit == null)
-                                continue;
-
-                            attackableTargetCount++;
-                            
-                            for (int i = 0; i < targets.Count; i++)
-                            {
-                                if (targets[i].CellPos == playerUnit.CellPos)
-                                    prioritySum += i;
-                            }
-                        }
-
-                        if (attackableTargetCount > 0)  // 공격 가능한 타겟을 찾았다
-                        {
-                            pq.Push(new PQSkill()
-                            {
-                                Skill = skill,
-                                PrioritySum = prioritySum,
-                                AttackableTargetCount = attackableTargetCount,
-                                DamageMultiplier = data.DamageMultiplier,
-                                ManaCost = data.ManaCost,
-                                Dir = (EDir)rotateCount,
-                                TargetPos = pos,
-                            });
-                        }
-
-                        if (data.Size.Count <= 1)  // 스킬 칸이 기본적으로 한 칸이라면 회전할 필요가 없다
-                            break;
-
-                        skill.Rotate();
-                    }
-
-                    if (pq.Count > 0)
-                        best.Push(pq.Pop());
-                }
-
-                if (best.Count > 0)
-                    bestSkill.Push(best.Pop());
-            }
-            #endregion
-
-            #region 무제한 범위 스킬
-            else if (data.Size != null)
-            {
-                // TODO: 최적의 방향과 위치 구하기
-            }
-            #endregion
+            if (pqBestRotation.Count > 0)
+                pqBestPos.Push(pqBestRotation.Pop());
         }
 
-        if (bestSkill.Count > 0)   // 가장 효율적인 스킬을 찾으면 반환
-            return bestSkill.Pop();
-
-        return default(PQSkill);
+        return pqBestPos.Count > 0 ? pqBestPos.Pop() : default(PQSkill);
     }
+    #endregion
+
     #endregion
     #endregion
 }
